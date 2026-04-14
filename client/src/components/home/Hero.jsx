@@ -7,7 +7,7 @@ const Hero = () => {
         
             <div className="flex gap-2 bg-[#0984E3] rounded-2xl  justify-center text-sm items-center mx-14">
 
-                <div className="flex gap-4 items-center space-y-2">
+                <div className="flex gap-4 items-center">
                     <div>
                     <Zap color="#FFFFFF" className="w-3.5" />
                     </div>
