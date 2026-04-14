@@ -20,7 +20,7 @@
 }
 
 /* Cache l'élément sur les écrans supérieurs à 1150px (Laptops, PC) */
-@media (min-width: 1150px) {
+@media (min-width: 1149px) {
   .mobile-only {
     display: none !important;
   }

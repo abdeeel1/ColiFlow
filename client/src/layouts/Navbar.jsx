@@ -11,7 +11,7 @@ const Navbar = () => {
     return ( 
         <>
         
-        <nav className="lg:px-20 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]">
+        <nav className="lg:px-10 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]">
 
             <div className="bg-[#FFFFFF] shadow-sm max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
                 <div className="h-10 flex items-center">
@@ -20,10 +20,10 @@ const Navbar = () => {
                     " />
                 </div>
                 
-                <div className="sm:hidden hidden md:hidden lg:block desktop-only">
+                <div className="desktop-only">
                     {
                         !isTraveler ?
-                        <ul className="lg:flex lg:items-center lg:gap-14">
+                        <ul className="lg:flex lg:items-center lg:gap-4 text-sm">
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Envoyer un colis <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
@@ -36,7 +36,7 @@ const Navbar = () => {
                             <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">FAQ</li>
                         </ul>
                         :
-                        <ul className="lg:flex lg:gap-14">
+                        <ul className="lg:flex lg:gap-4 lg:items-center text-sm">
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Publier un travel <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
@@ -61,16 +61,18 @@ const Navbar = () => {
                             <ToggleButton isTraveler={isTraveler} setIsTraveler={setIsTraveler}/>
                         </div>
 
-                        <div className="flex items-center">
+                        <div className="flex gap-4  items-center pe-4">
                             <Globe color="gray" className='w-3.5 lg:w-5 cursor-pointer' />
 
-                            <button className="lg:hidden mobile-only">
+                            <div className="mobile-only">
+
                                 <MobileMenu isTraveler={isTraveler}  />
-                            </button>
+                            </div>
+                            
                         </div>
 
-                        <div className="hidden md:hidden lg:block">
-                            <button className="btn xl:text-base xl:px-6 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button>
+                        <div className="desktop-only">
+                            <button className="btn btn-ghost hover:border-[#0984E3] xl:text-base xl:px-6 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button>
                         </div>
                     </div>
                 </div>
