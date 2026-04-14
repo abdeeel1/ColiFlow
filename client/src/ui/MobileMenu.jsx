@@ -17,19 +17,19 @@ export default function MobileMenu({isTraveler}) {
 
                     <Dropdown.SubmenuTrigger>
                         <Dropdown.Item >
-                            <Label>Envoyer un colis</Label>
+                            <Label className="font-plusjakarta">Envoyer un colis</Label>
                     <Dropdown.SubmenuIndicator />
                         </Dropdown.Item>
                     <Dropdown.Popover>
                         <Dropdown.Menu>
                             <Dropdown.Item >
-                                <Label>Nouveau colis</Label>
+                                <Label className="font-plusjakarta">Nouveau colis</Label>
                             </Dropdown.Item>
                             <Dropdown.Item>
-                                <Label>Demandes en attente</Label>
+                                <Label className="font-plusjakarta">Liste des colis</Label>
                             </Dropdown.Item>
                             <Dropdown.Item >
-                                <Label>Dashboard</Label>
+                                <Label className="font-plusjakarta">Dashboard</Label>
                             </Dropdown.Item>
                     
                 </Dropdown.Menu>
@@ -37,10 +37,10 @@ export default function MobileMenu({isTraveler}) {
                     </Dropdown.SubmenuTrigger>
 
                     <Dropdown.Item>
-                        <Label>Mes Colis</Label>
+                        <Label className="font-plusjakarta">Mes Colis</Label>
                     </Dropdown.Item>
                     <Dropdown.Item >
-                        <Label>FAQ</Label>
+                        <Label className="font-plusjakarta">FAQ</Label>
                     </Dropdown.Item>
                     <Dropdown.Item className="hover:bg-transparent">
                         <div className="flex flex-col gap-3">
@@ -63,19 +63,19 @@ export default function MobileMenu({isTraveler}) {
 
                     <Dropdown.SubmenuTrigger>
                         <Dropdown.Item >
-                            <Label>Publier un travel</Label>
+                            <Label className="font-plusjakarta">Publier un travel</Label>
                     <Dropdown.SubmenuIndicator />
                         </Dropdown.Item>
                     <Dropdown.Popover>
                         <Dropdown.Menu>
                             <Dropdown.Item >
-                                <Label>Nouveau travel</Label>
+                                <Label className="font-plusjakarta">Nouveau travel</Label>
                             </Dropdown.Item>
                             <Dropdown.Item>
-                                <Label>Demandes de Réservation</Label>
+                                <Label className="font-plusjakarta">Demandes de Réservation</Label>
                             </Dropdown.Item>
                             <Dropdown.Item >
-                                <Label>Dashboard</Label>
+                                <Label className="font-plusjakarta">Dashboard</Label>
                             </Dropdown.Item>
                     
                 </Dropdown.Menu>
@@ -83,15 +83,15 @@ export default function MobileMenu({isTraveler}) {
                     </Dropdown.SubmenuTrigger>
 
                     <Dropdown.Item>
-                        <Label>Mes Travel</Label>
+                        <Label className="font-plusjakarta">Mes Travel</Label>
                     </Dropdown.Item>
                     <Dropdown.Item >
-                        <Label>FAQ</Label>
+                        <Label className="font-plusjakarta">FAQ</Label>
                     </Dropdown.Item>
                     <Dropdown.Item className="hover:bg-transparent">
                         <div className="flex flex-col gap-3">
                             <hr className="text-[#2D3436] " />
-                            <button className="btn bg-[#0984E3] font-bold text-white rounded-2xl">
+                            <button className="btn bg-[#0984E3] font-bold text-white rounded-2xl font-plusjakarta">
                                 Se connecter
                             </button>
                         </div>

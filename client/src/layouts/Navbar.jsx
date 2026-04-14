@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MobileMenu from "../ui/MobileMenu";
 import ToggleButton from "../ui/ToggleButton";
-import { Globe } from 'lucide-react';
+import { ChevronDown, Globe } from 'lucide-react';
 
 
 const Navbar = () => {
@@ -11,22 +11,67 @@ const Navbar = () => {
     return ( 
         <>
         
-        <nav>
+        <nav className="lg:px-20">
 
-            <div className="bg-[#FFFFFF] rounded-2xl mx-4 my-4 flex justify-between items-center">
+            <div className="bg-[#FFFFFF] max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
                 <div className="h-10 flex items-center">
-                    <img src="/Logo.png" alt="" className="w-25 h-30" />
+                    <img src="/Logo.png" alt="" className="w-25 h-30
+                    lg:w-48 lg:h-50
+                    " />
+                </div>
+                
+                <div className="sm:hidden hidden md:hidden lg:block desktop-only">
+                    {
+                        !isTraveler ?
+                        <ul className="lg:flex lg:items-center lg:gap-14">
+                            <div className="dropdown dropdown-hover">
+                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2">Envoyer un colis <ChevronDown /></li>
+                            <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li><a>Nouveau colis</a></li>
+                                <li><a>Liste des colis</a></li>
+                                <li><a>Dashboard</a></li>
+                            </ul>
+                            </div>
+                            <li className="lg:text-[#2D3436] cursor-pointer">Mes Colis</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer">FAQ</li>
+                        </ul>
+                        :
+                        <ul className="lg:flex lg:gap-14">
+                            <div className="dropdown dropdown-hover">
+                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2">Publier un travel <ChevronDown /></li>
+                            <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li><a>Nouveau travel</a></li>
+                                <li><a>Demandes de Réservation</a></li>
+                                <li><a>Dashboard</a></li>
+                            </ul>
+                            </div>
+                            <li className="lg:text-[#2D3436] cursor-pointer">Mes Travel</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer">FAQ</li>
+                        </ul>
+                        
+                        
+                    }
                 </div>
 
-                <div className="flex gap-4 pe-4 items-center">
-                    <ToggleButton isTraveler={isTraveler} setIsTraveler={setIsTraveler}  />
+                <div className="lg:flex lg:gap-4 lg:pe-4 lg:items-center">
 
-                    <div className="flex items-center">
-                        <Globe width={16} color="gray" className="cursor-pointer" />
 
-                        <button >
-                            <MobileMenu isTraveler={isTraveler}  />
-                        </button>
+                    <div className="flex items-center gap-4 lg:gap-10">
+                        <div>
+                            <ToggleButton isTraveler={isTraveler} setIsTraveler={setIsTraveler}/>
+                        </div>
+
+                        <div className="flex items-center">
+                            <Globe color="gray" className='w-3.5 lg:w-5 cursor-pointer' />
+
+                            <button className="lg:hidden mobile-only">
+                                <MobileMenu isTraveler={isTraveler}  />
+                            </button>
+                        </div>
+
+                        <div className="hidden md:hidden lg:block">
+                            <button className="btn xl:text-base xl:px-6 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button>
+                        </div>
                     </div>
                 </div>
             </div>

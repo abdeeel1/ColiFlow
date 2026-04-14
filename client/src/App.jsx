@@ -6,21 +6,21 @@ function App() {
   
 
   return (
-      <BrowserRouter>
+      <div className='font-plusjakarta'>
+        <BrowserRouter>
       
-      <Routes>
-          <Route path='/' element={<Layout />}>
+        <Routes>
+            <Route path='/' element={<Layout />}>
 
-          
-
-          </Route>
+            </Route>
 
 
 
-      </Routes>
-      
-      
-      </BrowserRouter>
+        </Routes>
+        
+        
+        </BrowserRouter>
+      </div>
   )
 }
 

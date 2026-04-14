@@ -1,3 +1,27 @@
+@font-face {
+    font-family: PlusJakarta;
+    src: url("../src/assets/fonts/PlusJakartaSans-VariableFont_wght.ttf");
+}
+
+
+
 @import "tailwindcss";
 @import "@heroui/styles";
 @plugin "daisyui";
+
+@theme {
+    --font-plusjakarta : PlusJakarta, 'sans-serif';
+}
+
+@media (max-width: 1149px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Cache l'élément sur les écrans supérieurs à 1150px (Laptops, PC) */
+@media (min-width: 1150px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
