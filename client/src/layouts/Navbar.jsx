@@ -11,9 +11,9 @@ const Navbar = () => {
     return ( 
         <>
         
-        <nav className="lg:px-20">
+        <nav className="lg:px-20 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]">
 
-            <div className="bg-[#FFFFFF] max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
+            <div className="bg-[#FFFFFF] shadow-sm max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
                 <div className="h-10 flex items-center">
                     <img src="/Logo.png" alt="" className="w-25 h-30
                     lg:w-48 lg:h-50
@@ -25,28 +25,28 @@ const Navbar = () => {
                         !isTraveler ?
                         <ul className="lg:flex lg:items-center lg:gap-14">
                             <div className="dropdown dropdown-hover">
-                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2">Envoyer un colis <ChevronDown /></li>
+                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Envoyer un colis <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                                 <li><a>Nouveau colis</a></li>
                                 <li><a>Liste des colis</a></li>
                                 <li><a>Dashboard</a></li>
                             </ul>
                             </div>
-                            <li className="lg:text-[#2D3436] cursor-pointer">Mes Colis</li>
-                            <li className="lg:text-[#2D3436] cursor-pointer">FAQ</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Colis</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">FAQ</li>
                         </ul>
                         :
                         <ul className="lg:flex lg:gap-14">
                             <div className="dropdown dropdown-hover">
-                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2">Publier un travel <ChevronDown /></li>
+                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Publier un travel <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                                 <li><a>Nouveau travel</a></li>
                                 <li><a>Demandes de Réservation</a></li>
                                 <li><a>Dashboard</a></li>
                             </ul>
                             </div>
-                            <li className="lg:text-[#2D3436] cursor-pointer">Mes Travel</li>
-                            <li className="lg:text-[#2D3436] cursor-pointer">FAQ</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Travel</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">FAQ</li>
                         </ul>
                         
                         
