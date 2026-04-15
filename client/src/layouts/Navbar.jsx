@@ -9,7 +9,7 @@ const Navbar = () => {
     const [isTraveler, setIsTraveler] = useState(false)
     
     return ( 
-        <>
+        <header>
         
         <nav className="lg:px-10 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]">
 
@@ -80,9 +80,7 @@ const Navbar = () => {
 
 
         </nav>
-
-
-        </>
+        </header>
     );
 }
  
