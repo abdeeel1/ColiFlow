@@ -1,11 +1,30 @@
 import { Package, Zap } from "lucide-react";
 import Features from "../../ui/components/Features";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const Hero = () => {
+    
+    useGSAP(() => {
+        gsap.to('#tag-website', {
+            y : 20,
+            duration : 2,
+            yoyo : true,
+            repeat : -1,
+            
+        })
+
+        gsap.from('#header-title', {
+            x: -600,
+            opacity : 0.3,
+            duration : 1.3
+        })
+    }, [])
+
     return ( 
-        <section className="mt-20 lg:mt-40">
+        <section className="mt-20 lg:mt-30">
         
-            <div className="flex gap-2 bg-[#0984E3] rounded-2xl md:mx-55 lg:mx-80 xl:mx-100 2xl:mx-100 justify-center text-sm items-center mx-14">
+            <div id="tag-website" className="flex gap-2 bg-[#0984E3] rounded-2xl md:mx-55 lg:mx-80 xl:mx-100 2xl:mx-100 justify-center text-sm items-center mx-14">
 
                 <div className="flex gap-2 items-center">
                     <div>
@@ -18,7 +37,7 @@ const Hero = () => {
 
             </div>
 
-            <div className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
+            <div id="header-title" className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
                 <p className="font-bold text-center text-[32px] md:text-[48px] lg:text-[64px] leading-tight text-[#2D3436]">
                     Envoyez vos Colis au <br />
                     <span className="text-[#0984E3]">Maroc</span> en Toute 

@@ -2,16 +2,31 @@ import { useState } from "react";
 import MobileMenu from "../ui/MobileMenu";
 import ToggleButton from "../ui/ToggleButton";
 import { ChevronDown, Globe } from 'lucide-react';
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
 
 const Navbar = () => {
     
+
+    useGSAP(() => {
+
+        gsap.from('#navbar', {
+            y : -100,
+            duration : 1,
+            opacity : 0
+        })
+
+    }, [])
+
+
     const [isTraveler, setIsTraveler] = useState(false)
+
     
     return ( 
         <header>
         
-        <nav className="lg:px-10 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]">
+        <nav id="navbar" className="lg:px-10 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]">
 
             <div className="bg-[#FFFFFF] shadow-sm max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
                 <div className="h-10 flex items-center">
