@@ -1,3 +1,4 @@
+import HowItsWork from "@/components/home/HowItsWork";
 import BestChoices from "../components/home/BestChoices";
 import Hero from "../components/home/Hero";
 
@@ -8,6 +9,8 @@ const Home = () => {
             <Hero />
 
             <BestChoices />
+
+            <HowItsWork />
         
         </main>
     );
