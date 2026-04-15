@@ -23,7 +23,7 @@ const BestChoices = () => {
 
                 <p className="text-center font-semibold text-xl">Les meilleures opportunités de livraison</p>
 
-                <div className="flex gap-10 justify-center items-center flex-wrap">
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-10 lg:gap-14 place-items-center justify-center items-center  py-10">
                     {dataCard.map(card=>(
                         <div className="w-full "  key={card.id}>
                              <CardTravel 
