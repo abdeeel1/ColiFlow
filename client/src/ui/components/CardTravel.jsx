@@ -35,7 +35,7 @@ const CardTravel = ({ville_depart, ville_darrive, prix, type, date, voyageur, im
                     <p className="text-[#001638] font-bold text-xl">{prix} MAD</p>
                 </div>
 
-                <button className="btn btn-sm btn-ghost rounded-4xl  bg-[#0984E3] text-white py-2 px-4  hover:bg-[#076bc8]">
+                <button className="btn btn-sm btn-ghost hover:border-[#0984E3] rounded-4xl  bg-[#0984E3] text-white py-2 px-4  hover:bg-[#076bc8]">
                   <ArrowRight size={16} />
                 </button>
             </div>
