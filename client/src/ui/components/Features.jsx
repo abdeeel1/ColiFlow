@@ -18,14 +18,14 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-2 max-w-6xl mx-auto">
+    <section className="py-2 lg:py-10 max-w-6xl mx-auto">
       
       <div className="grid grid-cols-3 md:grid-cols-3 gap-12 text-center mb-10">
         {steps.map((step, index) => (
-          <div key={index} className={`transition-opacity duration-500 ${activeStep === index ? 'opacity-100' : 'opacity-50'}`}>
-             <div className="flex items-center justify-center rounded-2xl bg-[#cbccc9] py-2 mb-2"><step.icon color="gray" className="w-4.5" /></div>
+          <div key={index} className={`transition-opacity lg:h-50 flex flex-col gap-1 2xl:gap-2 duration-500 ${activeStep === index ? 'opacity-100' : 'opacity-50'}`}>
+             <div className={`flex items-center ${activeStep === index ? 'border border-gray-400' : ''} justify-center md:mx-15 lg:mx-22 xl:mx-35 rounded-2xl bg-[#cbccc9] py-2 mb-2`}><step.icon color="gray" className="w-4.5" /></div>
              <p className="font-bold text-gray-600 text-md mb-2">{step.title}</p>
-             <p className="text-gray-600 text-[11px]">{step.desc}</p>
+             <p className="text-gray-600 text-[11px] lg:text-[15px]">{step.desc}</p>
           </div>
         ))}
       </div>

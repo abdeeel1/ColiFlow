@@ -2,7 +2,7 @@ import Hero from "../components/home/Hero";
 
 const Home = () => {
     return ( 
-        <main>
+        <main className="flex justify-center items-center gap-X w-full">
         
             <Hero />
         
