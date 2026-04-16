@@ -65,7 +65,7 @@ const Footer = () => {
         {/* Desktop Version */}
 
         <div className="hidden xl:block">
-            <img src="/Logo.png" alt="" className="w-40 h-40 mx-72" />
+            <img src="/Logo.png" alt="" className="w-40 h-40  lg:mx-15 xl:mx-50 2xl:mx-70" />
 
             <hr className="mx-30"  />
 

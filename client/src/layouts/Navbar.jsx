@@ -3,6 +3,7 @@ import MobileMenu from "../ui/MobileMenu";
 import ToggleButton from "../ui/ToggleButton";
 import { ChevronDown, Globe } from 'lucide-react';
 import gsap from "gsap";
+import { Link } from "react-router-dom";
 
 
 const Navbar = () => {
@@ -91,7 +92,7 @@ const Navbar = () => {
                         </div>
 
                         <div className="desktop-only">
-                            <button className="btn btn-ghost hover:border-[#0984E3] xl:text-base xl:px-6 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button>
+                            <Link to={"/login"}><button className="btn btn-ghost hover:border-[#0984E3] xl:text-base xl:px-6 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button></Link>
                         </div>
                     </div>
                 </div>
