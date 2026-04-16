@@ -12,7 +12,7 @@ const Services = () => {
         
         
         <div>
-            <p className="font-bold text-2xl text-center">Une Nouvelle ère de livraison au Maroc</p>
+            <p className="font-bold text-2xl text-center xl:text-3xl">Une Nouvelle ère de livraison au Maroc</p>
 
             {/* Mobile Version */}
 
