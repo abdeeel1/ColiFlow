@@ -19,25 +19,25 @@ const Signup = () => {
 
                 <div className="flex flex-col gap-2 justify-start items-start py-3">
                     <label htmlFor="Telephone" className="text-[14px] font-semibold">Telephone</label>
-                    <input type="tel" className="border w-full rounded-[10px] pe-30 ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="+212600000000" />
+                    <input type="tel" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="+212600000000" />
                 </div>
                 
                 <div className="flex flex-col gap-2 justify-start items-start">
                     <label htmlFor="nom" className="text-[14px] font-semibold">Nom</label>
-                    <input type="text" className="border w-full rounded-[10px] pe-30 ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="Najib Abdessamad" />
+                    <input type="text" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="Najib Abdessamad" />
                 </div>
                 
                 <div className="flex flex-col gap-2 justify-start items-start py-3">
                     <label htmlFor="email" className="text-[14px] font-semibold">Adressse e-mail</label>
-                    <input type="email" className="border w-full rounded-[10px] pe-30 ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="abdessamad@gmail.com" />
+                    <input type="email" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="abdessamad@gmail.com" />
                 </div>
                 
                 <div className="flex flex-col gap-2 justify-start items-start">
-                    <div className="flex items-center gap-20 md:gap-112">
+                    <div className="flex w-full justify-between items-center">
                         <label htmlFor="email" className="text-[14px] font-semibold">Mot de passe</label>
                         <p className="text-[12px] text-[#0C2A92] font-semibold">Mot de passe oublié ?</p>
                     </div>
-                    <input type="password" className="border w-full rounded-[10px] pe-30 ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="********" />
+                    <input type="password" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="********" />
                 </div>
                 
                 <div className="flex gap-2 justify-start items-center py-10">

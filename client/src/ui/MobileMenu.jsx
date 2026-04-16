@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function MobileMenu({ isTraveler }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,9 +92,11 @@ export default function MobileMenu({ isTraveler }) {
 
         
         <div className="border-t flex flex-col gap-4 border-gray-200 pt-4 mt-4">
-          <button className="btn btn-ghost w-full hover:bg-[#0984E3] bg-[#0984E3] text-white font-bold rounded-2xl text-sm">
-            Se connecter
-          </button>
+          <Link to={"/login"}>
+            <button className="btn btn-ghost w-full hover:bg-[#0984E3] bg-[#0984E3] text-white font-bold rounded-2xl text-sm">
+              Se connecter
+            </button>
+          </Link>
           <button className="btn btn-neutral w-full  text-white font-bold rounded-2xl text-sm">
             Dashboard
           </button>

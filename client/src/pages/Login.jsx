@@ -20,15 +20,15 @@ const Login = () => {
 
                 <div className="flex  flex-col gap-2 justify-start items-start py-10">
                     <label htmlFor="email" className="text-[14px] font-semibold">Adressse e-mail</label>
-                    <input type="email" className="border w-full rounded-[10px] pe-30 ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="abdessamad@gmail.com" />
+                    <input type="email" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="abdessamad@gmail.com" />
                 </div>
                 
                 <div className="flex flex-col gap-2 justify-start items-start">
-                    <div className="flex items-center md:gap-112 gap-20">
+                    <div className="flex items-center w-full justify-between">
                         <label htmlFor="email" className="text-[14px] font-semibold">Mot de passe</label>
                         <p className="text-[12px] text-[#0C2A92] font-semibold">Mot de passe oublié ?</p>
                     </div>
-                    <input type="email" className="border w-full rounded-[10px] pe-30 ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="********" />
+                    <input type="password" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="********" />
                 </div>
                 
                 <div className="flex gap-2 justify-start items-center py-10">
