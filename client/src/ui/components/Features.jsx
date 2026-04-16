@@ -18,7 +18,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-2 lg:py-10 max-w-6xl mx-auto">
+    <section className="max-w-6xl mx-auto">
       
       <div className="grid grid-cols-3 md:grid-cols-3 gap-12 text-center mb-10">
         {steps.map((step, index) => (

@@ -11,18 +11,48 @@ const Hero = () => {
             duration : 2,
             yoyo : true,
             repeat : -1,
+            ease: 'linear'
             
         })
 
         gsap.from('#header-title', {
-            x: -600,
-            opacity : 0.3,
+            scale : 2,
+            opacity : 0,
+            duration : 1.5
+        })
+
+        gsap.fromTo('#span1', {
+            x: 500
+        }, {
+            x : 0,
             duration : 1.3
         })
+
+        gsap.from('#desciption', {
+            opacity : 0,
+            duration : 4
+        })
+
+        gsap.from('#cta-buttons', {
+            y: 50,
+            duration : 0.8,
+            ease : 'linear'
+        })
+
+        gsap.to('#progress', {
+            
+            width : '100%',
+            duration : 6,
+            repeat : -1,
+            ease : 'linear'
+        })
+
+        
+
     }, [])
 
     return ( 
-        <section className="mt-20 lg:mt-30">
+        <section className="mt-20 lg:mt-30 min-h-dvh">
         
             <div id="tag-website" className="flex gap-2 bg-[#0984E3] rounded-2xl md:mx-55 lg:mx-80 xl:mx-100 2xl:mx-100 justify-center text-sm items-center mx-14">
 
@@ -37,21 +67,21 @@ const Hero = () => {
 
             </div>
 
-            <div id="header-title" className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
-                <p className="font-bold text-center text-[32px] md:text-[48px] lg:text-[64px] leading-tight text-[#2D3436]">
+            <div  className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
+                <p id="header-title" className="font-bold text-center text-[32px] md:text-[48px] lg:text-[64px] leading-tight text-[#2D3436]">
                     Envoyez vos Colis au <br />
                     <span className="text-[#0984E3]">Maroc</span> en Toute 
-                    <span className="inline-flex items-center gap-2 text-[#0984E3] ml-2">
+                    <span id="span1" className="inline-flex items-center gap-2 text-[#0984E3] ml-2">
                     <Package className="size-10 " />
                     Simplicité
                     </span>
                 </p>
 
-                <div className="mb-4 lg:mb-8">
+                <div id="desciption" className="mb-4 lg:mb-8">
                     <span className="text-center text-[12px] lg:text-[18px] text-[#141414]">La première plateforme P2P de livraison au Maroc.</span>
                 </div>
 
-                <div className="flex gap-4">
+                <div id="cta-buttons" className="flex gap-4">
                     <button className="btn btn-ghost hover:border-[#0984E3]  bg-[#0984E3] rounded-2xl text-white font-bold btn-sm lg:btn-md">Trouver un trajet</button>
                     <button className="btn btn-ghost hover:border-[#c7c9caf6]  bg-[#c7c9caf6] rounded-2xl text-gray-500 font-bold btn-sm lg:btn-md">Publier un trajet</button>
                 </div>
@@ -60,6 +90,8 @@ const Hero = () => {
             <div>
                 <div>
                     <Features />
+
+                    <div id="progress" className="bg-gray-400 py-px mb-15 w-10"></div>
                 </div>
 
                 <div className="md:flex md:justify-center md:items-center">

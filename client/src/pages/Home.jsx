@@ -7,7 +7,7 @@ import CtaSection from "@/components/home/CtaSection";
 
 const Home = () => {
     return ( 
-        <main className="flex flex-col justify-center items-center gap-X w-full">
+        <main className="flex overflow-x-hidden flex-col justify-center items-center gap-X w-full">
         
             <Hero />
 
