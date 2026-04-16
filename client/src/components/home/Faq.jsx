@@ -36,6 +36,16 @@ const Faq = () => {
 
             </div>
 
+            <div className="">
+                <p className="text-[11px] flex flex-col lg:flex-row justify-center items-center gap-2 text-center text-[#656565]">
+                    D'autres questions ? Discutez avec nous sur <br />
+                    <span className="font-bold ms-1 py-0.5  bg-[#f7f6f6] rounded-2xl px-2"> <a href="#">Whatsapp</a> </span>
+                    or
+                    <span className="font-bold ms-1 py-0.5  bg-[#f7f6f6] rounded-2xl px-2"> <a href="#">Consultez le centre d'aide</a> </span>
+
+                </p>
+            </div>
+
         </section>
     );
 }
