@@ -19,13 +19,15 @@ const BestChoices = () => {
         <section>
             
             <div className="flex justify-center items-center flex-col space-y-10">
-                <p className="text-center font-bold text-2xl xl:text-3xl">Qu'attendez-vous ? Commencez dès maintenant.</p>
+                <p className="text-center font-clashdisplay font-bold text-2xl xl:text-3xl">Qu'attendez-vous ?{" "} Commencez dès maintenant.</p>
 
                 <SearchTravel />
 
-                <p className="text-center font-semibold text-xl xl:text-2xl">Les meilleures opportunités de livraison</p>
+                <div className="md:py-10 flex flex-col gap-12">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-10 lg:gap-14 place-items-center justify-center items-center  py-10 md:py-20">
+                <p className="text-center font-semibold text-xl xl:text-2xl font-clashdisplay">Les meilleures opportunités de livraison</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-10 lg:gap-14 place-items-center justify-center items-center  md:py-0">
                     {dataCard.map(card=>(
                         <div className="w-full "  key={card.id}>
                              <CardTravel 
@@ -42,7 +44,9 @@ const BestChoices = () => {
                     ))}
                 </div>
 
-                <div className="py-2 md:w-[75%] xl:w-[44%] bg-[#0984E3] mx-auto rounded-2xl text-sm w-full">
+                </div>
+
+                <div className="py-2 md:w-[75%] xl:w-[44%] bg-[#0984E3] mx-auto my-10 rounded-2xl text-sm w-full">
 
                     <div className="flex gap-2 md:gap-10 justify-center md:justify-evenly items-center px-4">
                         

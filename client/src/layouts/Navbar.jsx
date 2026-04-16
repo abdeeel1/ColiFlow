@@ -46,10 +46,10 @@ const Navbar = () => {
                         <ul className="lg:flex lg:items-center lg:gap-4 text-sm">
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Envoyer un colis <ChevronDown /></li>
-                            <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li><a>Nouveau colis</a></li>
-                                <li><a>Liste des colis</a></li>
-                                <li><a>Dashboard</a></li>
+                            <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>Nouveau colis</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>Liste des colis</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
                             </ul>
                             </div>
                             <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Colis</li>
@@ -59,10 +59,10 @@ const Navbar = () => {
                         <ul className="lg:flex lg:gap-4 lg:items-center text-sm">
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Publier un trajet <ChevronDown /></li>
-                            <ul tabIndex="-1" className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li><a>Nouveau trajet</a></li>
-                                <li><a>Demandes de Réservation</a></li>
-                                <li><a>Dashboard</a></li>
+                            <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>Nouveau trajet</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>Demandes de Réservation</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
                             </ul>
                             </div>
                             <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Travel</li>

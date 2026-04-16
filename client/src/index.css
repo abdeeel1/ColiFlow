@@ -3,6 +3,16 @@
     src: url("../src/assets/fonts/PlusJakartaSans-VariableFont_wght.ttf");
 }
 
+@font-face {
+  font-family: ClashDisplay-bold;
+  src: url("../src/assets/fonts/ClashDisplay-Bold.ttf");
+}
+
+@font-face {
+  font-family: ClashDisplay;
+  src: url("../src/assets/fonts/ClashDisplay-Regular.ttf");
+}
+
 @import "tailwindcss";
 @import "@heroui/styles";
 @import "tw-animate-css";
@@ -15,6 +25,8 @@
 
 @theme {
     --font-plusjakarta : PlusJakarta, 'sans-serif';
+    --font-clashdisplay-bold : ClashDisplay-bold, 'sans-serif';
+    --font-clashdisplay : ClashDisplay, 'sans-serif';
 }
 
 html, body{
@@ -81,6 +93,7 @@ html, body{
 }
 
 :root {
+    color-scheme: light only;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);

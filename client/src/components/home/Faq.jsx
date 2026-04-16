@@ -23,9 +23,9 @@ const Faq = () => {
     
     
     return ( 
-        <section className="py-20 xl:py-30">
+        <section className="py-20 xl:py-40">
 
-            <p className="text-center font-bold text-2xl xl:text-3xl capitalize">Questions fréquentes</p>
+            <p className="text-center font-clashdisplay font-bold text-2xl xl:text-3xl capitalize">Questions fréquentes</p>
  
 
             <div className="py-10 lg:flex lg:gap-15">

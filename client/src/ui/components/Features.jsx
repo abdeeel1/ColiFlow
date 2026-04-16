@@ -20,7 +20,7 @@ const Features = () => {
   return (
     <section className="max-w-6xl mx-auto">
       
-      <div className="grid grid-cols-3 md:grid-cols-3 gap-12 text-center mb-10">
+      <div className="grid grid-cols-3 md:grid-cols-3 gap-12 text-center">
         {steps.map((step, index) => (
           <div key={index} className={`transition-opacity lg:h-50 flex flex-col gap-1 2xl:gap-2 duration-500 ${activeStep === index ? 'opacity-100' : 'opacity-50'}`}>
              <div className={`flex items-center ${activeStep === index ? 'border border-gray-400' : ''} justify-center md:mx-15 lg:mx-22 xl:mx-35 rounded-2xl bg-[#cbccc9] py-2 mb-2`}><step.icon color="gray" className="w-4.5" /></div>
@@ -29,6 +29,7 @@ const Features = () => {
           </div>
         ))}
       </div>
+      
 
       
         

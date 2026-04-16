@@ -68,7 +68,7 @@ const Hero = () => {
             </div>
 
             <div  className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
-                <p id="header-title" className="font-bold text-center text-[32px] md:text-[48px] lg:text-[64px] leading-tight text-[#2D3436]">
+                <p id="header-title" className="font-bold font-clashdisplay-bold  text-center text-[32px] md:text-[48px] lg:text-[72px] leading-tight text-[#2D3436]">
                     Envoyez vos Colis au <br />
                     <span className="text-[#0984E3]">Maroc</span> en Toute 
                     <span id="span1" className="inline-flex items-center gap-2 text-[#0984E3] ml-2">

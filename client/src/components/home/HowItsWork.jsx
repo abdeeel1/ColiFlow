@@ -17,10 +17,10 @@ const HowItsWork = () => {
     
     
     return ( 
-        <section className="py-20 2xl:py-50">
+        <section className="py-20 2xl:py-20">
 
             <div>
-                <p className="font-bold text-2xl text-center">Comment ça marche ?</p>
+                <p className="font-bold text-2xl text-center font-clashdisplay">Comment ça marche ?</p>
 
                 <p className="text-center py-5 font-semibold leading-relaxed text-lg text-[#1E293B]">
                     Que vous souhaitiez envoyer un colis en toute

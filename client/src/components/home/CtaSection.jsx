@@ -5,7 +5,7 @@ const CtaSection = () => {
     return ( 
         <section>
             
-            <p className="text-center font-bold text-2xl xl:text-3xl capitalize">Une interface intuitive pour tous</p>
+            <p className="text-center font-bold text-2xl xl:text-3xl font-clashdisplay capitalize">Une interface intuitive pour tous</p>
 
             <div className="py-15">
                 <div className="bg-[#d2e7ff] rounded-2xl py-5 flex flex-col justify-center items-center">
