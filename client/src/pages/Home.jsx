@@ -3,6 +3,7 @@ import BestChoices from "../components/home/BestChoices";
 import Hero from "../components/home/Hero";
 import Services from "@/components/home/Services";
 import Faq from "@/components/home/Faq";
+import CtaSection from "@/components/home/CtaSection";
 
 const Home = () => {
     return ( 
@@ -17,6 +18,8 @@ const Home = () => {
             <Services />
 
             <Faq />
+
+            <CtaSection />
         
         </main>
     );
