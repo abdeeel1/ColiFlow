@@ -1,32 +1,36 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MobileMenu from "../ui/MobileMenu";
 import ToggleButton from "../ui/ToggleButton";
 import { ChevronDown, Globe } from 'lucide-react';
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 
 const Navbar = () => {
     
-
-    useGSAP(() => {
-
-        gsap.from('#navbar', {
-            y : -100,
-            duration : 1,
-            opacity : 0
-        })
-
-    }, [])
-
-
     const [isTraveler, setIsTraveler] = useState(false)
 
+    const navRef = useRef(null);
+
+    useEffect(() => {
+        
+        gsap.fromTo(navRef.current, 
+            { y: -100, opacity: 0 },
+            { 
+                y: 0, 
+                opacity: 1, 
+                duration: 1, 
+                ease: "circ",
+                clearProps: "all" 
+            }
+        );
+    }, []);
+
+    
     
     return ( 
         <header>
         
-        <nav id="navbar" className="lg:px-10 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]">
+        <nav id="navbar" className="lg:px-10 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]" ref={navRef}>
 
             <div className="bg-[#FFFFFF] shadow-sm max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
                 <div className="h-10 flex items-center">
@@ -79,7 +83,7 @@ const Navbar = () => {
                         <div className="flex gap-4  items-center pe-4">
                             <Globe color="gray" className='w-3.5 lg:w-5 cursor-pointer' />
 
-                            <div className="mobile-only">
+                            <div id="menu" className="mobile-only bg-white">
 
                                 <MobileMenu isTraveler={isTraveler}  />
                             </div>

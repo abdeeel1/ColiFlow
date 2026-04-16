@@ -1,6 +1,7 @@
 import HowItsWork from "@/components/home/HowItsWork";
 import BestChoices from "../components/home/BestChoices";
 import Hero from "../components/home/Hero";
+import Services from "@/components/home/Services";
 
 const Home = () => {
     return ( 
@@ -11,6 +12,8 @@ const Home = () => {
             <BestChoices />
 
             <HowItsWork />
+
+            <Services />
         
         </main>
     );

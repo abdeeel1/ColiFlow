@@ -17,7 +17,7 @@ const HowItsWork = () => {
     
     
     return ( 
-        <section className="py-20">
+        <section className="py-20 2xl:py-50">
 
             <div>
                 <p className="font-bold text-2xl text-center">Comment ça marche ?</p>
