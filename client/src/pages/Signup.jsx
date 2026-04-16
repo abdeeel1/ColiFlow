@@ -9,7 +9,7 @@ const Signup = () => {
 
         {/* Mobile Version */}
         
-        <div className="lg:hidden flex flex-col pt-6 px-10 justify-center   h-screen">
+        <div className="xl:hidden flex flex-col pt-6 px-10 justify-center   h-screen">
             
             <div className="">
                 <h2 className="font-bold text-black text-[21px] justify-start">Créer un compte</h2>
@@ -35,7 +35,7 @@ const Signup = () => {
                 <div className="flex flex-col gap-2 justify-start items-start">
                     <div className="flex w-full justify-between items-center">
                         <label htmlFor="email" className="text-[14px] font-semibold">Mot de passe</label>
-                        <p className="text-[12px] text-[#0C2A92] font-semibold">Mot de passe oublié ?</p>
+                        
                     </div>
                     <input type="password" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="********" />
                 </div>
@@ -64,7 +64,95 @@ const Signup = () => {
             </form>
 
         
-        </div>        
+        </div>    
+
+
+        {/* Desktop Version */}
+        
+              <div className="hidden  xl:flex flex-row   h-screen">
+                
+                
+                
+                <div className="w-full flex flex-col justify-center px-60">
+                    <div className="flex flex-col gap-4">
+                        <h2 className="font-bold text-black text-[25px] justify-start">
+                        Créer un compte
+                        </h2>
+                    </div>
+        
+                  <form action="#">
+
+                        <div className="flex flex-col gap-2 justify-start items-start py-3">
+                            <label htmlFor="Telephone" className="text-[14px] font-semibold">Telephone</label>
+                            <input type="tel" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="+212600000000" />
+                        </div>
+                        
+                        <div className="flex flex-col gap-2 justify-start items-start">
+                            <label htmlFor="nom" className="text-[14px] font-semibold">Nom</label>
+                            <input type="text" className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]" placeholder="Najib Abdessamad" />
+                        </div>
+
+                        <div className="flex  flex-col gap-2 justify-start items-start py-10">
+                            <label htmlFor="email" className="text-[15px] font-semibold">
+                                Adressse e-mail
+                            </label>
+                            <input
+                                type="email"
+                                className="border w-full rounded-[12px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]"
+                                placeholder="abdessamad@gmail.com"
+                            />
+                        </div>
+        
+                    <div className="flex flex-col gap-2 justify-start items-start">
+                            <div className="flex items-center w-full justify-between">
+                                <label htmlFor="email" className="text-[15px] font-semibold">
+                                Mot de passe
+                                </label>
+                            </div>
+                            <input
+                                type="password"
+                                className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[15px] focus:outline focus:outline-[#0984E3]"
+                                placeholder="********"
+                            />
+                    </div>
+        
+                    <div className="flex gap-2 justify-start items-center py-10">
+                        <CheckedInput />
+                        <p className="text-[15px] font-bold">J'accepte les conditions et la politique de confidentialité</p>
+                    </div>
+        
+                    <div>
+                        <button
+                            type="submit"
+                            className="btn bg-[#0984E3] btn-ghost text-white font-bold rounded-2xl w-full"
+                        >
+                            S'inscrire
+                        </button>
+                    </div>
+        
+                    <div className="flex justify-center items-center py-5">
+                        <p className="text-[14px] font-semibold">Or</p>
+                    </div>
+        
+                        <div className="flex flex-col gap-5 justify-center items-center">
+                            <GoogleButton text={"Sign up with Google"} />
+        
+                            <p className="text-center text-[15px]">
+                                Déjà un compte ?{" "}
+                                <span className="text-[#0C2A92] font-bold">
+                                <Link to={"/login"}>Connectez-vous</Link>
+                                </span>
+                            </p>
+                        </div>
+                    </form>
+        
+                </div>
+        
+                <div>
+                    <img src="/Login-Picture.jpg" alt="" className="w-400 h-full rounded-l-3xl" />
+                </div>
+        
+              </div>    
         
         
         </main>
