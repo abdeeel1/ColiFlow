@@ -43,8 +43,8 @@ const Services = () => {
                                     <img className="xl:shadow-2xl xl:bg-[#F1F5F9] xl:shadow-gray-400 h-80" src={service.picture} alt="" />
                                 </div>
                                 <div className="xl:pt-5 xl:flex xl:flex-col xl:space-y-4">
-                                    <p className="font-extrabold text-[18px] text-[#1E293B]">{service.title}</p>
-                                    <p className="text-[11px] text-[#636E72] w-120">{service.description}</p>
+                                    <p className="font-extrabold text-[18px] xl:text-[24px] text-[#1E293B]">{service.title}</p>
+                                    <p className="text-[11px] xl:text-[14px] text-[#636E72] w-120">{service.description}</p>
                                     <button className="btn btn-ghost hover:bg-[#065ea1] hover:border-[#065ea1] bg-[#0984E3] text-white justify-start w-35 text-[13px] text-center rounded-2xl"><a href="#" className="text-center decoration-0">{service.textButton}</a></button>
                                 </div>
                             </div>
