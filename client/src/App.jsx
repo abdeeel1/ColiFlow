@@ -4,6 +4,7 @@ import Layout from './layouts/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import NotFound from './pages/NotFound'
 
 function App() {
   
@@ -31,7 +32,9 @@ function App() {
 
             </Route>
 
+            {/* Not Found Page */}
 
+            <Route path='*' element={<NotFound />} />
 
         </Routes>
         

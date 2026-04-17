@@ -109,7 +109,7 @@ const Login = () => {
                         <label htmlFor="email" className="text-[15px] font-semibold">
                         Mot de passe
                         </label>
-                        <p className="text-[15px] text-[#0C2A92] font-semibold">
+                        <p className="text-[15px] text-[#0C2A92] font-semibold cursor-pointer">
                         Mot de passe oublié ?
                         </p>
                     </div>
@@ -153,7 +153,7 @@ const Login = () => {
         </div>
 
         <div>
-            <img src="/Login-Picture.jpg" alt="" className="w-400 h-213 rounded-l-3xl" />
+            <img src="/Login-Picture.jpg" alt="" className="w-400 h-full rounded-l-3xl" />
         </div>
 
       </div>
