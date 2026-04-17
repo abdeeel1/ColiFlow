@@ -16,29 +16,29 @@ const CtaSection = () => {
                     </div>
 
                     <div className="flex flex-col gap-4 justify-center items-center">
-                        <p className="font-semibold text-center py-5 px-5 text-[19px] lg:text-[22px]">Suivez vos colis en temps réel Dashboard ColiFlow</p>
+                        <p className="font-semibold text-center py-5 px-5 text-[1.188rem] lg:text-[1.375rem]">Suivez vos colis en temps réel Dashboard ColiFlow</p>
 
-                        <p className="text-[#656565] text-[13px] lg:text-[14px] px-5 text-center lg:mx-30">Que vous soyez expéditeur ou voyageur, accédez à tous vos trajets, messages et paiements sur une plateforme unique et fluide</p>
+                        <p className="text-[#656565] text-[0.813rem] lg:text-[0.875rem] px-5 text-center lg:mx-30">Que vous soyez expéditeur ou voyageur, accédez à tous vos trajets, messages et paiements sur une plateforme unique et fluide</p>
 
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:py-5 ">
                             <div className="flex gap-2 items-center">
                                 <Folder fill="#656565" width={10} />
-                                <p className="text-[12px] font-semibold text-[#656565]">Statut des livraisons mis à jour</p>
+                                <p className="text-[0.75rem] font-semibold text-[#656565]">Statut des livraisons mis à jour</p>
                             </div>
                             
                             <div className="flex gap-2 items-center">
                                 <Send fill="#656565" width={10} />
-                                <p className="text-[12px] font-semibold text-[#656565]">Discutez directement avec le voyageur</p>
+                                <p className="text-[0.75rem] font-semibold text-[#656565]">Discutez directement avec le voyageur</p>
                             </div>
                             
                             <div className="flex gap-2 items-center">
                                 <DollarSign width={10} />
-                                <p className="text-[12px] font-semibold text-[#656565]">Transactions protégées</p>
+                                <p className="text-[0.75rem] font-semibold text-[#656565]">Transactions protégées</p>
                             </div>
                             
                             <div className="flex gap-2 items-center">
                                 <Laptop fill="#656565" width={10} />
-                                <p className="text-[12px] font-semibold text-[#656565]">Une expérience fluide sur tous les supports</p>
+                                <p className="text-[0.75rem] font-semibold text-[#656565]">Une expérience fluide sur tous les supports</p>
                             </div>
                         </div>
                     </div>

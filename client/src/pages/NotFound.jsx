@@ -34,8 +34,8 @@ const NotFound = () => {
             </div>
 
             <div className="flex flex-col gap-2 items-center">
-                <p className="font-bold text-[20px]">Une erreur est survenue</p>
-                <p className="text-[12px] text-[#000000]">Oups ! Nous ne parvenons pas à trouver cette page</p>
+                <p className="font-bold text-[1.25rem]">Une erreur est survenue</p>
+                <p className="text-[0.75rem] text-[#000000]">Oups ! Nous ne parvenons pas à trouver cette page</p>
             </div>
 
             <div className="py-5">

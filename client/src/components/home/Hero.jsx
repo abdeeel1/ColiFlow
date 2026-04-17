@@ -61,14 +61,14 @@ const Hero = () => {
                     <Zap color="#FFFFFF" className="w-3.5" />
                     </div>
                     <div className="text-white font-semibold text-center">
-                        <p className="text-[8px] lg:text-[10px]">DISPONIBLE PARTOUT AU MAROC</p>
+                        <p className="text-[0.5rem] lg:text-[0.625rem]">DISPONIBLE PARTOUT AU MAROC</p>
                     </div>
                 </div>
 
             </div>
 
             <div  className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
-                <p id="header-title" className="font-bold font-clashdisplay-bold  text-center text-[32px] md:text-[48px] lg:text-[72px] leading-tight text-[#2D3436]">
+                <p id="header-title" className="font-bold font-clashdisplay-bold  text-center text-[2rem] md:text-[3rem] lg:text-[4.5rem] leading-tight text-[#2D3436]">
                     Envoyez vos Colis au <br />
                     <span className="text-[#0984E3]">Maroc</span> en Toute 
                     <span id="span1" className="inline-flex items-center gap-2 text-[#0984E3] ml-2">
@@ -78,7 +78,7 @@ const Hero = () => {
                 </p>
 
                 <div id="desciption" className="mb-4 lg:mb-8">
-                    <span className="text-center text-[12px] lg:text-[18px] text-[#141414]">La première plateforme P2P de livraison au Maroc.</span>
+                    <span className="text-center text-[0.75rem] lg:text-[1.125rem] text-[#141414]">La première plateforme P2P de livraison au Maroc.</span>
                 </div>
 
                 <div id="cta-buttons" className="flex gap-4">

@@ -9,45 +9,45 @@ const Login = () => {
 
       <div className="lg:hidden flex flex-col py-20 px-10 justify-center h-screen">
         <div className="">
-          <h2 className="font-bold text-black text-[21px] justify-start">
+          <h2 className="font-bold text-black text-[1.313rem] justify-start">
             Ravi de vous revoir !
           </h2>
-          <p className="text-[#000000] text-[13px]">
+          <p className="text-[#000000] text-[0.813rem]">
             Enter your credentials to access your account
           </p>
         </div>
 
         <form action="#">
           <div className="flex  flex-col gap-2 justify-start items-start py-10">
-            <label htmlFor="email" className="text-[14px] font-semibold">
+            <label htmlFor="email" className="text-[0.875rem] font-semibold">
               Adressse e-mail
             </label>
             <input
               type="email"
-              className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]"
+              className="border w-full rounded-[0.625rem]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[0.875rem] focus:outline focus:outline-[#0984E3]"
               placeholder="abdessamad@gmail.com"
             />
           </div>
 
           <div className="flex flex-col gap-2 justify-start items-start">
             <div className="flex items-center w-full justify-between">
-              <label htmlFor="email" className="text-[14px] font-semibold">
+              <label htmlFor="email" className="text-[0.875rem] font-semibold">
                 Mot de passe
               </label>
-              <p className="text-[12px] text-[#0C2A92] font-semibold">
+              <p className="text-[0.75rem] text-[#0C2A92] font-semibold">
                 Mot de passe oublié ?
               </p>
             </div>
             <input
               type="password"
-              className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]"
+              className="border w-full rounded-[0.625rem]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[0.875rem] focus:outline focus:outline-[#0984E3]"
               placeholder="********"
             />
           </div>
 
           <div className="flex gap-2 justify-start items-center py-10">
             <CheckedInput />
-            <p className="text-[12px] font-bold">Se souvenir de moi</p>
+            <p className="text-[0.75rem] font-bold">Se souvenir de moi</p>
           </div>
 
           <div>
@@ -60,13 +60,13 @@ const Login = () => {
           </div>
 
           <div className="flex justify-center items-center py-5">
-            <p className="text-[12px] font-semibold">Or</p>
+            <p className="text-[0.75rem] font-semibold">Or</p>
           </div>
 
           <div className="flex flex-col gap-5 justify-center items-center">
             <GoogleButton text={"Sign in with Google"} />
 
-            <p className="text-center text-[12px]">
+            <p className="text-center text-[0.75rem]">
               Vous n'avez pas de compte ?{" "}
               <span className="text-[#0C2A92] font-bold">
                 <Link to={"/signup"}>Créer un compte</Link>
@@ -84,45 +84,45 @@ const Login = () => {
         
         <div className="w-full flex flex-col justify-center px-60">
             <div className="flex flex-col gap-4">
-                <h2 className="font-bold text-black text-[25px] justify-start">
+                <h2 className="font-bold text-black text-[1.563rem] justify-start">
                 Ravi de vous revoir !
                 </h2>
-                <p className="text-[#000000] text-[18px]">
+                <p className="text-[#000000] text-[1.125rem]">
                 Enter your credentials to access your account
                 </p>
             </div>
 
           <form action="#">
                 <div className="flex  flex-col gap-2 justify-start items-start py-10">
-                    <label htmlFor="email" className="text-[15px] font-semibold">
+                    <label htmlFor="email" className="text-[0.938rem] font-semibold">
                         Adressse e-mail
                     </label>
                     <input
                         type="email"
-                        className="border w-full rounded-[12px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[14px] focus:outline focus:outline-[#0984E3]"
+                        className="border w-full rounded-[0.75rem]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[0.875rem] focus:outline focus:outline-[#0984E3]"
                         placeholder="abdessamad@gmail.com"
                     />
                 </div>
 
             <div className="flex flex-col gap-2 justify-start items-start">
                     <div className="flex items-center w-full justify-between">
-                        <label htmlFor="email" className="text-[15px] font-semibold">
+                        <label htmlFor="email" className="text-[0.938rem] font-semibold">
                         Mot de passe
                         </label>
-                        <p className="text-[15px] text-[#0C2A92] font-semibold cursor-pointer">
+                        <p className="text-[0.938rem] text-[#0C2A92] font-semibold cursor-pointer">
                         Mot de passe oublié ?
                         </p>
                     </div>
                     <input
                         type="password"
-                        className="border w-full rounded-[10px]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[15px] focus:outline focus:outline-[#0984E3]"
+                        className="border w-full rounded-[0.625rem]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[0.938rem] focus:outline focus:outline-[#0984E3]"
                         placeholder="********"
                     />
             </div>
 
             <div className="flex gap-2 justify-start items-center py-10">
                 <CheckedInput />
-                <p className="text-[15px] font-bold">Se souvenir de moi</p>
+                <p className="text-[0.938rem] font-bold">Se souvenir de moi</p>
             </div>
 
             <div>
@@ -135,13 +135,13 @@ const Login = () => {
             </div>
 
             <div className="flex justify-center items-center py-5">
-                <p className="text-[14px] font-semibold">Or</p>
+                <p className="text-[0.875rem] font-semibold">Or</p>
             </div>
 
                 <div className="flex flex-col gap-5 justify-center items-center">
                     <GoogleButton text={"Sign in with Google"} />
 
-                    <p className="text-center text-[15px]">
+                    <p className="text-center text-[0.938rem]">
                         Vous n'avez pas de compte ?{" "}
                         <span className="text-[#0C2A92] font-bold">
                         <Link to={"/signup"}>Créer un compte</Link>
