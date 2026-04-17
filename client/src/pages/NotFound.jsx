@@ -1,10 +1,35 @@
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
+    
+    useGSAP(()=>{
+
+        gsap.to('#notfound', {
+            y: 4,
+            x: 30,
+            z: 4,
+            repeat : -1,
+            duration: 1.4,
+            yoyo : true,
+            ease : "none"
+        })
+    })
+    
+    
+    
+    
+    
+    
+    
     return ( 
         <main className="flex flex-col justify-center h-screen w-full items-center bg-[#F1F5F9]">
         
-            <div>
+            
+            <div className="bg-[#0984E3] lg:py-40 lg:px-40 lg:-left-30 lg:top-20 py-20 px-20 rounded-[100%] absolute top-7 -left-20"></div>
+
+            <div id="notfound">
                 <img src="/NotFound-Picture.png" alt="" className="w-full 2xl:h-180 lg:h-100" />
             </div>
 
