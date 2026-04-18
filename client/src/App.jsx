@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import NotFound from './pages/NotFound'
+import TravelsList from './pages/TravelsList'
 
 function App() {
   
@@ -29,6 +30,8 @@ function App() {
             <Route path='/' element={<Layout />}>
 
                 <Route index element={<Home />} />
+                
+                <Route path='/travels' element={<TravelsList />} />
 
             </Route>
 

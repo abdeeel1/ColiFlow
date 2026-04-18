@@ -2,6 +2,7 @@ import { Package, Zap } from "lucide-react";
 import Features from "../../ui/components/Features";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
     
@@ -52,7 +53,7 @@ const Hero = () => {
     }, [])
 
     return ( 
-        <section className="mt-20 lg:mt-30 min-h-dvh">
+        <section className="mt-5 min-h-dvh">
         
             <div id="tag-website" className="flex gap-2 bg-[#0984E3] rounded-2xl md:mx-55 lg:mx-80 xl:mx-100 2xl:mx-100 justify-center text-sm items-center mx-14">
 
@@ -82,7 +83,7 @@ const Hero = () => {
                 </div>
 
                 <div id="cta-buttons" className="flex gap-4">
-                    <button className="btn btn-ghost hover:border-[#0984E3]  bg-[#0984E3] rounded-2xl text-white font-bold btn-sm lg:btn-md">Trouver un trajet</button>
+                    <Link to={"/travels"}><button className="btn btn-ghost hover:border-[#0984E3]  bg-[#0984E3] rounded-2xl text-white font-bold btn-sm lg:btn-md">Trouver un trajet</button></Link>
                     <button className="btn btn-ghost hover:border-[#c7c9caf6]  bg-[#c7c9caf6] rounded-2xl text-gray-500 font-bold btn-sm lg:btn-md">Publier un trajet</button>
                 </div>
             </div>

@@ -29,9 +29,9 @@ const Navbar = () => {
     
     
     return ( 
-        <header>
+        <header className="sticky top-0 z-50 bg-[#F1F5F9]">
         
-        <nav id="navbar" className="lg:px-10 fixed top-0 left-0 w-full z-50 bg-[#F1F5F9]" ref={navRef}>
+        <nav id="navbar" className="lg:px-10 w-full" ref={navRef}>
 
             <div className="bg-[#FFFFFF] shadow-sm max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
                 <div className="h-10 flex items-center">
@@ -43,12 +43,13 @@ const Navbar = () => {
                 <div className="desktop-only">
                     {
                         !isTraveler ?
-                        <ul className="lg:flex lg:items-center lg:gap-4 text-sm">
+                        <ul className="lg:flex font-semibold lg:items-center lg:gap-6 text-sm">
+                            <Link to={"/"}>Acceuil</Link>
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Envoyer un colis <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
                                 <li className="hover:bg-gray-200 rounded-2xl"><a>Nouveau colis</a></li>
-                                <li className="hover:bg-gray-200 rounded-2xl"><a>Liste des colis</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels"}>Liste des trajets</Link></li>
                                 <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
                             </ul>
                             </div>
