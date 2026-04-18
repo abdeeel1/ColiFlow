@@ -30,7 +30,7 @@ const NotFound = () => {
             <div className="bg-[#0984E3] lg:py-40 lg:px-40 lg:-left-30 lg:top-20 py-20 px-20 rounded-[100%] absolute top-7 -left-20"></div>
 
             <div id="notfound">
-                <img src="/NotFound-Picture.png" alt="" className="w-full 2xl:h-180 lg:h-100" />
+                <img src="/NotFound-Picture.png" alt="" className="w-full 2xl:h-160 lg:h-100" />
             </div>
 
             <div className="flex flex-col gap-2 items-center">
