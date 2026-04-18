@@ -8,7 +8,7 @@ const Footer = () => {
         {/* Mobile Version */}
 
         <div className="xl:hidden">
-            <img src="/Logo.png" alt="" className="w-40 h-40" />
+            <img src="/images/Logo.png" alt="" className="w-40 h-40" />
 
             <hr className="mx-4"  />
 
@@ -65,7 +65,7 @@ const Footer = () => {
         {/* Desktop Version */}
 
         <div className="hidden xl:block">
-            <img src="/Logo.png" alt="" className="w-40 h-40  lg:mx-15 xl:mx-50 2xl:mx-70" />
+            <img src="/images/Logo.png" alt="" className="w-40 h-40  lg:mx-15 xl:mx-50 2xl:mx-70" />
 
             <hr className="mx-30"  />
 

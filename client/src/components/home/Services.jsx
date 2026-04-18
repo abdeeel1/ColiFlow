@@ -1,9 +1,9 @@
 const Services = () => {
     
     const ServicesData = [
-        {id:1, picture:"/Service-1.png", title:"Envoyer vos colis à prix réduit", description: "Profitez des trajets de notre communauté pour expédier vos objets partout au Maroc. Que ce soit un document urgent ou un bagage encombrant, trouvez un voyageur de confiance en quelques clics et économisez jusqu'à 50% sur vos frais de livraison habituels", textButton: "Trouver un trajet"},
-        {id:2, picture:"/Service-2.png", title:"Rentabilisez vos déplacements", description: "Vous voyagez souvent entre les villes du Royaume ? Ne roulez plus à vide ! Proposez l'espace libre dans votre coffre pour transporter des colis et amortissez vos frais de carburant et de péage. C'est simple, écologique et convivial", textButton: "En savoir plus"},
-        {id:3, picture:"/Service-3.png", title:"Une communauté 100% vérifiée", description: "La sécurité est notre priorité. Chaque membre de ColiFlow passe par un processus de vérification rigoureux de son identité (CIN). Consultez les avis et les notes des autres utilisateurs pour choisir votre partenaire de transport en toute sérénité. Votre colis est entre de bonnes mains", textButton: "Publier un trajet"},
+        {id:1, picture:"/images/Service-1.png", title:"Envoyer vos colis à prix réduit", description: "Profitez des trajets de notre communauté pour expédier vos objets partout au Maroc. Que ce soit un document urgent ou un bagage encombrant, trouvez un voyageur de confiance en quelques clics et économisez jusqu'à 50% sur vos frais de livraison habituels", textButton: "Trouver un trajet"},
+        {id:2, picture:"/images/Service-2.png", title:"Rentabilisez vos déplacements", description: "Vous voyagez souvent entre les villes du Royaume ? Ne roulez plus à vide ! Proposez l'espace libre dans votre coffre pour transporter des colis et amortissez vos frais de carburant et de péage. C'est simple, écologique et convivial", textButton: "En savoir plus"},
+        {id:3, picture:"/images/Service-3.png", title:"Une communauté 100% vérifiée", description: "La sécurité est notre priorité. Chaque membre de ColiFlow passe par un processus de vérification rigoureux de son identité (CIN). Consultez les avis et les notes des autres utilisateurs pour choisir votre partenaire de transport en toute sérénité. Votre colis est entre de bonnes mains", textButton: "Publier un trajet"},
     ]
 
     

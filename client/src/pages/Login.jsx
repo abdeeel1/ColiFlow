@@ -153,7 +153,7 @@ const Login = () => {
         </div>
 
         <div>
-            <img src="/Login-Picture.jpg" alt="" className="w-400 h-full rounded-l-3xl" />
+            <img src="/images/Login-Picture.jpg" alt="" className="w-400 h-full rounded-l-3xl" />
         </div>
 
       </div>

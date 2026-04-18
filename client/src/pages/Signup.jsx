@@ -69,7 +69,7 @@ const Signup = () => {
 
         {/* Desktop Version */}
         
-              <div className="hidden  xl:flex flex-row   h-screen">
+              <div className="hidden  xl:flex flex-row xl:flex-row-reverse   h-screen">
                 
                 
                 
@@ -149,7 +149,7 @@ const Signup = () => {
                 </div>
         
                 <div>
-                    <img src="/Login-Picture.jpg" alt="" className="w-400 h-full rounded-l-3xl" />
+                    <img src="/images/Login-Picture.jpg" alt="" className="w-400 h-full rounded-r-3xl" />
                 </div>
         
               </div>    

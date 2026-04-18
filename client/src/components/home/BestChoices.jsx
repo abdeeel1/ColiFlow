@@ -7,10 +7,10 @@ import ActionLink from "@/ui/ActionLink";
 const BestChoices = () => {
     
     const dataCard = [
-        {id : 1, ville_depart : "fez", ville_darrive : "rabat", prix : 40, type : "petit colis", date: "demain, 09:00", voyageur: "Abdessamad Najib", verified : true, image : '/Rabat.png'},
-        {id : 2, ville_depart : "rabat", ville_darrive : "casablanca", prix : 20, type : "grand colis", date: "lundi, 11:00", voyageur: "Salaheddine Alaoui", verified : true, image : '/Casablanca.png'},
-        {id : 3, ville_depart : "oujda", ville_darrive : "marrakech", prix : 60, type : "volumineux colis", date: "jeudi, 16:00", voyageur: "Meriem Fadil", verified : false, image : '/Marrakech.png'},
-        {id : 4, ville_depart : "nador", ville_darrive : "tanger", prix : 45, type : "moyen colis", date: "samedi, 21:00", voyageur: "Ilyas Dakir", verified : true, image : '/Tanger.png'}
+        {id : 1, ville_depart : "fez", ville_darrive : "rabat", prix : 40, type : "petit colis", date: "demain, 09:00", voyageur: "Abdessamad Najib", verified : true, image : '/images/Rabat.png'},
+        {id : 2, ville_depart : "rabat", ville_darrive : "casablanca", prix : 20, type : "grand colis", date: "lundi, 11:00", voyageur: "Salaheddine Alaoui", verified : true, image : '/images/Casablanca.png'},
+        {id : 3, ville_depart : "oujda", ville_darrive : "marrakech", prix : 60, type : "volumineux colis", date: "jeudi, 16:00", voyageur: "Meriem Fadil", verified : false, image : '/images/Marrakech.png'},
+        {id : 4, ville_depart : "nador", ville_darrive : "tanger", prix : 45, type : "moyen colis", date: "samedi, 21:00", voyageur: "Ilyas Dakir", verified : true, image : '/images/Tanger.png'}
     ]
     
     
