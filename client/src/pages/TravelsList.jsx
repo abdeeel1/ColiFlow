@@ -29,6 +29,7 @@ import DropdownFilter from "@/ui/DropdownFilter";
 import SelectFilter from "@/ui/SelectFilter";
 import DrawerRight from "@/ui/DrawerRight";
 import MapDrawer from "@/ui/MapDrawer";
+import ModalSend from "@/ui/ModalSend";
 
 let DefaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -124,7 +125,7 @@ const TravelsList = () => {
         price: 140,
         rating: 4,
         review: 90,
-      },
+      }
     ];
 
     const [filterdCards, setFilterdCards] = useState(travelsAnnouncement);
@@ -346,13 +347,7 @@ const TravelsList = () => {
                     <p>{travel.direct ? "Trajet direct" : "Trajet indirect"}</p>
                   </div>
 
-                  <Link
-                    to={`/colis/send/${travel.id}`}
-                    className="text-[#0984E3] font-bold flex items-center gap-1 w-40"
-                    onClick={(e)=>e.stopPropagation()}
-                  >
-                    Envoyer un colis <ArrowRight size={18} />
-                  </Link>
+                  <ModalSend text={""} travel={travel} />
 
                   <div className="mt-10 justify-between flex items-center">
                     <div className="flex wfy  gap-1 items-center">
@@ -427,7 +422,7 @@ const TravelsList = () => {
       </div>
 
       {/* Mobile Version -lg */}
-      <div className="lg:hidden flex-col gap-5">
+      <div className="lg:hidden flex flex-col gap-5">
         <div className="flex flex-col lg:hidden bg-white rounded-2xl border border-gray-200 w-full max-w-md overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
             <div className="flex flex-col w-full">

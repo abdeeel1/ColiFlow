@@ -60,7 +60,7 @@ export default function MobileMenu({ isTraveler }) {
 
         
         <nav className="flex flex-col gap-1 flex-1">
-          <Link to="/" className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100">Acceuil</Link>
+          <Link to="/"  className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100">Acceuil</Link>
           
           <button
             onClick={() => setSubmenuOpen(!submenuOpen)}
@@ -87,7 +87,7 @@ export default function MobileMenu({ isTraveler }) {
           <a href="#" className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100">
             {secondaryLabel}
           </a>
-          <a href="#" className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100">
+          <a href="#faq" className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100">
             FAQ
           </a>
         </nav>

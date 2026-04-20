@@ -23,7 +23,7 @@ const Faq = () => {
     
     
     return ( 
-        <section className="py-20 xl:py-40">
+        <section className="py-20 xl:py-40" id="faq">
 
             <p className="text-center font-clashdisplay font-bold text-2xl xl:text-3xl capitalize">Questions fréquentes</p>
  

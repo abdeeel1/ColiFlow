@@ -1,3 +1,4 @@
+import ModalSend from "@/ui/ModalSend";
 import TagChip from "@/ui/TagChip";
 import { ArrowLeft, ArrowRight, Check, Divide, MapPin, Star } from "lucide-react";
 import { Separator } from "radix-ui";
@@ -239,7 +240,9 @@ const TravelDetail = () => {
                         </div>
 
                         <div className="flex flex-col xl:flex-row items-center gap-6 mt-10 xl:mt-0">
-                          <button className="btn btn-ghost bg-[#0984E3] hover:border-[#0984E3] text-white rounded-2xl">Réserver ce trajet</button>
+                          <button className="btn btn-ghost bg-[#0984E3] hover:border-[#0984E3] text-white rounded-2xl">
+                            <ModalSend travel={travel} />
+                          </button>
                           <button href="#" className="cursor-pointer font-bold">Contacter {travel.traveler} →</button>
                         </div>
                       </div>

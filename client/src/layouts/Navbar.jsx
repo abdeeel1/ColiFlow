@@ -54,7 +54,7 @@ const Navbar = () => {
                             </ul>
                             </div>
                             <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Colis</li>
-                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">FAQ</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl"><a href="#faq">FAQ</a></li>
                         </ul>
                         :
                         <ul className="lg:flex font-semibold lg:gap-4 lg:items-center text-sm">
@@ -68,7 +68,7 @@ const Navbar = () => {
                             </ul>
                             </div>
                             <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Travel</li>
-                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">FAQ</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl"><a href="#faq">FAQ</a></li>
                         </ul>
                         
                         
