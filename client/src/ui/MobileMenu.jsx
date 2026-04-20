@@ -13,7 +13,7 @@ export default function MobileMenu({ isTraveler }) {
 
   const senderLinks = [
     { label: "Nouveau colis", href: "#" },
-    { label: "Liste des colis", href: "#" },
+    { label: "Liste des trajets", href: "/travels" },
     { label: "Dashboard", href: "#" },
   ];
 
@@ -30,6 +30,7 @@ export default function MobileMenu({ isTraveler }) {
   return (
     <>
     <div className="mobile-only flex flex-col items-center font-plusjakarta">
+      
       <button onClick={() => setIsOpen(true)} aria-label="Open menu">
         <Menu color="gray" size={20} />
       </button>
@@ -59,6 +60,7 @@ export default function MobileMenu({ isTraveler }) {
 
         
         <nav className="flex flex-col gap-1 flex-1">
+          <Link to="/" className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100">Acceuil</Link>
           
           <button
             onClick={() => setSubmenuOpen(!submenuOpen)}
