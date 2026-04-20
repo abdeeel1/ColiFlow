@@ -23,7 +23,7 @@ import {
   Search,
   Star,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "@heroui/react";
 import DropdownFilter from "@/ui/DropdownFilter";
 import SelectFilter from "@/ui/SelectFilter";
@@ -39,168 +39,175 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const TravelsList = () => {
-  const travelsAnnouncement = [
-    {
-      id: 1,
-      verified: true,
-      package: "petite",
-      traveler: "Najib Abdessamad",
-      ville_depart: "fez",
-      ville_darrive: "rabat",
-      date: "demain 9:00",
-      type_veh: "voiture",
-      poids: 10,
-      direct: true,
-      lat: 34.0331,
-      lng: -5.0003,
-      price: 75,
-      rating: 5,
-      review: 120,
-    },
-    {
-      id: 2,
-      verified: true,
-      package: "grand",
-      traveler: "Salaheddine Alaoui",
-      ville_depart: "rabat",
-      ville_darrive: "casablanca",
-      date: "lundi 11:00",
-      type_veh: "camionnette",
-      poids: 25,
-      direct: false,
-      lat: 34.0209,
-      lng: -6.8416,
-      price: 80,
-      rating: 4,
-      review: 100,
-    },
-    {
-      id: 3,
-      verified: false,
-      package: "volumineux",
-      traveler: "Meriem Fadil",
-      ville_depart: "oujda",
-      ville_darrive: "marrakech",
-      date: "mardi 8:00",
-      type_veh: "petit camion",
-      poids: 40,
-      direct: true,
-      lat: 34.6814,
-      lng: -1.9086,
-      price: 110,
-      rating: 3,
-      review: 10,
-    },
-    {
-      id: 4,
-      verified: true,
-      package: "volumineux",
-      traveler: "Aymane Morid",
-      ville_depart: "laayoune",
-      ville_darrive: "tanger",
-      date: "mercredi 8:00",
-      type_veh: "voiture",
-      poids: 40,
-      direct: true,
-      lat: 26.85,
-      lng: -12.9086,
-      price: 150,
-      rating: 4,
-      review: 80,
-    },
-    {
-      id: 5,
-      verified: true,
-      package: "petite",
-      traveler: "Khalid Borid",
-      ville_depart: "laayoune",
-      ville_darrive: "casablanca",
-      date: "mercredi 8:00",
-      type_veh: "voiture",
-      poids: 10,
-      direct: true,
-      lat: 26.85,
-      lng: -12.9086,
-      price: 140,
-      rating: 4,
-      review: 90,
-    },
-  ];
-
-  const [filterdCards, setFilterdCards] = useState(travelsAnnouncement);
-  const [page, setPage] = useState(1);
-  const ITEMS_PER_PAGE = 4;
-  const [visibleCards, setVisibleCards] = useState([]);
-  const loaderRef = useRef(null);
-  const [savedTravel, setSavedTravel] = useState([]);
-
-  const MapBoundsFilter = () => {
-    useMapEvent("moveend", (e) => {
-      const bounds = e.target.getBounds();
-
-      const visible = travelsAnnouncement.filter((travel) =>
-        bounds.contains([travel.lat, travel.lng]),
-      );
-
-      setFilterdCards(visible);
-      setPage(1);
-    });
-
-    return null;
-  };
-
-  useEffect(() => {
-    const nextItems = filterdCards.slice(0, page * ITEMS_PER_PAGE);
-
-    if (nextItems.length === visibleCards.length) return;
-
-    setVisibleCards(nextItems);
-  }, [page, filterdCards]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (
-          entries[0].isIntersecting &&
-          visibleCards.length < filterdCards.length
-        ) {
-          setPage((prev) => prev + 1);
-        }
+    const travelsAnnouncement = [
+      {
+        id: 1,
+        verified: true,
+        package: "petite",
+        traveler: "Najib Abdessamad",
+        ville_depart: "fez",
+        ville_darrive: "rabat",
+        date: "demain 9:00",
+        type_veh: "voiture",
+        poids: 10,
+        direct: true,
+        lat: 34.0331,
+        lng: -5.0003,
+        price: 75,
+        rating: 5,
+        review: 120,
       },
       {
-        root: null,
-        rootMargin: "100px",
-        threshold: 0.1,
+        id: 2,
+        verified: true,
+        package: "grand",
+        traveler: "Salaheddine Alaoui",
+        ville_depart: "rabat",
+        ville_darrive: "casablanca",
+        date: "lundi 11:00",
+        type_veh: "camionnette",
+        poids: 25,
+        direct: false,
+        lat: 34.0209,
+        lng: -6.8416,
+        price: 80,
+        rating: 4,
+        review: 100,
       },
+      {
+        id: 3,
+        verified: false,
+        package: "volumineux",
+        traveler: "Meriem Fadil",
+        ville_depart: "oujda",
+        ville_darrive: "marrakech",
+        date: "mardi 8:00",
+        type_veh: "petit camion",
+        poids: 40,
+        direct: true,
+        lat: 34.6814,
+        lng: -1.9086,
+        price: 110,
+        rating: 3,
+        review: 10,
+      },
+      {
+        id: 4,
+        verified: true,
+        package: "volumineux",
+        traveler: "Aymane Morid",
+        ville_depart: "laayoune",
+        ville_darrive: "tanger",
+        date: "mercredi 8:00",
+        type_veh: "voiture",
+        poids: 40,
+        direct: true,
+        lat: 26.85,
+        lng: -12.9086,
+        price: 150,
+        rating: 4,
+        review: 80,
+      },
+      {
+        id: 5,
+        verified: true,
+        package: "petite",
+        traveler: "Khalid Borid",
+        ville_depart: "laayoune",
+        ville_darrive: "casablanca",
+        date: "mercredi 8:00",
+        type_veh: "voiture",
+        poids: 10,
+        direct: true,
+        lat: 26.85,
+        lng: -12.9086,
+        price: 140,
+        rating: 4,
+        review: 90,
+      },
+    ];
+
+    const [filterdCards, setFilterdCards] = useState(travelsAnnouncement);
+    const [page, setPage] = useState(1);
+    const ITEMS_PER_PAGE = 4;
+    const [visibleCards, setVisibleCards] = useState([]);
+    const loaderRef = useRef(null);
+    const [savedTravel, setSavedTravel] = useState([]);
+    const navigate = useNavigate();
+
+    
+
+    const MapBoundsFilter = () => {
+      useMapEvent("moveend", (e) => {
+        const bounds = e.target.getBounds();
+
+        const visible = travelsAnnouncement.filter((travel) =>
+          bounds.contains([travel.lat, travel.lng]),
+        );
+
+        setFilterdCards(visible);
+        setPage(1);
+      });
+
+      return null;
+    };
+
+    useEffect(() => {
+      const nextItems = filterdCards.slice(0, page * ITEMS_PER_PAGE);
+
+      if (nextItems.length === visibleCards.length) return;
+
+      setVisibleCards(nextItems);
+    }, [page, filterdCards]);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (
+            entries[0].isIntersecting &&
+            visibleCards.length < filterdCards.length
+          ) {
+            setPage((prev) => prev + 1);
+          }
+        },
+        {
+          root: null,
+          rootMargin: "100px",
+          threshold: 0.1,
+        },
+      );
+
+      if (loaderRef.current) observer.observe(loaderRef.current);
+
+      return () => observer.disconnect();
+    }, [visibleCards, filterdCards]);
+
+    useEffect(() => {
+      const container = loaderRef.current?.parentElement;
+
+      if (!container) return;
+
+      if (
+        container.scrollHeight <= container.clientHeight &&
+        visibleCards.length < filterdCards.length
+      ) {
+        setPage((prev) => prev + 1);
+      }
+    }, [visibleCards, filterdCards]);
+
+    const saveToggle = (e, id) => {
+      
+      e.stopPropagation()
+
+      setSavedTravel((prev) =>
+        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+      );
+      
+    };
+
+    const Divider = () => (
+      <div className="hidden lg:block w-px self-stretch bg-gray-200 my-2" />
     );
-
-    if (loaderRef.current) observer.observe(loaderRef.current);
-
-    return () => observer.disconnect();
-  }, [visibleCards, filterdCards]);
-
-  useEffect(() => {
-    const container = loaderRef.current?.parentElement;
-
-    if (!container) return;
-
-    if (
-      container.scrollHeight <= container.clientHeight &&
-      visibleCards.length < filterdCards.length
-    ) {
-      setPage((prev) => prev + 1);
-    }
-  }, [visibleCards, filterdCards]);
-
-  const saveToggle = (id) => {
-    setSavedTravel((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
-    );
-  };
-
-  const Divider = () => (
-    <div className="hidden lg:block w-px self-stretch bg-gray-200 my-2" />
-  );
 
   return (
     <main>
@@ -296,6 +303,7 @@ const TravelsList = () => {
                 <div
                   key={travel.id}
                   className="bg-white rounded-2xl mb-4 p-8 mx-10 cursor-pointer"
+                  onClick={()=>navigate(`/travel/${travel.id}`)}
                 >
                   <div className="flex justify-between items-center">
                     <div>
@@ -314,7 +322,8 @@ const TravelsList = () => {
                     <div>
                       <button
                         className="cursor-pointer"
-                        onClick={() => saveToggle(travel.id)}
+                        onClick={(e) => saveToggle(e, travel.id)}
+
                       >
                         <Heart
                           stroke="#838383"
@@ -339,7 +348,8 @@ const TravelsList = () => {
 
                   <Link
                     to={`/colis/send/${travel.id}`}
-                    className="text-[#0984E3] font-bold flex items-center gap-1"
+                    className="text-[#0984E3] font-bold flex items-center gap-1 w-40"
+                    onClick={(e)=>e.stopPropagation()}
                   >
                     Envoyer un colis <ArrowRight size={18} />
                   </Link>
@@ -474,7 +484,10 @@ const TravelsList = () => {
               </h3>
 
               <div>
-                <MapDrawer travelsAnnouncement={travelsAnnouncement} MapBoundsFilter={MapBoundsFilter}/>
+                <MapDrawer
+                  travelsAnnouncement={travelsAnnouncement}
+                  MapBoundsFilter={MapBoundsFilter}
+                />
               </div>
             </div>
             <hr className="bg-gray-400 my-4" />
@@ -482,30 +495,31 @@ const TravelsList = () => {
             {filterdCards.length > 0 ? (
               <>
                 <div className="flex gap-3 mb-3 overflow-x-auto no-scrollbar">
-                    <div className="shrink-0">
-                      <DropdownFilter />
-                    </div>
-                    <div className="shrink-0">
-                      <SelectFilter />
-                    </div>
-                    <div className="shrink-0">
-                      <button className="px-4 py-[0.52rem] bg-white rounded-2xl font-bold text-sm text-[#757575] cursor-pointer">
-                        Urgence
-                      </button>
-                    </div>
-                    <div className="shrink-0">
-                      <button className="px-4 py-[0.52rem] bg-white rounded-2xl font-bold text-sm text-[#757575] cursor-pointer">
-                        Verification
-                      </button>
-                    </div>
-                    <div className="shrink-0">
-                      <DrawerRight />
-                    </div>
+                  <div className="shrink-0">
+                    <DropdownFilter />
+                  </div>
+                  <div className="shrink-0">
+                    <SelectFilter />
+                  </div>
+                  <div className="shrink-0">
+                    <button className="px-4 py-[0.52rem] bg-white rounded-2xl font-bold text-sm text-[#757575] cursor-pointer">
+                      Urgence
+                    </button>
+                  </div>
+                  <div className="shrink-0">
+                    <button className="px-4 py-[0.52rem] bg-white rounded-2xl font-bold text-sm text-[#757575] cursor-pointer">
+                      Verification
+                    </button>
+                  </div>
+                  <div className="shrink-0">
+                    <DrawerRight />
+                  </div>
                 </div>
                 {visibleCards.map((travel) => (
                   <div
                     key={travel.id}
                     className="bg-white rounded-2xl mb-4 p-8  cursor-pointer w-full"
+                    onClick={()=>navigate(`/travel/${travel.id}`)}
                   >
                     <div className="flex justify-between items-center">
                       <div>
@@ -524,7 +538,7 @@ const TravelsList = () => {
                       <div>
                         <button
                           className="cursor-pointer"
-                          onClick={() => saveToggle(travel.id)}
+                          onClick={(e) => saveToggle(e, travel.id)}
                         >
                           <Heart
                             stroke="#838383"
@@ -555,6 +569,7 @@ const TravelsList = () => {
                     <Link
                       to={`/colis/send/${travel.id}`}
                       className="text-[#0984E3] font-bold flex items-center gap-1"
+                      onClick={(e)=>e.stopPropagation()}
                     >
                       Envoyer un colis <ArrowRight size={18} />
                     </Link>
@@ -563,23 +578,22 @@ const TravelsList = () => {
                       <div className="flex flex-col w-32  gap-1 items-center">
                         <div className="flex">
                           {[...Array(5)].map((star, i) => (
-                          <Star
-                          size={15}
-                            key={i}
-                            className={
-                              i < travel.rating
-                                ? "fill-yellow-400 stroke-yellow-500"
-                                : "text-gray-300"
-                                
-                            }
-                          />
-                        ))}
+                            <Star
+                              size={15}
+                              key={i}
+                              className={
+                                i < travel.rating
+                                  ? "fill-yellow-400 stroke-yellow-500"
+                                  : "text-gray-300"
+                              }
+                            />
+                          ))}
                         </div>
 
                         <div>
                           <span className="text-[0.7rem]">
-                          ({travel.review} Review)
-                        </span>
+                            ({travel.review} Review)
+                          </span>
                         </div>
                       </div>
 

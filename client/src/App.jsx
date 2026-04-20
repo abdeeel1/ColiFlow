@@ -6,6 +6,8 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import NotFound from './pages/NotFound'
 import TravelsList from './pages/TravelsList'
+import TravelDetail from './pages/TravelDetail'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
   
@@ -14,7 +16,7 @@ function App() {
       <div className='font-plusjakarta'>
         <BrowserRouter>
       
-        
+        <ScrollToTop />
         
         
         <Routes>
@@ -32,6 +34,8 @@ function App() {
                 <Route index element={<Home />} />
                 
                 <Route path='/travels' element={<TravelsList />} />
+
+                <Route path='/travel/:id' element={<TravelDetail />} />
 
             </Route>
 
