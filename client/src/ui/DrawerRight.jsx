@@ -17,14 +17,14 @@ export default function DrawerRight() {
             <Drawer.Body className="text-black py-5">
                 <div>
                     <div className="flex flex-col gap-4 pb-10">
-                        <p className="text-[1.2rem] font-semibold">Taille du Colis</p>
+                        <p className="text-[0.8rem] lg:text-[1.2rem] font-semibold">Taille du Colis</p>
                         <div>
                             <CheckboxGroupSelect />
                         </div>
                     </div>
                     
                     <div className="flex flex-col gap-4 pb-10">
-                        <p className="text-[1.2rem] font-semibold">Date et Heure</p>
+                        <p className="text-[0.8rem] lg:text-[1.2rem] font-semibold">Date et Heure</p>
                         <div className="flex flex-col gap-4">
                             <TimeInputStyle />
 
@@ -33,7 +33,7 @@ export default function DrawerRight() {
                     </div>
 
                     <div className="flex flex-col gap-4 pb-10">
-                        <p className="text-[1.2rem] font-semibold">Note du voyageur</p>
+                        <p className="text-[0.8rem] lg:text-[1.2rem] font-semibold">Note du voyageur</p>
   
                         <div className="flex flex-col gap-2">
                             {[5, 4, 3, 2].map((star) => (

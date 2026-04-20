@@ -10,7 +10,7 @@ export default function CheckboxGroupSelect() {
   return (
     
     <div className="flex gap-10 items-center py-5">
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col lg:flex-row gap-4 justify-center">
           <div className="flex items-center gap-2">
               <CheckedInput value={"petite"} />
               <p>Petite</p>
