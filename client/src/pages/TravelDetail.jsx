@@ -240,9 +240,9 @@ const TravelDetail = () => {
                         </div>
 
                         <div className="flex flex-col xl:flex-row items-center gap-6 mt-10 xl:mt-0">
-                          <button className="btn btn-ghost bg-[#0984E3] hover:border-[#0984E3] text-white rounded-2xl">
-                            <ModalSend travel={travel} />
-                          </button>
+                          <div className="btn btn-ghost bg-[#0984E3] hover:border-[#0984E3] text-white rounded-2xl">
+                            <ModalSend text={"Réserver ce trajet"} travel={travel} />
+                          </div>
                           <button href="#" className="cursor-pointer font-bold">Contacter {travel.traveler} →</button>
                         </div>
                       </div>

@@ -303,7 +303,7 @@ const TravelsList = () => {
               {visibleCards.map((travel) => (
                 <div
                   key={travel.id}
-                  className="bg-white rounded-2xl mb-4 p-8 mx-10 cursor-pointer"
+                  className="bg-white rounded-2xl mb-4 p-8 mx-10 cursor-pointer hover:bg-gray-100 hover:transition-all"
                   onClick={()=>navigate(`/travel/${travel.id}`)}
                 >
                   <div className="flex justify-between items-center">
@@ -347,7 +347,9 @@ const TravelsList = () => {
                     <p>{travel.direct ? "Trajet direct" : "Trajet indirect"}</p>
                   </div>
 
-                  <ModalSend text={""} travel={travel} />
+                  <div className="text-[#0984E3]">
+                    <ModalSend className="text-[#0984E3]" text={"Envoyer un colis"} travel={travel} />
+                  </div>
 
                   <div className="mt-10 justify-between flex items-center">
                     <div className="flex wfy  gap-1 items-center">
@@ -561,13 +563,9 @@ const TravelsList = () => {
                       </p>
                     </div>
 
-                    <Link
-                      to={`/colis/send/${travel.id}`}
-                      className="text-[#0984E3] font-bold flex items-center gap-1"
-                      onClick={(e)=>e.stopPropagation()}
-                    >
-                      Envoyer un colis <ArrowRight size={18} />
-                    </Link>
+                    <div className="text-[#0984E3]">
+                      <ModalSend className="text-[#0984E3]" text={"Envoyer un colis"} travel={travel} />
+                    </div>
 
                     <div className="mt-5 justify-between flex flex-col gap-4 items-center">
                       <div className="flex flex-col w-32  gap-1 items-center">
