@@ -1,34 +1,40 @@
 import CheckedInput from "@/ui/CheckedInput";
-import ColisCheckbox from "@/ui/components/ColisCheckbox";
-import { ArrowDown, ChevronDown } from "lucide-react";
 
 const FormStepLast = () => {
     return ( 
-        <div className="bg-white shadow p-6 rounded-2xl">
-        
-        
+        <div className="bg-white shadow-sm border border-slate-100 p-6 md:p-8 rounded-[2rem]">
+            <form action="#">
+                <div className="flex flex-col gap-8">
+                    
+                    {/* Prix */}
+                    <div className="flex flex-col gap-3 w-full md:w-1/2">
+                        <label className="text-sm text-slate-700 font-bold">Combien proposez-vous au voyageur ?</label>
+                        <div className="relative">
+                            <input 
+                                placeholder="Ex: 120" 
+                                type="number" 
+                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-lg font-semibold rounded-xl px-4 py-3 pr-16 focus:bg-white focus:outline-none focus:border-[#0984E3] focus:ring-4 focus:ring-[#0984E3]/10 transition-all" 
+                            />
+                            <span className="absolute right-4 top-[50%] -translate-y-[50%] font-bold text-slate-400">
+                                MAD
+                            </span>
+                        </div>
+                    </div>
 
-        <form action="#">
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-3 w-full">
-                    <label htmlFor="" className="text-sm text-gray-600 font-semibold">Combien proposez-vous au voyageur ?</label>
-                    <input placeholder="Ex:120 MAD" type="number" className="border w-full text-[0.9rem] rounded-[0.625rem]  ps-2 py-1 placeholder:text-gray-300 placeholder:text-[0.8rem] focus:outline focus:outline-[#0984E3]" />
+                    {/* Avertissement / Checkbox */}
+                    <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex gap-3 items-start md:items-center">
+                        <div className="mt-1 md:mt-0 shrink-0">
+                            <CheckedInput />
+                        </div>
+                        <p className="text-sm font-medium text-orange-800 leading-tight">
+                            Je confirme que le contenu de mon colis est conforme aux lois en vigueur et ne contient aucune substance interdite ou dangereuse.
+                        </p>
+                    </div>
+                    
                 </div>
-
-                <div className="flex gap-2 justify-start items-center py-3">
-                    <CheckedInput />
-                    <p className="text-[0.75rem] font-bold text-center text-danger">Je confirme que le contenu de mon colis est conforme aux lois en vigueur et ne contient aucune substance interdite ou dangereuse</p>
-                </div>
-                
-                
-            </div>
-
-            
-        </form>
-        
+            </form>
         </div>
     );
 }
  
 export default FormStepLast;
-

@@ -1,34 +1,27 @@
 import { FileUploadDemo } from "@/ui/FileUploadDemo";
-import { ChevronDown } from "lucide-react";
 
 const FormStepThree = () => {
-    
-    
-
-    
-    
-    
-    
-    
     return ( 
-        <div className="bg-white shadow p-6 rounded-2xl">
-        
-        
+        <div className="bg-white shadow-sm border border-slate-100 p-6 md:p-8 rounded-[2rem]">
+            <form action="" onSubmit={(e)=>{e.preventDefault()}}>
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                    
+                    {/* Zone d'upload (Laisser gérer par ton composant UI) */}
+                    <div className="w-full lg:w-1/2">
+                        <label className="block text-sm text-slate-700 font-bold mb-4">Photos du colis</label>
+                        <FileUploadDemo />
+                    </div>
 
-        <form action="" onSubmit={(e)=>{e.preventDefault()}}>
-            <div className="flex flex-col 2xl:flex-row  gap-4">
-                
-                  <FileUploadDemo />
-
-                  <div className="flex flex-col gap-4">
-                    <label htmlFor="" className="text-sm text-gray-600 font-semibold">Description</label>
-                    <textarea name="" id="" className="border border-neutral-400 rounded ps-2 py-1 placeholder:text-gray-300  focus:outline focus:outline-[#0984E3] resize-none overflow-y-scroll no-scrollbar " placeholder="Décrivez votre colis.." rows={5} cols={110}></textarea>
-                  </div>
-                
-               
-            </div>
-        </form>
-        
+                    {/* Description */}
+                    <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                        <label className="text-sm text-slate-700 font-bold">Description et consignes</label>
+                        <textarea 
+                            className="w-full h-full min-h-37.5 bg-slate-50 border border-slate-200 text-slate-800 text-[0.95rem] rounded-xl px-4 py-3 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#0984E3] focus:ring-4 focus:ring-[#0984E3]/10 transition-all resize-none" 
+                            placeholder="Décrivez votre colis (Fragile, lourd, doit rester à plat...)" 
+                        ></textarea>
+                    </div>
+                </div>
+            </form>
         </div>
     );
 }

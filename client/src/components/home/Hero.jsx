@@ -53,7 +53,7 @@ const Hero = () => {
     }, [])
 
     return ( 
-        <section className="mt-5 min-h-dvh" >
+        <section className="mt-5 min-h-dvh" id="hero">
         
             <div id="tag-website" className="flex gap-2 bg-[#0984E3] rounded-2xl md:mx-55 lg:mx-80 xl:mx-100 2xl:mx-100 justify-center text-sm items-center mx-14">
 

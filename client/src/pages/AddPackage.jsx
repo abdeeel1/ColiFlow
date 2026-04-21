@@ -1,3 +1,4 @@
+
 import FormStepLast from "@/components/sender-form/FormStepLast";
 import FormStepOne from "@/components/sender-form/FormStepOne";
 import FormStepThree from "@/components/sender-form/FormStepThree";
@@ -7,9 +8,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AddPackage = () => {
-    
     const nums = [1, 2, 3, 4]
-
     const navigate = useNavigate()
 
     const [step, setStep] = useState(1)
@@ -18,7 +17,6 @@ const AddPackage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
         console.log('Package Add ! -- Test Mode')
     }
 
@@ -27,100 +25,89 @@ const AddPackage = () => {
     }
 
     return ( 
-        <main className="p-4 xl:p-10 bg-[#F1F5F9]">
-        
-        <div className="flex flex-col h-full  md:h-334 lg:h-333 2xl:h-227.5 xl:px-40">
-            <div className="flex  gap-2 items-center">
-                <h2 className="font-bold text-[1.2rem]">Ajouter un colis</h2>
-                <Circle className="size-2" fill="#0984E3" stroke="#0984E3" color="#0984E3" />
-            </div>
-
-            <div className="bg-[#0984E3] rounded-2xl p-6 my-5">
-                <div className="flex items-center gap-2 my-4">
-                    <CheckCircle fill="#FFFFFF" color="#0984E3" className="size-5"/>
-                    <p className="text-white">Créer un nouveau colis</p>
+        <main className="min-h-screen p-4 md:p-8 xl:p-12 bg-slate-50">
+            <div className="max-w-5xl mx-auto flex flex-col gap-6">
+                
+                {/* Header */}
+                <div className="flex gap-3 items-center px-2">
+                    <Circle className="size-3" fill="#0984E3" stroke="#0984E3" color="#0984E3" />
+                    <h2 className="font-bold text-2xl text-slate-800">Ajouter un colis</h2>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6">
-                    <div className="hidden  md:flex items-center justify-between lg:justify-between lg:px-8">
-                        {
-                            nums.map((num, index)=>(
-                                <div key={index} className="flex flex-col items-center gap-3">
-                                    
-                                    <span className={`rounded-full px-4 py-2 border-2 ${num === step ? 'bg-[#0984E3] text-white border-[#0984E3]' : 'bg-white text-[#0984E3] border-[#0984E3]'}`}>{num}</span>
-                                    <span className="text-[0.9rem]">
-                                        {
-                                        
-                                        num === 1 ? "L'Object" :
-                                        num === 2 ? "Le Trajet" :
-                                        num === 3 ? "Photos & Détails" :
-                                        "Budget & Validation"
-                                         
-                                        }  
-                                    </span>
-                                </div>
-                            ))
-                        }
+                {/* Bannière Stepper */}
+                <div className="bg-[#0984E3] rounded-[2rem] p-6 md:p-8 shadow-lg shadow-blue-500/20">
+                    <div className="flex items-center gap-3 mb-6">
+                        <CheckCircle fill="#FFFFFF" color="#0984E3" className="size-6"/>
+                        <p className="text-white text-lg font-medium">Créer un nouveau colis</p>
                     </div>
 
-                    <div className="md:hidden flex flex-col items-center">
-                        <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden mb-6">
-                            <div 
-                                className="bg-[#0984E3] h-full transition-all duration-300" 
-                                style={{ width: `${(step / 4) * 100}%` }}
-                            />
-                            </div>
-                            <p className="text-xs font-bold text-gray-400    uppercase tracking-wider">
-                            Étape {step} sur 4
-                            </p>
+                    <div className="bg-white rounded-2xl p-6 shadow-sm">
+                        {/* Stepper Desktop */}
+                        <div className="hidden md:flex items-center justify-between px-4 lg:px-12">
+                            {nums.map((num, index) => (
+                                <div key={index} className="flex flex-col items-center gap-3 relative z-10">
+                                    <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 font-bold transition-all duration-300 ${num === step ? 'bg-[#0984E3] text-white border-[#0984E3] shadow-md ring-4 ring-blue-50' : num < step ? 'bg-blue-50 text-[#0984E3] border-blue-200' : 'bg-white text-slate-300 border-slate-200'}`}>
+                                        {num < step ? '✓' : num}
+                                    </div>
+                                    <span className={`text-sm font-semibold transition-colors ${num === step ? 'text-[#0984E3]' : 'text-slate-400'}`}>
+                                        {num === 1 ? "L'Objet" : num === 2 ? "Le Trajet" : num === 3 ? "Détails" : "Validation"}  
+                                    </span>
+                                </div>
+                            ))}
+                            {/* Ligne de fond du stepper (Optionnel, à ajuster selon tes préférences) */}
+                            {/* <div className="hidden md:block absolute top-[50%] left-[10%] right-[10%] h-0.5 bg-slate-100 -z-0"></div> */}
                         </div>
+
+                        {/* Stepper Mobile */}
+                        <div className="md:hidden flex flex-col">
+                            <div className="flex justify-between items-center mb-2">
+                                <p className="text-xs font-bold text-[#0984E3] uppercase tracking-wider">
+                                    Étape {step} sur 4
+                                </p>
+                                <span className="text-xs font-semibold text-slate-500">
+                                    {step === 1 ? "L'Objet" : step === 2 ? "Le Trajet" : step === 3 ? "Photos & Détails" : "Budget & Validation"}
+                                </span>
+                            </div>
+                            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div className="bg-[#0984E3] h-full transition-all duration-500 ease-out rounded-full" style={{ width: `${(step / 4) * 100}%` }} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <p className="pt-6 text-blue-50/90 font-medium text-sm md:text-base">
+                        Complétez les 4 étapes pour proposer votre colis à la communauté.
+                    </p>
+                </div>
+                
+                {/* Formulaire Actif */}
+                <div className="w-full">
+                    {step === 1 && <FormStepOne />}
+                    {step === 2 && <FormStepTwo />}
+                    {step === 3 && <FormStepThree />}
+                    {step === 4 && <FormStepLast />}
                 </div>
 
-                <p className="pt-4 text-white font-semibold">Complétez les 4 étapes pour proposer votre colis à la communauté.</p>
-            </div>
-            
-            <div className="min-h-50 rounded-2xl p-6">
-                {step === 1 && <FormStepOne />}
-                {step === 2 && <FormStepTwo />}
-                {step === 3 && <FormStepThree />}
-                {step === 4 && <FormStepLast />}
-            </div>
+                {/* Actions (Boutons) */}
+                <div className="flex justify-between items-center mt-6 px-2">
+                    {step === 1 ? (
+                        <button className="btn btn-ghost text-slate-500 hover:bg-slate-200 rounded-xl px-6 py-3 font-semibold transition-colors" onClick={handleCancel}>
+                            Annuler
+                        </button>
+                    ) : (
+                        <button className="btn btn-ghost bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl px-6 py-3 font-semibold transition-colors" onClick={prevStep}>
+                            ← Précédent
+                        </button>
+                    )}
 
-            
-            <div className="py-6 px-10 lg:px-20   flex justify-between">
-                
-                {
-                    step > 1 &&
-                    <button className="btn btn-ghost bg-gray-300 rounded-2xl "
-                    onClick={prevStep}
-                    
+                    <button 
+                        className={`btn text-white rounded-xl px-8 py-3 font-bold shadow-lg transition-all transform active:scale-95 border-0 ${step === 4 ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30' : 'bg-[#0984E3] hover:bg-[#076ebd] shadow-blue-500/30'}`}
+                        onClick={step === 4 ? handleSubmit : nextStep}
                     >
-                        ← Precedent
+                        {step === 4 ? 'Publier l\'annonce' : 'Suivant →'}
                     </button>
-                }
+                </div>
 
-                {
-                    step === 1 && 
-                    <button className="btn btn-ghost bg-gray-300 rounded-2xl "
-                    onClick={handleCancel}
-                    
-                    >
-                        Annuler
-                    </button>
-                    
-                }
-
-                <button 
-                className={`btn btn-ghost  text-white rounded-2xl cursor-pointer  ${step === 4 ? 'bg-green-700 hover:bg-green-900 hover:border-green-900' : 'bg-[#0984E3] hover:bg-[#085fa1] hover:border-[#085fa1]'}`}
-                onClick={step === 4 ? handleSubmit : nextStep}
-                >
-                    {step === 4 ? 'Publier →' : 'Suivante →'}
-                </button>
             </div>
-
-        </div>
-        
-        
         </main>
     );
 }
