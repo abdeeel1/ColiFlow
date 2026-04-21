@@ -40,7 +40,7 @@ const Services = () => {
                         <div key={service.id}>
                             <div className={`xl:flex xl:gap-50 xl:items-center ${service.id === 2 ? 'xl:flex-row-reverse xl:gap-50' : ''}`}>
                                 <div>
-                                    <img className="xl:shadow-2xl xl:bg-[#F1F5F9] xl:shadow-gray-400 h-80" src={service.picture} alt="" />
+                                    <img className="xl:shadow-2xl xl:bg-[#F1F5F9] xl:shadow-gray-400 h-80" src={service.picture} alt="" loading="lazy"/>
                                 </div>
                                 <div className="xl:pt-5 xl:flex xl:flex-col xl:space-y-4">
                                     <p className="font-extrabold text-[1.125rem] xl:text-[1.125rem] text-[#1E293B]">{service.title}</p>

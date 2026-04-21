@@ -56,6 +56,7 @@ export default function ActionTab({ expediteurData, voyageurData }) {
                                 src={item.picture}
                                 className="w-full object-cover rounded-t-[2rem]" 
                                 alt={item.title} 
+                                loading="lazy"
                             />
                         </figure>
                     </div>

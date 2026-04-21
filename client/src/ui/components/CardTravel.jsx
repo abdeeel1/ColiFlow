@@ -18,6 +18,7 @@ const CardTravel = ({ville_depart, ville_darrive, prix, type, date, voyageur, im
         src={image}
         alt=""
         className=""
+        loading="lazy"
       />
       <CardHeader>
         <div className="flex flex-row gap-4 items-center">
