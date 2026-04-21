@@ -43,7 +43,7 @@ export default function ModalSend( {text, travel} ) {
                         </div>
 
                         <div className="text-[#0F3DDE] font-semibold">
-                            <Link to={"/"} >
+                            <Link to={"/packages/create"} >
                                 + Créér un nouveu colis
                             </Link>
                         </div>

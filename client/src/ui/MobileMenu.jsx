@@ -12,7 +12,7 @@ export default function MobileMenu({ isTraveler }) {
   }, [isOpen]);
 
   const senderLinks = [
-    { label: "Nouveau colis", href: "#" },
+    { label: "Nouveau colis", href: "/packages/create" },
     { label: "Liste des trajets", href: "/travels" },
     { label: "Dashboard", href: "#" },
   ];
@@ -73,13 +73,13 @@ export default function MobileMenu({ isTraveler }) {
           {submenuOpen && (
             <div className="flex flex-col pl-3 mb-1">
               {subLinks.map((link) => (
-                <a
+                <Link
                   key={link.label}
-                  href={link.href}
+                  to={link.href}
                   className="px-3 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 hover:text-[#2D3436]"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
           )}

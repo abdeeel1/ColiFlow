@@ -35,9 +35,10 @@ const Navbar = () => {
 
             <div className="bg-[#FFFFFF] shadow-sm max-w-360 lg:mx-auto md:mx-10 rounded-2xl mx-4 my-4 flex justify-between items-center lg:py-2">
                 <div className="h-10 flex items-center">
-                    <img src="/images/Logo.png" alt="" className="w-25 h-30
+                    <Link to={"/"}><img src="/images/Logo.png" alt="" className="w-25 h-30
                     lg:w-48 lg:h-50
                     " />
+                    </Link>
                 </div>
                 
                 <div className="desktop-only">
@@ -48,7 +49,7 @@ const Navbar = () => {
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Envoyer un colis <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li className="hover:bg-gray-200 rounded-2xl"><a>Nouveau colis</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/packages/create"}>Nouveau colis</Link></li>
                                 <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels"}>Liste des trajets</Link></li>
                                 <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
                             </ul>

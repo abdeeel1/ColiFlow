@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound'
 import TravelsList from './pages/TravelsList'
 import TravelDetail from './pages/TravelDetail'
 import ScrollToTop from './components/ScrollToTop'
+import AddPackage from './pages/AddPackage'
 
 function App() {
   
@@ -26,6 +27,8 @@ function App() {
             <Route path='login' element={<Login />} />
 
             <Route path='signup' element={<Signup />} />
+
+            <Route path='/packages/create' element={<AddPackage />} />
             
             {/* Routes Layout */}
 
