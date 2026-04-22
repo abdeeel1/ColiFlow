@@ -22,11 +22,11 @@ const AddPackage = () => {
     const formSchema = z.object({
         colisName : z.string().trim().min(2, "le nom du colis doit comporter plus de trois mots"),
         category : z.string().min(1, "la sélection d'une catégorie est obligatoire"),
-        colisSize : z.enum(['1kg', '1-5kg', '5-15kg', '15kg'], {errorMap: () => ({ message : "la sélection d'un poid est obligatoire"})}),
+        colisSize : z.number("la sélection d'un poid est obligatoire"),
         cityOne : z.string().min(1, "la sélection d'une ville est obligatoire"),
         cityTwo : z.string().min(1, "la sélection d'une ville est obligatoire"),
-        dateDelivery : z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date invalide"),
-        emergencies : z.enum(['standard', 'urgent', 'tresUrgent'], {errorMap: () => ({message : "la sélection d'une urgence est obligatoire"})}),
+        dateDelivery : z.string().min(1, 'date invalide'),
+        emergencies : z.enum(['standard', 'urgent', 'très urgent'], {error: () => ({message : "la sélection d'une urgence est obligatoire"})}),
         pictures: z.any().refine((files) => files?.length > 0, "Ce champ est obligatoire"),
         description: z.string().optional(),
         price: z.coerce.number({ invalid_type_error: "Nombre invalide" }).min(1, "Prix requis"),
@@ -138,13 +138,13 @@ const AddPackage = () => {
 
                         <div className="flex justify-between mt-6">
                         {step > 1 && (
-                            <button type="button" onClick={prevStep} className="btn btn-secondary rounded-2xl text-white font-bold">Prev</button>
+                            <button type="button" onClick={prevStep} className="btn btn-ghsot bg-neutral-500 border-neutral-500 px-8 text-[1rem] rounded-2xl text-white font-bold">Prev</button>
                         )}
 
                         {step < 4 ? (
-                            <button type="button" onClick={nextStep} className="btn btn-ghost bg-[#0984E3] border-[#0984E3] rounded-2xl text-white font-bold">Next</button>
+                            <button type="button" onClick={nextStep} className="btn btn-ghost px-8 text-[1rem] bg-[#0984E3] border-[#0984E3] rounded-2xl text-white font-bold">Next</button>
                         ) : (
-                            <button type="submit">Submit</button>
+                            <button type="submit" className="btn btn-ghost bg-green-700 border-green-700 px-8 text-[1rem] rounded-2xl">Submit</button>
                         )}
                         </div>
                     </form>

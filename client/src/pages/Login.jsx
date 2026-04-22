@@ -39,11 +39,11 @@ const Login = () => {
   };
 
   return (
-    <main className="bg-[#F1F5F9]">
+    <main className="bg-[#F1F5F9] min-h-screen">
 
     <div className="flex h-screen">
       {/* LEFT SIDE (FORM) */}
-      <div className="w-full h-screen xl:w-1/2 flex flex-col   justify-center py-20 px-10 xl:px-60">
+      <div className="w-full min-h-screen 2xl:w-1/2  flex flex-col justify-center py-20 px-10 xl:px-40">
 
         {/* HEADER */}
         <div className="flex flex-col gap-4">
@@ -70,7 +70,7 @@ const Login = () => {
               placeholder="abdessamad@gmail.com"
             />
             {errors.email && (
-              <p className="text-sm text-red-600 my-2">
+              <p className="text-sm text-red-600">
                 {errors.email.message}
               </p>
             )}
@@ -98,7 +98,7 @@ const Login = () => {
             />
 
             {errors.password && (
-              <p className="text-sm text-red-600 my-2">
+              <p className="text-sm text-red-600">
                 {errors.password.message}
               </p>
             )}
@@ -151,7 +151,7 @@ const Login = () => {
       </div>
 
       {/* RIGHT SIDE (IMAGE - DESKTOP ONLY) */}
-      <div className="hidden xl:block w-1/2">
+      <div className="hidden xl:block 2xl:w-1/2 lg:w-full min-h-screen">
         <img
           src="/images/Login-Picture.jpg"
           alt=""

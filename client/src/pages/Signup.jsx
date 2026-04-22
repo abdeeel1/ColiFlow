@@ -59,12 +59,12 @@ const Signup = () => {
   
   
     return (
-    <main className="bg-[#F1F5F9]">
+    <main className="bg-[#F1F5F9] min-h-screen">
 
 
     <div className="flex flex-row-reverse h-full xl:h-screen">
       {/* FORM SIDE */}
-      <div className="w-full xl:w-1/2 flex flex-col justify-center pt-6 px-10 xl:px-60">
+      <div className="w-full min-h-screen overflow-y-auto 2xl:w-1/2 flex flex-col  py-10  px-10 xl:px-40">
 
         {/* HEADER */}
         <div>
@@ -85,7 +85,7 @@ const Signup = () => {
                     className="border w-full rounded-[0.625rem] ps-2 py-1 placeholder:text-gray-300 text-sm xl:text-base focus:outline focus:outline-[#0984E3]"
                     placeholder="+212600000000"
                     />
-                    {errors.phone && <p className="text-sm text-red-600 my-1">{errors.phone.message}</p>}
+                    {errors.phone && <p className="text-sm text-red-600">{errors.phone.message}</p>}
                 </div>
 
                 {/* NOM */}
@@ -97,7 +97,7 @@ const Signup = () => {
                         className="border w-full rounded-[0.625rem] ps-2 py-1 placeholder:text-gray-300 text-sm xl:text-base focus:outline focus:outline-[#0984E3]"
                         placeholder="Najib Abdessamad"
                     />
-                    {errors.name && <p className="text-sm text-red-600 my-1">{errors.name.message}</p>}
+                    {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
                 </div>
 
                 {/* EMAIL */}
@@ -125,7 +125,7 @@ const Signup = () => {
                         className="border w-full rounded-[0.625rem] ps-2 py-1 placeholder:text-gray-300 text-sm xl:text-base focus:outline focus:outline-[#0984E3]"
                         placeholder="********"
                     />
-                    {errors.password && <p className="text-sm text-red-600 my-1">{errors.password.message}</p>}
+                    {errors.password && <p className="text-sm text-red-600">{errors.password.message}</p>}
                 </div>
                 
                 {/* PASSWORD CONFIRMATION */}
@@ -139,11 +139,11 @@ const Signup = () => {
                         className="border w-full rounded-[0.625rem] ps-2 py-1 placeholder:text-gray-300 text-sm xl:text-base focus:outline focus:outline-[#0984E3]"
                         placeholder="********"
                     />
-                    {errors.confirmPassword && <p className="text-sm text-red-600 my-1">{errors.confirmPassword.message}</p>}
+                    {errors.confirmPassword && <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>}
                 </div>
 
                 {/* CHECKBOX */}
-                <div className="flex items-center gap-2 py-10">
+                <div className="flex items-center gap-2 pb-6">
                     <Controller
                     name="accept"
                     control={control}
@@ -158,7 +158,7 @@ const Signup = () => {
                         <p className="text-[0.75rem] xl:text-[0.938rem] font-bold">
                             J'accepte les conditions et la politique de confidentialité
                         </p>
-                        {errors.accept && <p className="text-sm text-red-600 my-1">{errors.accept.message}</p>}
+                        {errors.accept && <p className="text-sm text-red-600">{errors.accept.message}</p>}
                 
                     </div>
             </div>
@@ -182,7 +182,7 @@ const Signup = () => {
           </div>
 
           {/* GOOGLE */}
-          <div className="flex flex-col gap-5 items-center">
+          <div className="flex flex-col gap-3 items-center">
             <GoogleButton text={"Sign up with Google"} />
 
             <p className="text-center text-[0.75rem] xl:text-[0.938rem]">
@@ -197,7 +197,7 @@ const Signup = () => {
       </div>
 
       {/* IMAGE SIDE (desktop only) */}
-      <div className="hidden xl:block w-1/2">
+      <div className="hidden xl:block 2xl:w-1/2 lg:w-full min-h-screen">
         <img
           src="/images/Login-Picture.jpg"
           alt=""
