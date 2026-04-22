@@ -3,26 +3,76 @@ import FormStepLast from "@/components/sender-form/FormStepLast";
 import FormStepOne from "@/components/sender-form/FormStepOne";
 import FormStepThree from "@/components/sender-form/FormStepThree";
 import FormStepTwo from "@/components/sender-form/FormStepTwo";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Circle } from "lucide-react";
 import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import z from "zod";
 
 const AddPackage = () => {
     const nums = [1, 2, 3, 4]
     const navigate = useNavigate()
 
     const [step, setStep] = useState(1)
-    const nextStep = () => setStep((prev) => prev + 1)
-    const prevStep = () => setStep((prev) => prev - 1)
+    
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log('Package Add ! -- Test Mode')
+    
+
+    const formSchema = z.object({
+        colisName : z.string().trim().min(2, "le nom du colis doit comporter plus de trois mots"),
+        category : z.string().min(1, "la sélection d'une catégorie est obligatoire"),
+        colisSize : z.enum(['1kg', '1-5kg', '5-15kg', '15kg'], {errorMap: () => ({ message : "la sélection d'un poid est obligatoire"})}),
+        cityOne : z.string().min(1, "la sélection d'une ville est obligatoire"),
+        cityTwo : z.string().min(1, "la sélection d'une ville est obligatoire"),
+        dateDelivery : z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date invalide"),
+        emergencies : z.enum(['standard', 'urgent', 'tresUrgent'], {errorMap: () => ({message : "la sélection d'une urgence est obligatoire"})}),
+        pictures: z.any().refine((files) => files?.length > 0, "Ce champ est obligatoire"),
+        description: z.string().optional(),
+        price: z.coerce.number({ invalid_type_error: "Nombre invalide" }).min(1, "Prix requis"),
+        acceptCondition : z.literal(true, 'vous devez accepter pour publier votre annonce')
+    })
+
+    const methods = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+        colisName: "",
+        category: "",
+        colisSize: undefined,
+        cityOne: "",
+        cityTwo: "",
+        dateDelivery: "",
+        emergencies: "standard",
+        pictures: null,
+        description: "",
+        price: "",
+        acceptCondition: false
     }
+    });
 
     const handleCancel = () => {
         navigate('/')
     }
+
+    const nextStep = async () => {
+        let fields = []
+
+        if(step === 1) fields = ["colisName", "category", "colisSize"]
+        if(step === 2) fields = ["cityOne", "cityTwo", "dateDelivery", "emergencies"]
+        if(step === 3) fields = ["pictures", "description"]
+        if(step === 4) fields = ["price", "acceptCondition"]
+
+        const valid = await methods.trigger(fields)
+
+        console.log("valid:", valid)
+        console.log("errors:", methods.formState.errors)
+
+        if (valid) setStep(s => s + 1)
+    }
+    
+    const prevStep = () => setStep((prev) => prev - 1)
+
+    const onSubmitData = (data) => console.log(data)
 
     return ( 
         <main className="min-h-screen p-4 md:p-8 xl:p-12 bg-slate-50">
@@ -54,8 +104,7 @@ const AddPackage = () => {
                                     </span>
                                 </div>
                             ))}
-                            {/* Ligne de fond du stepper (Optionnel, à ajuster selon tes préférences) */}
-                            {/* <div className="hidden md:block absolute top-[50%] left-[10%] right-[10%] h-0.5 bg-slate-100 -z-0"></div> */}
+                           
                         </div>
 
                         {/* Stepper Mobile */}
@@ -80,33 +129,28 @@ const AddPackage = () => {
                 </div>
                 
                 {/* Formulaire Actif */}
-                <div className="w-full">
-                    {step === 1 && <FormStepOne />}
-                    {step === 2 && <FormStepTwo />}
-                    {step === 3 && <FormStepThree />}
-                    {step === 4 && <FormStepLast />}
-                </div>
+                <FormProvider {...methods} >
+                    <form className="w-full" onSubmit={methods.handleSubmit(onSubmitData)}>
+                        {step === 1 && <FormStepOne />}
+                        {step === 2 && <FormStepTwo />}
+                        {step === 3 && <FormStepThree />}
+                        {step === 4 && <FormStepLast />}
 
-                {/* Actions (Boutons) */}
-                <div className="flex justify-between items-center mt-6 px-2">
-                    {step === 1 ? (
-                        <button className="btn btn-ghost text-slate-500 hover:bg-slate-200 rounded-xl px-6 py-3 font-semibold transition-colors" onClick={handleCancel}>
-                            Annuler
-                        </button>
-                    ) : (
-                        <button className="btn btn-ghost bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl px-6 py-3 font-semibold transition-colors" onClick={prevStep}>
-                            ← Précédent
-                        </button>
-                    )}
+                        <div className="flex justify-between mt-6">
+                        {step > 1 && (
+                            <button type="button" onClick={prevStep} className="btn btn-secondary rounded-2xl text-white font-bold">Prev</button>
+                        )}
 
-                    <button 
-                        className={`btn text-white rounded-xl px-8 py-3 font-bold shadow-lg transition-all transform active:scale-95 border-0 ${step === 4 ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30' : 'bg-[#0984E3] hover:bg-[#076ebd] shadow-blue-500/30'}`}
-                        onClick={step === 4 ? handleSubmit : nextStep}
-                    >
-                        {step === 4 ? 'Publier l\'annonce' : 'Suivant →'}
-                    </button>
-                </div>
+                        {step < 4 ? (
+                            <button type="button" onClick={nextStep} className="btn btn-ghost bg-[#0984E3] border-[#0984E3] rounded-2xl text-white font-bold">Next</button>
+                        ) : (
+                            <button type="submit">Submit</button>
+                        )}
+                        </div>
+                    </form>
+                </FormProvider>
 
+                
             </div>
         </main>
     );

@@ -26,7 +26,7 @@ const secondaryVariant = {
   },
 };
 
-export const FileUpload = ({ onChange }) => {
+export const FileUpload = ({ onChange, header, description }) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
 
@@ -80,10 +80,10 @@ export const FileUpload = ({ onChange }) => {
         </div>
         <div className="flex flex-col items-center justify-center">
           <p className="relative z-20 font-sans text-base font-bold text-neutral-700 dark:text-neutral-300">
-            Ajoutez jusqu'à 3 photos de votre colis
+            {header}
           </p>
           <p className="relative z-20 mt-2 font-sans text-base font-normal text-neutral-400 dark:text-neutral-400">
-            les colis avec photos sont acceptés 2x plus vite
+            {description}
           </p>
           <div className="relative mx-auto mt-10 w-full max-w-xl">
             {files.length > 0 &&

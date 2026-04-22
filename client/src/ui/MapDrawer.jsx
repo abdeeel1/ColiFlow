@@ -4,7 +4,6 @@ import CheckboxGroupSelect from "./CheckboxGroupSelect";
 import TimeInput from "./TimeInputStyle";
 import TimeInputStyle from "./TimeInputStyle";
 import DateInputStyle from "./DateInputStyle";
-import CheckedInput from "./CheckedInput";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 export default function MapDrawer({travelsAnnouncement, MapBoundsFilter}) {

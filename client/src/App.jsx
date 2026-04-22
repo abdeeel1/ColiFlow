@@ -9,6 +9,8 @@ import TravelsList from './pages/TravelsList'
 import TravelDetail from './pages/TravelDetail'
 import ScrollToTop from './components/ScrollToTop'
 import AddPackage from './pages/AddPackage'
+import ForgotPassword from './pages/ForgotPassword'
+import AddTravel from './pages/AddTravel'
 
 function App() {
   
@@ -28,7 +30,11 @@ function App() {
 
             <Route path='signup' element={<Signup />} />
 
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+
             <Route path='/packages/create' element={<AddPackage />} />
+
+            <Route path='/travels/create' element={<AddTravel />} />
             
             {/* Routes Layout */}
 

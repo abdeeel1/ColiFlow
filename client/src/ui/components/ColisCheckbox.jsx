@@ -1,46 +1,9 @@
 import { useState } from "react";
 import { Package, PackageOpen, PackageCheck, Truck } from "lucide-react";
 
-const packages = [
-  {
-    id: "petite",
-    label: "Petite",
-    description: "Enveloppe ou petite boîte",
-    weight: "Jusqu'à 1 kg",
-    icon: Package,
-    iconSize: 24,
-    
-  },
-  {
-    id: "moyen",
-    label: "Moyen",
-    description: "Boîte standard",
-    weight: "1 – 5 kg",
-    icon: PackageOpen,
-    iconSize: 28,
-    
-  },
-  {
-    id: "grand",
-    label: "Grand",
-    description: "Grande boîte",
-    weight: "5 – 15 kg",
-    icon: PackageCheck,
-    iconSize: 32,
-    
-  },
-  {
-    id: "volumineux",
-    label: "Volumineux",
-    description: "Colis encombrant",
-    weight: "+ 15 kg",
-    icon: Truck,
-    iconSize: 34,
-    
-  },
-];
 
-export default function ColisCheckbox() {
+
+export default function ColisCheckbox({data}) {
   const [selected, setSelected] = useState(null);
 
   const handleSelect = (id) => {
@@ -55,7 +18,7 @@ export default function ColisCheckbox() {
 
       {/* Radio Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4  gap-8">
-        {packages.map(({ id, label, description, weight, icon: Icon, iconSize }) => {
+        {data.map(({ id, label, description, weight, icon: Icon, iconSize }) => {
           
           const isSelected = selected === id;
 
@@ -144,18 +107,7 @@ export default function ColisCheckbox() {
         })}
       </div>
 
-      {selected && (
-        <div className="my-3 flex items-center gap-2 px-4 py-3   rounded-xl text-sm font-medium text-black transition-all duration-200">
-          <Package size={16} strokeWidth={2} />
-          <span>
-            Colis sélectionné :{" "}
-            <span className="font-semibold">
-              {packages.find((p) => p.id === selected)?.label}
-            </span>{" "}
-            — {packages.find((p) => p.id === selected)?.weight}
-          </span>
-        </div>
-      )}
+      
     </div>
   );
 }

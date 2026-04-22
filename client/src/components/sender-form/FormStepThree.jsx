@@ -9,7 +9,7 @@ const FormStepThree = () => {
                     {/* Zone d'upload (Laisser gérer par ton composant UI) */}
                     <div className="w-full lg:w-1/2">
                         <label className="block text-sm text-slate-700 font-bold mb-4">Photos du colis</label>
-                        <FileUploadDemo />
+                        <FileUploadDemo header={"Ajoutez jusqu'à 3 photos de votre colis"} description={"les colis avec photos sont acceptés 2x plus vite"} />
                     </div>
 
                     {/* Description */}

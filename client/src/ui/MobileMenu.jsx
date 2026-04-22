@@ -18,9 +18,9 @@ export default function MobileMenu({ isTraveler }) {
   ];
 
   const travelerLinks = [
-    { label: "Nouveau travel", href: "#" },
-    { label: "Demandes de Réservation", href: "#" },
-    { label: "Dashboard", href: "#" },
+      { label: "Nouveau travel", href: "/travels/create" },
+      { label: "Demandes de Réservation", href: "#" },
+      { label: "Dashboard", href: "#" },
   ];
 
   const subLinks = isTraveler ? travelerLinks : senderLinks;

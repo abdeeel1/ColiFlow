@@ -1,4 +1,4 @@
-import CheckedInput from "@/ui/CheckedInput";
+import { CheckboxInput } from "../ui/checkbox";
 
 const FormStepLast = () => {
     return ( 
@@ -24,7 +24,8 @@ const FormStepLast = () => {
                     {/* Avertissement / Checkbox */}
                     <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex gap-3 items-start md:items-center">
                         <div className="mt-1 md:mt-0 shrink-0">
-                            <CheckedInput />
+                            
+                                <CheckboxInput />
                         </div>
                         <p className="text-sm font-medium text-orange-800 leading-tight">
                             Je confirme que le contenu de mon colis est conforme aux lois en vigueur et ne contient aucune substance interdite ou dangereuse.

@@ -4,7 +4,7 @@ import CheckboxGroupSelect from "./CheckboxGroupSelect";
 import TimeInput from "./TimeInputStyle";
 import TimeInputStyle from "./TimeInputStyle";
 import DateInputStyle from "./DateInputStyle";
-import CheckedInput from "./CheckedInput";
+import { CheckboxInput } from "@/components/ui/checkbox";
 
 export default function DrawerRight() {
   return (
@@ -38,7 +38,7 @@ export default function DrawerRight() {
                         <div className="flex flex-col gap-2">
                             {[5, 4, 3, 2].map((star) => (
                             <label key={star} className="flex items-center gap-3 cursor-pointer group">
-                                <CheckedInput />
+                                <CheckboxInput />
                                 <div className="flex items-center gap-1">
                                 
                                 {[...Array(star)].map((_, i) => (

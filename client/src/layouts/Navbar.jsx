@@ -63,7 +63,7 @@ const Navbar = () => {
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Publier un trajet <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li className="hover:bg-gray-200 rounded-2xl"><a>Nouveau trajet</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels/create"}>Nouveau trajet</Link></li>
                                 <li className="hover:bg-gray-200 rounded-2xl"><a>Demandes de Réservation</a></li>
                                 <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
                             </ul>
