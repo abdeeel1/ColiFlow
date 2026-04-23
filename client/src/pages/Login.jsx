@@ -2,12 +2,15 @@
 
 import GoogleButton from "@/ui/GoogleButton";
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckboxInput } from "@/components/ui/checkbox";
+import axiosClient from "@/services/axios";
 
 const Login = () => {
+
+  const navigate = useNavigate()
 
   const FormSchema = z.object({
     email: z.string().trim().email(),
@@ -34,9 +37,34 @@ const Login = () => {
     }
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const credentials = {
+      email : data.email,
+      password : data.password,
+      remember : data.remember
+    }
+
+
+    try {
+       
+        await axiosClient.get('/sanctum/csrf-cookie')
+        const response = await axiosClient.post('/login', credentials)  
+
+        if (response.status === 200 || response.status === 204) {
+                
+                const userRes = await axiosClient.get('/api/user');
+
+                console.log("Bienvenue", userRes.data.name);
+
+                navigate('/'); 
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+  
   };
+  
 
   return (
     <main className="bg-[#F1F5F9] min-h-screen">
@@ -143,7 +171,7 @@ const Login = () => {
             <p className="text-center text-[0.75rem] xl:text-[0.938rem]">
               Vous n'avez pas de compte ?{" "}
               <span className="text-[#0C2A92] font-bold">
-                <Link to="/signup">Créer un compte</Link>
+                <Link to="/register">Créer un compte</Link>
               </span>
             </p>
           </div>

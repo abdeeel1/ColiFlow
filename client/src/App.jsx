@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useEffect } from 'react'
 import './App.css'
 import Layout from './layouts/Layout'
 import Home from './pages/Home'
@@ -14,6 +15,7 @@ import AddTravel from './pages/AddTravel'
 
 function App() {
   
+  
 
   return (
       <div className='font-plusjakarta'>
@@ -28,7 +30,7 @@ function App() {
             
             <Route path='login' element={<Login />} />
 
-            <Route path='signup' element={<Signup />} />
+            <Route path='register' element={<Signup />} />
 
             <Route path='/forgot-password' element={<ForgotPassword />} />
 

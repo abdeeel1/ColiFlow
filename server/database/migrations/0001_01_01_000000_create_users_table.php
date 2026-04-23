@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone');
+            $table->string('role', 20)->default('sender');
+            $table->boolean('is_traveler')->default(false);
+            $table->string('profile_picture')->nullable();
+            $table->string('document_cin')->nullable();
+            $table->string('statut_verification', 20)->default('pending');
             $table->rememberToken();
             $table->timestamps();
         });
