@@ -1,5 +1,6 @@
 import BadgeAlert from "@/ui/BadgeAlert";
 import { Circle, DollarSign, Folder, Laptop, Send } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CtaSection = () => {
     return ( 
@@ -44,7 +45,7 @@ const CtaSection = () => {
                     </div>
 
                     <div className="flex flex-col lg:flex-row  gap-4 py-5">
-                        <button className="btn btn-ghost bg-blue-600 hover:border-blue-600 text-white btn-sm rounded-2xl">Commencer Maintenant</button>
+                        <Link to={"/login"}><button className="btn btn-ghost bg-blue-600 hover:border-blue-600 text-white btn-sm rounded-2xl">Commencer Maintenant</button></Link>
                         <button className="btn btn-soft btn-sm rounded-2xl">Voir la Démo</button>
                     </div>
                 

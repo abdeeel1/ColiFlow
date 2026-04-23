@@ -7,12 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Circle } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import z from "zod";
 
 const AddPackage = () => {
     const nums = [1, 2, 3, 4]
-    const navigate = useNavigate()
 
     const [step, setStep] = useState(1)
     
@@ -29,7 +28,7 @@ const AddPackage = () => {
         emergencies : z.enum(['standard', 'urgent', 'très urgent'], {error: () => ({message : "la sélection d'une urgence est obligatoire"})}),
         pictures: z.any().refine((files) => files?.length > 0, "Ce champ est obligatoire"),
         description: z.string().optional(),
-        price: z.coerce.number({ invalid_type_error: "Nombre invalide" }).min(1, "Prix requis"),
+        price: z.coerce.number({ invalid_type_error: "nombre invalide" }).min(1, "Prix requis"),
         acceptCondition : z.literal(true, 'vous devez accepter pour publier votre annonce')
     })
 
@@ -50,9 +49,7 @@ const AddPackage = () => {
     }
     });
 
-    const handleCancel = () => {
-        navigate('/')
-    }
+    
 
     const nextStep = async () => {
         let fields = []
@@ -79,9 +76,9 @@ const AddPackage = () => {
             <div className="max-w-5xl mx-auto flex flex-col gap-6">
                 
                 {/* Header */}
+                
                 <div className="flex gap-3 items-center px-2">
-                    <Circle className="size-3" fill="#0984E3" stroke="#0984E3" color="#0984E3" />
-                    <h2 className="font-bold text-2xl text-slate-800">Ajouter un colis</h2>
+                    <Link to={'/'} className="font-bold text-lg text-slate-800">← Retour</Link>
                 </div>
 
                 {/* Bannière Stepper */}

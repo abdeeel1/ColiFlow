@@ -2,26 +2,69 @@ import TravelerFormLast from "@/components/traveler-form/TravelerFormLast";
 import TravelerFormOne from "@/components/traveler-form/TravelerFormOne";
 import TravelerFormThree from "@/components/traveler-form/TravelerFormThree";
 import TravelerFormTwo from "@/components/traveler-form/TravelerFormTwo";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Circle } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FormProvider, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import z from "zod";
 
 const AddTravel = () => {
     const nums = [1, 2, 3, 4]
-    const navigate = useNavigate()
 
     const [step, setStep] = useState(1)
-    const nextStep = () => setStep((prev) => prev + 1)
+
+    const formSchema = z.object({
+        travelCityOne : z.string().min(1, "la sélection d'une ville est obligatoire"),
+        travelCityTwo : z.string().min(1, "la sélection d'une ville est obligatoire"),
+        travelDate : z.string().min(1, 'date invalide'),
+        travelDescription : z.string().optional(),
+        carType : z.enum(['voiture', 'moto', 'camionnette', 'petit camion'], {error: () => ({message : "la sélection d'une voiture est obligatoire"})}),
+        carModel : z.string().min(3, 'le modele du voiture doit comporter plus de trois mots'),
+        carId : z.string().min(4, 'la matriculation du voiture doit comporter plus de trois mots'),
+        carPictures : z.any().refine((files) => files?.length > 0, "Ce champ est obligatoire"),
+        colisPoids : z.number("la sélection d'un poid est obligatoire"),
+        colisAccept : z.array(z.string()).min(1, "choisissez au moins une option"),
+        travelPrice: z.coerce.number({ invalid_type_error: "nombre invalide" }).min(1, "Prix requis"),
+    })
+
+
+    const methods = useForm({
+        resolver : zodResolver(formSchema),
+        defaultValues : {
+            travelCityOne : "",
+            travelCityTwo : "",
+            travelDate : "",
+            travelDescription : "",
+            carType : 'voiture',
+            carModel : "",
+            carId : "",
+            carPictures : null,
+            colisPoids : "",
+            colisAccept : [],
+            travelPrice : ""
+        }
+    })
+
+    const nextStep = async () => {
+        let fields = []
+
+        if(step === 1) fields = ["travelCityOne", "travelCityTwo", "travelDate", "travelDescription"]
+        if(step === 2) fields = ["carType", "carModel",  "carId","carPictures"]
+        if(step === 3) fields = ["colisPoids", "colisAccept"]
+        if(step === 4) fields = ["travelPrice"]
+
+        const valid = await methods.trigger(fields)
+
+        console.log("valid:", valid)
+        console.log("errors:", methods.formState.errors)
+
+        if (valid) setStep(s => s + 1)
+    }
+
     const prevStep = () => setStep((prev) => prev - 1)
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log('Package Add ! -- Test Mode')
-    }
-
-    const handleCancel = () => {
-        navigate('/')
-    }
+    const onSubmitData = (data) => console.log(data)
 
     return ( 
         <main className="min-h-screen p-4 md:p-8 xl:p-12 bg-slate-50">
@@ -29,8 +72,7 @@ const AddTravel = () => {
                 
                 {/* Header */}
                 <div className="flex gap-3 items-center px-2">
-                    <Circle className="size-3" fill="#0984E3" stroke="#0984E3" color="#0984E3" />
-                    <h2 className="font-bold text-2xl text-slate-800">Publier un trajet</h2>
+                    <Link to={'/'} className="font-bold text-lg text-slate-800">← Retour</Link>
                 </div>
 
                 {/* Bannière Stepper */}
@@ -79,32 +121,26 @@ const AddTravel = () => {
                 </div>
                 
                 {/* Formulaire Actif */}
-                <div className="w-full">
-                    {step === 1 && <TravelerFormOne />}
-                    {step === 2 && <TravelerFormTwo />}
-                    {step === 3 && <TravelerFormThree />}
-                    {step === 4 && <TravelerFormLast />}
-                </div>
+                <FormProvider {...methods} >
+                    <form className="w-full" onSubmit={methods.handleSubmit(onSubmitData)}>
+                        {step === 1 && <TravelerFormOne />}
+                        {step === 2 && <TravelerFormTwo />}
+                        {step === 3 && <TravelerFormThree />}
+                        {step === 4 && <TravelerFormLast />}
 
-                {/* Actions (Boutons) */}
-                <div className="flex justify-between items-center mt-6 px-2">
-                    {step === 1 ? (
-                        <button className="btn btn-ghost text-slate-500 hover:bg-slate-200 rounded-xl px-6 py-3 font-semibold transition-colors" onClick={handleCancel}>
-                            Annuler
-                        </button>
-                    ) : (
-                        <button className="btn btn-ghost bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl px-6 py-3 font-semibold transition-colors" onClick={prevStep}>
-                            ← Précédent
-                        </button>
-                    )}
+                        <div className="flex justify-between mt-6">
+                        {step > 1 && (
+                            <button type="button" onClick={prevStep} className="btn btn-ghsot bg-neutral-500 border-neutral-500 px-8 text-[1rem] rounded-2xl text-white font-bold">Prev</button>
+                        )}
 
-                    <button 
-                        className={`btn text-white rounded-xl px-8 py-3 font-bold shadow-lg transition-all transform active:scale-95 border-0 ${step === 4 ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30' : 'bg-[#0984E3] hover:bg-[#076ebd] shadow-blue-500/30'}`}
-                        onClick={step === 4 ? handleSubmit : nextStep}
-                    >
-                        {step === 4 ? 'Publier l\'annonce' : 'Suivant →'}
-                    </button>
-                </div>
+                        {step < 4 ? (
+                            <button type="button" onClick={nextStep} className="btn btn-ghost px-8 text-[1rem] bg-[#0984E3] border-[#0984E3] rounded-2xl text-white font-bold">Next</button>
+                        ) : (
+                            <button type="submit" className="btn btn-ghost bg-green-700 border-green-700 px-8 text-[1rem] rounded-2xl hover:text-white">Submit</button>
+                        )}
+                        </div>
+                    </form>
+                </FormProvider>
 
             </div>
         </main>

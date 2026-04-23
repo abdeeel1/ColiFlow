@@ -1,5 +1,4 @@
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 const FormStepTwo = () => {
@@ -7,7 +6,7 @@ const FormStepTwo = () => {
     
     const { register, setValue, watch, formState: {errors} } = useFormContext()
 
-    const [urgency, setUrgency] = useState(0)
+    
 
     const cityOne = watch('cityOne')
 

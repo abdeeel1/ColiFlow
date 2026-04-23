@@ -1,17 +1,49 @@
 
 import { CalendarDays, MapPin } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 
-const tripSummary = {
-  departure: { label: "LIEU DE DÉPART", city: "Casablanca" },
-  arrival: { label: "LIEU D'ARRIVÉE", city: "Rabat" },
-  details: [
-    { label: "Date de départ", value: "Lundi, 21:00" },
-    { label: "Type de véhicule", value: "Moto" },
-    { label: "Poids maximum", value: "-1 kg" },
-  ],
-};
 
 const TravelerFormLast = () => {
+  
+  
+  const {register, watch, formState: {errors}} = useFormContext()
+  
+  const travelCityOne = watch('travelCityOne')
+  const travelCityTwo = watch('travelCityTwo')
+  const travelDate = watch('travelDate')
+  const carType = watch('carType')
+  const colisPoids = watch('colisPoids')
+  const travelPrice = watch('travelPrice') || 0
+
+  const price = Number(travelPrice) || 0;
+  const serviceFee = price * 0.15;
+  const earnings = price - serviceFee;
+
+
+  
+  const packages = [
+    { id: 1, weight: "- 1kg" },
+    { id: 2, weight: "1 – 5 kg" },
+    { id: 3, weight: "5 – 15 kg" },
+    { id: 4, weight: "+ 15kg" }
+  ];
+
+  const selectedPackage = packages.find(p => p.id === colisPoids )
+
+  const tripSummary = {
+    departure: { label: "LIEU DE DÉPART", city: travelCityOne },
+    arrival: { label: "LIEU D'ARRIVÉE", city: travelCityTwo },
+    details: [
+      { label: "Date de départ", value: travelDate },
+      { label: "Type de véhicule", value: carType },
+      { label: "Poids maximum", value: selectedPackage.weight },
+    ],
+  };
+
+  
+
+  
+  
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -26,7 +58,7 @@ const TravelerFormLast = () => {
             <span className="w-8 h-8 rounded-full bg-[#0984E3] text-white flex items-center justify-center text-xs font-bold shrink-0"><MapPin size={14} /></span>
             <div>
               <p className="text-[10px] font-bold text-slate-400 tracking-widest">{tripSummary.departure.label}</p>
-              <p className="font-bold text-slate-800">{tripSummary.departure.city}</p>
+              <p className="font-bold text-slate-800 capitalize">{tripSummary.departure.city}</p>
             </div>
           </div>
 
@@ -36,7 +68,7 @@ const TravelerFormLast = () => {
             <span className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-bold shrink-0"><MapPin size={14} /></span>
             <div>
               <p className="text-[10px] font-bold text-slate-400 tracking-widest">{tripSummary.arrival.label}</p>
-              <p className="font-bold text-slate-800">{tripSummary.arrival.city}</p>
+              <p className="font-bold text-slate-800 capitalize">{tripSummary.arrival.city}</p>
             </div>
           </div>
         </div>
@@ -50,7 +82,7 @@ const TravelerFormLast = () => {
               
               <div>
                 <p className="text-xs text-slate-400">{item.label}</p>
-                <p className="text-sm font-semibold text-[#0984E3]">{item.value}</p>
+                <p className="text-sm font-semibold text-[#0984E3] capitalize">{item.value}</p>
               </div>
             </div>
           ))}
@@ -58,7 +90,7 @@ const TravelerFormLast = () => {
       </div>
 
       {/* Right — Prix */}
-      <div className="bg-white h-95 shadow-sm border border-slate-100 p-6 rounded-[2rem] flex flex-col gap-6">
+      <div className="bg-white h-full shadow-sm border border-slate-100 p-6 rounded-[2rem] flex flex-col gap-6">
         <div>
           <h2 className="text-lg font-bold text-slate-800">Prix</h2>
           <p className="text-xs text-slate-400">Fixez votre tarif</p>
@@ -67,6 +99,7 @@ const TravelerFormLast = () => {
         {/* Input */}
         <div className="relative">
           <input
+          {...register('travelPrice')}
             placeholder="Ex: 100"
             type="number"
             className="w-full bg-white border-2 border-[#0984E3] text-slate-800 text-lg font-semibold rounded-xl px-4 py-3 pr-16 focus:outline-none focus:ring-4 focus:ring-[#0984E3]/10 transition-all"
@@ -75,22 +108,23 @@ const TravelerFormLast = () => {
             MAD
           </span>
         </div>
+        {errors.travelPrice && <p className="text-red-600 text-sm">{errors.travelPrice.message}</p>}
 
         {/* Earnings breakdown */}
         <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col gap-2">
           <p className="text-sm font-bold text-green-800 mb-1">Détail des gains</p>
           <div className="flex justify-between text-sm text-green-700">
             <span>Prix du trajet</span>
-            <span className="font-bold">100 MAD</span>
+            <span className="font-bold">{price.toFixed(2)} MAD</span>
           </div>
           <div className="flex justify-between text-sm text-green-700">
             <span>Frais de service (15%)</span>
-            <span className="font-bold">-15 MAD</span>
+            <span className="font-bold">{serviceFee.toFixed(2)} MAD</span>
           </div>
           <hr className="border-green-200 my-1" />
           <div className="flex justify-between text-base font-extrabold text-green-800">
             <span>Vous Gagnez</span>
-            <span>85 MAD</span>
+            <span>{earnings.toFixed(2)} MAD</span>
           </div>
         </div>
 

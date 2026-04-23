@@ -124,7 +124,7 @@ const Login = () => {
           {/* SUBMIT */}
           <button
             type="submit"
-            className="btn bg-[#0984E3] hover:border-[#0984E3] text-white font-bold rounded-2xl w-full"
+            className="btn bg-[#0984E3] border-[#0984E3] hover:border-[#0984E3] text-white font-bold rounded-2xl w-full"
           >
             Connexion
           </button>

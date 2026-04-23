@@ -3,7 +3,7 @@ import { CheckboxInput } from "../ui/checkbox";
 
 const FormStepLast = () => {
     
-    const { register, setValue, watch, formState: {errors} } = useFormContext()
+    const { register, formState: {errors} } = useFormContext()
     
     
     

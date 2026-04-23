@@ -64,7 +64,7 @@ const Signup = () => {
 
     <div className="flex flex-row-reverse h-full xl:h-screen">
       {/* FORM SIDE */}
-      <div className="w-full min-h-screen overflow-y-auto 2xl:w-1/2 flex flex-col  py-10  px-10 xl:px-40">
+      <div className="w-full min-h-screen overflow-y-auto 2xl:w-1/2 flex flex-col 2xl:justify-center  py-10  px-10 xl:px-40">
 
         {/* HEADER */}
         <div>
@@ -82,7 +82,7 @@ const Signup = () => {
                     <input
                     {...register('phone')}
                     type="tel"
-                    className="border w-full rounded-[0.625rem] ps-2 py-1 placeholder:text-gray-300 text-sm xl:text-base focus:outline focus:outline-[#0984E3]"
+                    className={`border w-full rounded-[0.625rem] ps-2 py-1 placeholder:text-gray-300 text-sm xl:text-base focus:outline focus:outline-[#0984E3]`}
                     placeholder="+212600000000"
                     />
                     {errors.phone && <p className="text-sm text-red-600">{errors.phone.message}</p>}
@@ -169,7 +169,7 @@ const Signup = () => {
           {/* SUBMIT */}
           <button
             type="submit"
-            className="btn bg-[#0984E3] text-white font-bold rounded-2xl w-full"
+            className="btn border-[#0984E3] bg-[#0984E3] text-white font-bold rounded-2xl w-full"
           >
             S'inscrire
           </button>
