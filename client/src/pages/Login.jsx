@@ -37,25 +37,22 @@ const Login = () => {
     }
   });
 
+
+   
+
   const onSubmit = async (data) => {
     const credentials = {
       email : data.email,
-      password : data.password,
-      remember : data.remember
+      password : data.password
     }
 
 
     try {
        
         await axiosClient.get('/sanctum/csrf-cookie')
-        const response = await axiosClient.post('/login', credentials)  
+        const response = await axiosClient.post('/api/login', credentials)  
 
         if (response.status === 200 || response.status === 204) {
-                
-                const userRes = await axiosClient.get('/api/user');
-
-                console.log("Bienvenue", userRes.data.name);
-
                 navigate('/'); 
         }
 
