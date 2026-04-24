@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { useEffect } from 'react'
 import './App.css'
 import Layout from './layouts/Layout'
 import Home from './pages/Home'
@@ -12,6 +11,8 @@ import ScrollToTop from './components/ScrollToTop'
 import AddPackage from './pages/AddPackage'
 import ForgotPassword from './pages/ForgotPassword'
 import AddTravel from './pages/AddTravel'
+import { Toaster } from './components/ui/sonner'
+
 
 function App() {
   
@@ -22,7 +23,8 @@ function App() {
         <BrowserRouter>
       
         <ScrollToTop />
-        
+
+        <Toaster position='top-right' />
         
         <Routes>
             

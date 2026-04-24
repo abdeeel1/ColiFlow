@@ -1,20 +1,27 @@
 "use client"
 
 import { CheckboxInput } from "@/components/ui/checkbox";
+import axiosClient from "@/services/axios";
 import GoogleButton from "@/ui/GoogleButton";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod";
 
 const Signup = () => {
   
+
+    const [errorMessage, setErrorMessage] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [success, setSuccess] = useState(null)
     
     const FormSchema = z.object({
         phone: z.string()
             .trim()
-            .regex(/^(\+212|0)[5-7]\d{8}$/, "Numéro marocain invalide"),
+            .regex(/^(\+212|0)[5-7]\d{8}$/, "numéro marocain invalide"),
 
         name: z.string()
             .trim()
@@ -50,9 +57,66 @@ const Signup = () => {
         }
     })
 
-    const onSubmitData = (data) => {
+    useEffect(() => {
+        if (errorMessage) {
+          toast.error(errorMessage);
+        }
+      }, [errorMessage]);
+
+      
+      useEffect(() => {
+        if (success) {
+          toast.success(success);
+        }
+      }, [success]);
+
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
+    const onSubmitData = async (data) => {
+      
+      const credentials = {
+          phone : data.phone,
+          name : data.name,
+          email : data.email,
+          password : data.password,
+          password_confirmation : data.confirmPassword,
+          accept : data.accept
+      }
+
+      setLoading(true)
+      setErrorMessage(null)
+      setSuccess(null)
+
+      
         
-        console.log(data)
+      try {
+          
+          await axiosClient.get('/sanctum/csrf-cookie');
+          const response = await axiosClient.post('/register', credentials)
+
+          setSuccess('Compte créé avec succès')
+
+
+        } 
+      catch (err) 
+          {
+          
+            if(err.response?.status === 422){
+              
+              const errorsData = err.response.data.errors
+
+              const firstError = Object.values(errorsData)[0][0]
+              setErrorMessage(capitalize(firstError))
+            } else {
+              setErrorMessage('Une erreur est survenue')
+            }
+
+          
+          }
+
+      finally {
+        setLoading(false)
+      }
 
     }   
     
@@ -171,7 +235,7 @@ const Signup = () => {
             type="submit"
             className="btn border-[#0984E3] bg-[#0984E3] text-white font-bold rounded-2xl w-full"
           >
-            S'inscrire
+            {loading ? <span className="loading loading-spinner loading-sm text-white"></span> : "S'inscrire"}
           </button>
 
           {/* DIVIDER */}
