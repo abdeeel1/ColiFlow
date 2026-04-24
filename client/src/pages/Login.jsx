@@ -7,10 +7,20 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckboxInput } from "@/components/ui/checkbox";
 import axiosClient from "@/services/axios";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/slices/authSlice";
+import { toast } from "sonner";
 
 const Login = () => {
 
   const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const FormSchema = z.object({
     email: z.string().trim().email(),
@@ -37,12 +47,30 @@ const Login = () => {
     }
   });
 
+  useEffect(() => {
+    if(successMessage) {
+      toast.success(successMessage)
+    }
+  }, [successMessage])
+  
+  useEffect(() => {
+    if(errorMessage) {
+      toast.error(errorMessage)
+    }
+  }, [errorMessage])
+
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
   const onSubmit = async (data) => {
     const credentials = {
       email : data.email,
       password : data.password,
       remember : data.remember
     }
+
+    setLoading(true)
+    setErrorMessage('')
+    setSuccessMessage('')
 
 
     try {
@@ -52,15 +80,34 @@ const Login = () => {
 
         if (response.status === 200 || response.status === 204) {
                 
+                setSuccessMessage('Connexion réussie')
+
                 const userRes = await axiosClient.get('/api/user');
+
+                dispatch(setUser(userRes.data));
 
                 console.log("Bienvenue", userRes.data.name);
 
-                navigate('/'); 
+                setTimeout(() => {
+                  navigate('/');
+                }, 800);
         }
 
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        
+        if(err.response?.status === 422){
+              
+              const errorsData = err.response.data.errors
+
+              const firstError = Object.values(errorsData)[0][0]
+              setErrorMessage(capitalize(firstError))
+            } else {
+              setErrorMessage('Une erreur est survenue')
+            
+        }
+
+    } finally {
+      setLoading(false)
     }
   
   };
@@ -154,7 +201,7 @@ const Login = () => {
             type="submit"
             className="btn bg-[#0984E3] border-[#0984E3] hover:border-[#0984E3] text-white font-bold rounded-2xl w-full"
           >
-            Connexion
+            {loading ? <span className="loading loading-spinner loading-sm text-white"></span> : 'Connexion'}
           </button>
 
           {/* DIVIDER */}

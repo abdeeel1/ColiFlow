@@ -2,17 +2,22 @@
 
 import { CheckboxInput } from "@/components/ui/checkbox";
 import axiosClient from "@/services/axios";
+import { setUser } from "@/store/slices/authSlice";
 import GoogleButton from "@/ui/GoogleButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import z from "zod";
 
 const Signup = () => {
   
+    /* const navigate = useNavigate('/')
+
+    const dispatch = useDispatch() */
 
     const [errorMessage, setErrorMessage] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -94,7 +99,12 @@ const Signup = () => {
           await axiosClient.get('/sanctum/csrf-cookie');
           const response = await axiosClient.post('/register', credentials)
 
-          setSuccess('Compte créé avec succès')
+          
+          if(response.status === 204){
+            
+            setSuccess('Email de vérification envoyé')
+
+          }
 
 
         } 

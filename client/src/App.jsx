@@ -12,11 +12,37 @@ import AddPackage from './pages/AddPackage'
 import ForgotPassword from './pages/ForgotPassword'
 import AddTravel from './pages/AddTravel'
 import { Toaster } from './components/ui/sonner'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import axiosClient from './services/axios'
+import { logout, setUser } from './store/slices/authSlice'
 
 
 function App() {
   
-  
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+    const authenticate = async () => {
+      const hasHint = localStorage.getItem('coliflow_auth_hint') === 'true';
+
+      if (!hasHint) {
+        dispatch(logout());
+        return;
+      }
+
+      try {
+        const response = await axiosClient.get('/api/user');
+        dispatch(setUser(response.data));
+      } catch {
+        dispatch(logout());
+      }
+    };
+
+    authenticate();
+}, [dispatch]);
+
+    
 
   return (
       <div className='font-plusjakarta'>
