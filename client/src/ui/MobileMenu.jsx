@@ -1,10 +1,40 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import axiosClient from "@/services/axios";
+import { toast } from "sonner";
+import { logout } from "@/store/slices/authSlice";
 
 export default function MobileMenu({ isTraveler }) {
   const [isOpen, setIsOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
+  const [loading, setLoading] = useState(false)
+
+  const {isAuth, user} = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    
+    setLoading(true)
+
+    try {
+
+      await axiosClient.post('/logout')
+      dispatch(logout())
+      navigate('/login')
+
+    } catch (error) {
+
+        console.log(error)
+
+    }
+
+    finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -94,11 +124,18 @@ export default function MobileMenu({ isTraveler }) {
 
         
         <div className="border-t flex flex-col gap-4 border-gray-200 pt-4 mt-4">
-          <Link to={"/login"}>
-            <button className="btn btn-ghost w-full hover:bg-[#0984E3] bg-[#0984E3] text-white font-bold rounded-2xl text-sm">
-              Se connecter
+          {
+            !isAuth ?
+            <Link to={"/login"}>
+              <button className="btn btn-ghost w-full hover:bg-[#0984E3] bg-[#0984E3] text-white font-bold rounded-2xl text-sm">
+                Se connecter
+              </button>
+            </Link>
+            :
+            <button onClick={handleLogout} className="btn btn-ghost w-full border-red-700 hover:bg-red-700 bg-red-700 text-white font-bold rounded-2xl text-sm">
+                {loading ? <span className="loading loading-spinner loading-sm text-white"></span> : 'Se déconnecter'}
             </button>
-          </Link>
+          }
           <button className="btn btn-neutral w-full  text-white font-bold rounded-2xl text-sm">
             Dashboard
           </button>

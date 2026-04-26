@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axiosClient from "@/services/axios";
+import AuthMenu from "@/ui/components/AuthMenu";
 
 
 const Navbar = () => {
@@ -16,7 +17,7 @@ const Navbar = () => {
 
     const {isAuth, user} = useSelector((state) => state.auth)
 
-    const navRef = useRef(null);
+    const navRef = useRef(null)
 
     useEffect(() => {
         
@@ -30,13 +31,7 @@ const Navbar = () => {
                 clearProps: "all" 
             }
         );
-    }, []);
-
-    const handleLogout = async ()  => {
-        
-        /*  */
-
-    }
+    }, [])
 
     
     
@@ -99,24 +94,29 @@ const Navbar = () => {
                         <div className="flex gap-4  items-center pe-4">
                             <Globe color="gray" className='w-3.5 lg:w-5 cursor-pointer' />
 
-                            <div id="menu" className="mobile-only bg-white">
+                            {
+                            
+                            !isAuth ? <div className="desktop-only">
+                                <Link to={"/login"}><button className="btn btn-ghost hover:border-[#0984E3] xl:text-base xl:px-6 2xl:mx-4 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button></Link>
+                            </div>
+                            :
+                            <div className="desktop-only">
+                                <AuthMenu />
+                            </div>    
+                            
+                            }
+
+                            <div id="menu" className="mobile-only flex items-center bg-white">
 
                                 <MobileMenu isTraveler={isTraveler}  />
+
+                                {
+                                    (isAuth && <AuthMenu />)
+                                }
                             </div>
                             
                         </div>
 
-                        {
-                        
-                        !isAuth ? <div className="desktop-only">
-                            <Link to={"/login"}><button className="btn btn-ghost hover:border-[#0984E3] xl:text-base xl:px-6 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button></Link>
-                        </div>
-                        :
-                        <div className="desktop-only">
-                            <button onClick={handleLogout} className="btn btn-error  xl:text-base xl:px-6 text-md  text-white font-bold rounded-2xl transition-colors px-8">Se déconnecter</button>
-                        </div>    
-                        
-                        }
                     </div>
                 </div>
             </div>

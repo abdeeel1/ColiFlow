@@ -24,7 +24,7 @@ function App() {
   
   const dispatch = useDispatch();
   const { isAuth, user } = useSelector((state) => state.auth);
-  const [checkingServer, setCheckingServer] = useState(!isAuth);
+  const [checkingServer, setCheckingServer] = useState(true);
 
   useEffect(() => {
     const verifySession = async () => {
@@ -43,7 +43,7 @@ function App() {
 
   if (checkingServer) {
   return (
-    <div className="min-h-screen gap-2 flex items-center justify-center">
+    <div className="min-h-screen gap-2 flex items-center justify-center transition-opacity duration-300">
       <span className="loading loading-spinner loading-lg text-[#0984E3]"></span>
       <p className="text-center text-[1rem] font-bold">Veuillez patienter</p>
     </div>
