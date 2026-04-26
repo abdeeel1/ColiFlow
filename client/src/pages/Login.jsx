@@ -2,15 +2,30 @@
 
 import GoogleButton from "@/ui/GoogleButton";
 import { Controller, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckboxInput } from "@/components/ui/checkbox";
 import axiosClient from "@/services/axios";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/slices/authSlice";
+import { toast } from "sonner";
 
 const Login = () => {
 
+  const [params] = useSearchParams()
+
   const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+
+  const hasShown = useRef(false);
+
+
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const FormSchema = z.object({
     email: z.string().trim().email(),
@@ -38,7 +53,35 @@ const Login = () => {
   });
 
 
+
    
+
+  useEffect(() => {
+    if(successMessage) {
+      toast.success(successMessage)
+    }
+  }, [successMessage])
+  
+  useEffect(() => {
+    if(errorMessage) {
+      toast.error(errorMessage)
+    }
+  }, [errorMessage])
+
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
+  const handleGoogleSignUp = () => {
+      window.location.href = "http://localhost:8000/auth/google"
+  }
+
+  useEffect(()=>{
+    if(params.get('verified') && !hasShown.current){
+      hasShown.current = true
+      
+      toast.success("L'adresse e-mail a été vérifiée avec succès")
+      navigate("/login", { replace: true })
+    }
+  }, [])
 
   const onSubmit = async (data) => {
     const credentials = {
@@ -46,21 +89,54 @@ const Login = () => {
       password : data.password
     }
 
+    setLoading(true)
+    setErrorMessage('')
+    setSuccessMessage('')
+
 
     try {
        
         await axiosClient.get('/sanctum/csrf-cookie')
-        const response = await axiosClient.post('/api/login', credentials)  
+        const response = await axiosClient.post('/login', credentials)  
 
         if (response.status === 200 || response.status === 204) {
+
                 navigate('/'); 
+
+                
+                setSuccessMessage('Connexion réussie')
+
+                const userRes = await axiosClient.get('/api/user');
+
+                dispatch(setUser(userRes.data));
+
+                console.log("Bienvenue", userRes.data.name);
+
+                setTimeout(() => {
+                  navigate('/');
+                }, 800);
         }
 
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        
+        if(err.response?.status === 422){
+              
+              const errorsData = err.response.data.errors
+
+              const firstError = Object.values(errorsData)[0][0]
+              setErrorMessage(capitalize(firstError))
+            } else {
+              setErrorMessage('Une erreur est survenue')
+            
+        }
+
+    } finally {
+      setLoading(false)
     }
   
   };
+
+  
   
 
   return (
@@ -151,7 +227,7 @@ const Login = () => {
             type="submit"
             className="btn bg-[#0984E3] border-[#0984E3] hover:border-[#0984E3] text-white font-bold rounded-2xl w-full"
           >
-            Connexion
+            {loading ? <span className="loading loading-spinner loading-sm text-white"></span> : 'Connexion'}
           </button>
 
           {/* DIVIDER */}
@@ -163,7 +239,7 @@ const Login = () => {
 
           {/* GOOGLE */}
           <div className="flex flex-col gap-5 items-center">
-            <GoogleButton text={"Sign in with Google"} />
+            <GoogleButton text={"Sign in with Google"} onClick={handleGoogleSignUp}/>
 
             <p className="text-center text-[0.75rem] xl:text-[0.938rem]">
               Vous n'avez pas de compte ?{" "}

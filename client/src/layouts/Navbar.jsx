@@ -4,11 +4,17 @@ import ToggleButton from "../ui/ToggleButton";
 import { ChevronDown, Globe } from 'lucide-react';
 import gsap from "gsap";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import axiosClient from "@/services/axios";
 
 
 const Navbar = () => {
     
     const [isTraveler, setIsTraveler] = useState(false)
+
+    const dispatch = useDispatch()
+
+    const {isAuth, user} = useSelector((state) => state.auth)
 
     const navRef = useRef(null);
 
@@ -25,6 +31,12 @@ const Navbar = () => {
             }
         );
     }, []);
+
+    const handleLogout = async ()  => {
+        
+        /*  */
+
+    }
 
     
     
@@ -94,9 +106,17 @@ const Navbar = () => {
                             
                         </div>
 
-                        <div className="desktop-only">
+                        {
+                        
+                        !isAuth ? <div className="desktop-only">
                             <Link to={"/login"}><button className="btn btn-ghost hover:border-[#0984E3] xl:text-base xl:px-6 text-md bg-[#0984E3] text-white font-bold rounded-2xl transition-colors px-8">Se connecter</button></Link>
                         </div>
+                        :
+                        <div className="desktop-only">
+                            <button onClick={handleLogout} className="btn btn-error  xl:text-base xl:px-6 text-md  text-white font-bold rounded-2xl transition-colors px-8">Se déconnecter</button>
+                        </div>    
+                        
+                        }
                     </div>
                 </div>
             </div>
