@@ -18,6 +18,8 @@ import axiosClient from './services/axios'
 import { logout, setUser } from './store/slices/authSlice'
 import CompleteProfile from './pages/CompleteProfile'
 import ResetPassword from './pages/ResetPassword'
+import ProtectedRoute from './utils/ProtectedRoute'
+
 
 
 function App() {
@@ -63,20 +65,27 @@ function App() {
         <Routes>
             
             {/* Routes without Layout - Login & Signup */}
+
+            <Route element={<ProtectedRoute />} >
+            
+              <Route path='/travels/create' element={<AddTravel />} />
+            
+              <Route path='/packages/create' element={ <AddPackage /> } />
+            
+            </Route>
             
             <Route path='login' element={<Login />} />
 
             <Route path='register' element={<Signup />} />
 
-            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/complete-profile' element={<CompleteProfile />} />
 
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+            
             <Route path='/password-reset/:token' element={<ResetPassword />} />
 
-            <Route path='/packages/create' element={<AddPackage />} />
 
-            <Route path='/travels/create' element={<AddTravel />} />
 
-            <Route path='/complete-profile' element={<CompleteProfile />} />
             
             {/* Routes Layout */}
 

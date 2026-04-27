@@ -3,20 +3,40 @@ import FormStepLast from "@/components/sender-form/FormStepLast";
 import FormStepOne from "@/components/sender-form/FormStepOne";
 import FormStepThree from "@/components/sender-form/FormStepThree";
 import FormStepTwo from "@/components/sender-form/FormStepTwo";
+import axiosClient from "@/services/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Circle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod";
 
 const AddPackage = () => {
     const nums = [1, 2, 3, 4]
+    
+    
 
     const [step, setStep] = useState(1)
-    
 
+    const [loading, setLoding] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
     
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
+
+    useEffect(() => {
+        if(successMessage) {
+          toast.success(successMessage)
+        }
+      }, [successMessage])
+      
+    useEffect(() => {
+        if(errorMessage) {
+          toast.error(errorMessage)
+        }
+    }, [errorMessage])
 
     const formSchema = z.object({
         colisName : z.string().trim().min(2, "le nom du colis doit comporter plus de trois mots"),
@@ -69,7 +89,47 @@ const AddPackage = () => {
     
     const prevStep = () => setStep((prev) => prev - 1)
 
-    const onSubmitData = (data) => console.log(data)
+    const onSubmitData = async (data) => {
+        
+        setLoding(true)
+        setErrorMessage('')
+        setSuccessMessage('')
+
+        const formData = new FormData()
+
+        formData.append("from_city_id", data.cityOne);
+        formData.append("to_city_id", data.cityTwo);
+        formData.append("package_name", data.colisName);
+        formData.append("category", data.category);
+        formData.append("package_size", data.colisSize);
+        formData.append("description", data.description || "");
+        formData.append("date_delivery", data.dateDelivery);
+        formData.append("urgency", data.emergencies);
+        formData.append("price", data.price);
+        formData.append("accept_condition", data.acceptCondition ? 1 : 0);
+
+        data.pictures.forEach((file)=>{
+            formData.append("pictures[]", file)
+        })
+
+        try {
+            
+            const response = await axiosClient.post('/api/packages', formData)
+            setSuccessMessage(capitalize(response.data.message))
+            
+
+        } catch (error) {
+            
+            const errorsData = error.response.data.errors
+
+            const firstError = Object.values(errorsData)[0][0]
+            setErrorMessage(capitalize(firstError))
+
+
+        } finally {
+            setLoding(false)
+        }
+    }
 
     return ( 
         <main className="min-h-screen p-4 md:p-8 xl:p-12 bg-slate-50">
@@ -141,7 +201,7 @@ const AddPackage = () => {
                         {step < 4 ? (
                             <button type="button" onClick={nextStep} className="btn btn-ghost px-8 text-[1rem] bg-[#0984E3] border-[#0984E3] rounded-2xl text-white font-bold">Next</button>
                         ) : (
-                            <button type="submit" className="btn btn-ghost bg-green-700 border-green-700 px-8 text-[1rem] rounded-2xl">Submit</button>
+                            <button type="submit" className="btn btn-ghost bg-green-700 border-green-700 px-8 text-[1rem] rounded-2xl text-white">{loading ? <span className="loading loading-spinner loading-sm text-white"></span> : 'Submit'}</button>
                         )}
                         </div>
                     </form>

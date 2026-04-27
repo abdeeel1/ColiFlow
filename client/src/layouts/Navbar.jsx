@@ -4,18 +4,25 @@ import ToggleButton from "../ui/ToggleButton";
 import { ChevronDown, Globe } from 'lucide-react';
 import gsap from "gsap";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import axiosClient from "@/services/axios";
+import { useSelector } from "react-redux";
 import AuthMenu from "@/ui/components/AuthMenu";
+import { useTranslation } from "react-i18next";
 
 
 const Navbar = () => {
     
-    const [isTraveler, setIsTraveler] = useState(false)
+    const { t, i18n } = useTranslation();
 
-    const dispatch = useDispatch()
 
-    const {isAuth, user} = useSelector((state) => state.auth)
+    const handleTranslateLang = (selectedLang) => {
+        i18n.changeLanguage(selectedLang)
+
+        localStorage.setItem('i18nextLng', selectedLang);
+    }
+
+
+    const { user, isAuth } = useSelector((state) => state.auth);
+    const isTraveler = user?.is_traveler;
 
     const navRef = useRef(null)
 
@@ -52,21 +59,21 @@ const Navbar = () => {
                     {
                         !isTraveler ?
                         <ul className="lg:flex font-semibold lg:items-center lg:gap-6 text-sm">
-                            <Link to={"/"}>Acceuil</Link>
+                            <Link to={"/"}>{t('Acceuil')}</Link>
                             <div className="dropdown dropdown-hover">
-                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Envoyer un colis <ChevronDown /></li>
+                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">{t('Envoyer un colis')}<ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/packages/create"}>Nouveau colis</Link></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/packages/create"}>{t('Nouveau colis')}</Link></li>
                                 <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels"}>Liste des trajets</Link></li>
                                 <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
                             </ul>
                             </div>
-                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Colis</li>
-                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl"><a href="#faq">FAQ</a></li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">{t('Mes Colis')}</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl"><a href="#faq">{t('FAQ')}</a></li>
                         </ul>
                         :
                         <ul className="lg:flex font-semibold lg:gap-4 lg:items-center text-sm">
-                            <Link to={"/"}>Acceuil</Link>
+                            <Link to={"/"}>{t('Acceuil')}</Link>
                             <div className="dropdown dropdown-hover">
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Publier un trajet <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
@@ -87,12 +94,26 @@ const Navbar = () => {
 
 
                     <div className="flex items-center gap-4 lg:gap-10">
-                        <div>
-                            <ToggleButton isTraveler={isTraveler} setIsTraveler={setIsTraveler}/>
-                        </div>
+                        {
+                            (
+                            isAuth && 
+                            <div className="hidden lg:block">
+                                <ToggleButton />
+                            </div>
+                            ) 
+                        }
 
-                        <div className="flex gap-4  items-center pe-4">
-                            <Globe color="gray" className='w-3.5 lg:w-5 cursor-pointer' />
+                        <div className="flex gap-4   items-center pe-4">
+                            
+
+                            <div className="dropdown dropdown-center w-10">
+                                <div tabIndex={0} role="button" className="btn m-1 btn-ghost hover:bg-[#FFFFFF] hover:border-[#FFFFFF]"><Globe color="gray" className='w-3.5 lg:w-5 cursor-pointer' /></div>
+                                <ul tabIndex="-1" className="dropdown-content menu flex justify-center items-center  z-1 w-20 p-2 bg-base-100 shadow-sm">
+                                    <li value="en"><button onClick={() => handleTranslateLang('en')}><span className="fi fi-gb"></span></button></li>
+                                    <li value="ar"><button onClick={() => handleTranslateLang('ar')}><span className="fi fi-sa"></span></button></li>
+                                    <li value="fr"><button onClick={() => handleTranslateLang('fr')}><span className="fi fi-gf"></span></button></li>
+                                </ul>
+                            </div>
 
                             {
                             

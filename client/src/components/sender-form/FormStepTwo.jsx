@@ -1,4 +1,6 @@
+import axiosClient from "@/services/axios";
 import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 const FormStepTwo = () => {
@@ -6,13 +8,25 @@ const FormStepTwo = () => {
     
     const { register, setValue, watch, formState: {errors} } = useFormContext()
 
+    const [cities, setCities] = useState([])
+
+    useEffect(() => {
+        try {
+            axiosClient.get('/api/cities')
+            .then((res)=>{
+                setCities(res.data)
+            })
+        } catch (err) {
+            console.log(err)   
+        }
+    }, [])
+
     
 
     const cityOne = watch('cityOne')
 
     const emergency = watch('emergencies')
 
-    const cities = ["casablanca", "rabat", "tanger", "agadir", "fez", "marrakech"]
 
     return ( 
         <div className="bg-white shadow-sm border border-slate-100 p-6 md:p-8 rounded-[2rem]">
@@ -26,8 +40,8 @@ const FormStepTwo = () => {
                             <select {...register('cityOne')} className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[0.95rem] rounded-xl appearance-none px-4 py-3 focus:bg-white focus:outline-none focus:border-[#0984E3] focus:ring-4 focus:ring-[#0984E3]/10 transition-all cursor-pointer" >
                                 <option value="">Sélectionner une ville</option>
                                 {
-                                    cities.map((city, index)=>(
-                                        <option key={index} value={city} className="capitalize">{city}</option>
+                                    cities.map((city)=>(
+                                        <option key={city.id} value={city.id} className="capitalize">{city.name}</option>
                                     ))
                                 }
                             </select>
@@ -45,9 +59,9 @@ const FormStepTwo = () => {
                             <select {...register('cityTwo')} className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[0.95rem] rounded-xl appearance-none px-4 py-3 focus:bg-white focus:outline-none focus:border-[#0984E3] focus:ring-4 focus:ring-[#0984E3]/10 transition-all cursor-pointer" >
                                 <option value="">Sélectionner une ville</option>
                                 {
-                                    cities.filter(city=>city !== cityOne)
-                                    .map((city, index)=>(
-                                        <option className="capitalize" key={index} value={city} >{city}</option>
+                                    cities.filter(city => city.name !== cityOne)
+                                    .map((city)=>(
+                                        <option className="capitalize" key={city.id} value={city.id} >{city.name}</option>
                                     ))
                                 }
                             </select>

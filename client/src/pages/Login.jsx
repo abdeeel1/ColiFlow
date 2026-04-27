@@ -81,7 +81,7 @@ const Login = () => {
       toast.success("L'adresse e-mail a été vérifiée avec succès")
       navigate("/login", { replace: true })
     }
-  }, [])
+  }, [navigate, params])
 
   const onSubmit = async (data) => {
     const credentials = {

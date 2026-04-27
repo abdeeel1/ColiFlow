@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axiosClient from "@/services/axios";
 import { toast } from "sonner";
 import { logout } from "@/store/slices/authSlice";
+import ToggleButton from "./ToggleButton";
+
 
 export default function MobileMenu({ isTraveler }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -124,6 +126,12 @@ export default function MobileMenu({ isTraveler }) {
 
         
         <div className="border-t flex flex-col gap-4 border-gray-200 pt-4 mt-4">
+          
+          <div>
+            <ToggleButton />  
+          </div>
+
+          
           {
             !isAuth ?
             <Link to={"/login"}>
