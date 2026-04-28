@@ -15,7 +15,8 @@ const SearchTravel = () => {
       depart : z.string().trim().min(3),
       arrive : z.string().trim().min(3),
       dateDepart : z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date invalide"),
-      typeColis : z.coerce.number().optional()
+      typeColis : z.coerce.number().optional(),
+      verified : z.boolean().optional()
   })
 
   const {register, handleSubmit} = useForm({
@@ -24,24 +25,21 @@ const SearchTravel = () => {
       depart : "",
       arrive : "",
       dateDepart : "",
-      typeColis : ""
+      typeColis : "",
+      verified : false
     }
   })
 
-  /* const onSubmitData = async (data) => {
+  const onSubmitData = async (data) => {
 
-    try {
-      
-    } catch (err) {
-      console.log(err)
-    }
-  } */
+    console.log(data)
+  }
 
   return (
     <div className="mt-10 bg-gray-100 flex items-center justify-center px-3">
 
       {/* Mobile & md: stacked card */}
-      <form /* onSubmit={handleSubmit(onSubmitData)} */ className="flex flex-col lg:hidden bg-white rounded-2xl border border-gray-200 w-full max-w-md overflow-hidden">
+      <form onSubmit={handleSubmit(onSubmitData)} className="flex flex-col lg:hidden bg-white rounded-2xl border border-gray-200 w-full max-w-md overflow-hidden">
         
         <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
           <MapPin size={14} className="text-gray-400 shrink-0" />
@@ -86,6 +84,13 @@ const SearchTravel = () => {
               </select>
             </div>
           </div>
+
+        <div className="flex items-center gap-2 px-4 py-3 border-t border-gray-100">
+          <input {...register('verified')} type="checkbox" className="checkbox checkbox-sm checkbox-primary" />
+          <label className="text-sm text-gray-700">
+            Conducteurs vérifiés seulement
+          </label>
+        </div>
 
         <div className="p-3">
           <button type="submit" className="w-full bg-[#0984E3] hover:bg-[#0984E3] active:scale-95 text-white text-sm font-semibold py-2.5 rounded-xl transition-all">
@@ -136,6 +141,15 @@ const SearchTravel = () => {
             <span className="text-[9px] xl:text-[10px] font-semibold uppercase tracking-wide text-gray-400">Type de colis</span>
             <input {...register('typeColis')} type="text"  placeholder="Fragile, alimentaire..."
               className="border-none outline-none bg-transparent text-xs xl:text-sm text-gray-800 placeholder-gray-300 py-0.5 w-full" />
+          </div>
+        </div>
+
+        <Divider />
+
+        <div className="flex items-center gap-2 px-3 xl:px-4" style={{ flex: "0.7" }}>
+          <div className="flex items-center gap-2">
+            <input {...register('verified')} type="checkbox" className="checkbox checkbox-xs checkbox-primary" />
+            <span className="text-[9px] xl:text-[10px] font-semibold uppercase tracking-wide text-gray-400">Vérifiés</span>
           </div>
         </div>
 
