@@ -19,6 +19,7 @@ import { logout, setUser } from './store/slices/authSlice'
 import CompleteProfile from './pages/CompleteProfile'
 import ResetPassword from './pages/ResetPassword'
 import ProtectedRoute from './utils/ProtectedRoute'
+import { useTranslation } from 'react-i18next'
 
 
 
@@ -27,6 +28,12 @@ function App() {
   const dispatch = useDispatch();
   const { isAuth, user } = useSelector((state) => state.auth);
   const [checkingServer, setCheckingServer] = useState(true);
+
+   const { i18n } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  }, [i18n.language]);
 
   useEffect(() => {
     const verifySession = async () => {

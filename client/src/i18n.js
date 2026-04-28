@@ -24,6 +24,7 @@ i18n
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'], // This ensures it writes to localStorage automatically
     },
+    
     fallbackLng: 'fr',
     debug: true,
 

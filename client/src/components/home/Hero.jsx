@@ -3,8 +3,11 @@ import Features from "../../ui/components/Features";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
+    
+    const { t } = useTranslation();
     
     useGSAP(() => {
         gsap.to('#tag-website', {
@@ -64,7 +67,7 @@ const Hero = () => {
                     <Zap color="#FFFFFF" className="w-3.5" />
                     </div>
                     <div className="text-white font-semibold text-center">
-                        <p className="text-[8px] lg:text-[10px]">DISPONIBLE PARTOUT AU MAROC</p>
+                        <p className="text-[8px] lg:text-[10px]">{t('DISPONIBLE PARTOUT AU MAROC')}</p>
                     </div>
                 </div>
 
@@ -72,21 +75,21 @@ const Hero = () => {
 
             <div  className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
                 <p id="header-title" className="font-bold font-clashdisplay-bold  text-center text-[32px] md:text-[48px] lg:text-[4.5rem] leading-tight text-[#2D3436]">
-                    Envoyez vos Colis au <br />
-                    <span className="text-[#0984E3]">Maroc</span> en Toute 
+                    {t('Envoyez vos Colis au')} <br />
+                    <span className="text-[#0984E3]">{t('Maroc')}</span> {t('en Toute')} 
                     <span id="span1" className="inline-flex items-center gap-2 text-[#0984E3] ml-2">
                     <Package className="size-10 " />
-                    Simplicité
+                    {t('Simplicité')}
                     </span>
                 </p>
 
                 <div id="desciption" className="mb-4 lg:mb-8">
-                    <span className="text-center text-[12px] lg:text-[18px] text-[#141414]">La première plateforme P2P de livraison au Maroc.</span>
+                    <span className="text-center text-[12px] lg:text-[18px] text-[#141414]">{t('La première plateforme P2P de livraison au Maroc')}</span>
                 </div>
 
                 <div id="cta-buttons" className="flex gap-4">
-                    <Link to={"/travels"}><button className="btn btn-ghost hover:border-[#0984E3]  bg-[#0984E3] rounded-2xl text-white font-bold btn-sm lg:btn-md">Trouver un trajet</button></Link>
-                    <Link to={"/travels/create"}><button className="btn btn-ghost hover:border-[#c7c9caf6]  bg-[#c7c9caf6] rounded-2xl text-gray-500 font-bold btn-sm lg:btn-md">Publier un trajet</button></Link>
+                    <Link to={"/travels"}><button className="btn btn-ghost hover:border-[#0984E3]  bg-[#0984E3] rounded-2xl text-white font-bold btn-sm lg:btn-md">{t('Trouver un trajet')}</button></Link>
+                    <Link to={"/travels/create"}><button className="btn btn-ghost hover:border-[#c7c9caf6]  bg-[#c7c9caf6] rounded-2xl text-gray-500 font-bold btn-sm lg:btn-md">{t('Publier un trajet')}</button></Link>
                 </div>
             </div>
 

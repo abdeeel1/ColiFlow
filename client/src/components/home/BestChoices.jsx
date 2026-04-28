@@ -19,7 +19,7 @@ const BestChoices = () => {
         <section>
             
             <div className="flex justify-center items-center flex-col space-y-10">
-                <p className="text-center font-clashdisplay font-bold text-2xl xl:text-3xl">Qu'attendez-vous ?{" "} Commencez dès maintenant.</p>
+                <p className="text-center font-clashdisplay font-bold text-2xl xl:text-3xl">Qu'attendez-vous ?{" "} Commencez dès maintenant</p>
 
                 <SearchTravel />
 
@@ -50,7 +50,7 @@ const BestChoices = () => {
 
                     <div className="flex gap-2 md:gap-10 justify-center md:justify-evenly items-center px-4">
                         
-                        <p className="text-white font-semibold text-[0.5rem] md:text-[0.938rem] text-center">Une solution simple, rapide et 100% marocaine.</p>
+                        <p className="text-white font-semibold text-[0.5rem] md:text-[0.938rem] text-center">Une solution simple, rapide et 100% marocaine</p>
                         
                         <ActionLink text="Read More" link="#" />
                         

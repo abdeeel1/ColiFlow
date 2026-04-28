@@ -75,15 +75,15 @@ const Navbar = () => {
                         <ul className="lg:flex font-semibold lg:gap-4 lg:items-center text-sm">
                             <Link to={"/"}>{t('Acceuil')}</Link>
                             <div className="dropdown dropdown-hover">
-                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">Publier un trajet <ChevronDown /></li>
+                            <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">{t('Publier un trajet')} <ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels/create"}>Nouveau trajet</Link></li>
-                                <li className="hover:bg-gray-200 rounded-2xl"><a>Demandes de Réservation</a></li>
-                                <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels/create"}>{t('Nouveau trajet')}</Link></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>{t('Demandes de Réservation')}</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>{t('Dashboard')}</a></li>
                             </ul>
                             </div>
-                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">Mes Travel</li>
-                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl"><a href="#faq">FAQ</a></li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">{t('Mes Travel')}</li>
+                            <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl"><a href="#faq">{t('FAQ')}</a></li>
                         </ul>
                         
                         

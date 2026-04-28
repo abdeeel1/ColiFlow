@@ -5,5 +5,33 @@
     "Mes Colis" : "طرودي",
     "FAQ" : "الأسئلة الشائعة",
     "Liste des trajets" : "قائمة الرحلات",
-    "Dashboard" : "لوحة التحكم"
+    "Dashboard" : "لوحة التحكم",
+    "Publier un trajet" : "نشر مسار",
+    "Nouveau trajet" : "مسار جديد",
+    "Demandes de Réservation" : "طلبات الحجز",
+    "Mes Travel" : "رحلاتي",
+    "DISPONIBLE PARTOUT AU MAROC" : "متوفر في جميع أنحاء المغرب",
+    "Envoyez vos Colis au" : "أرسلوا طرودكم إلى",
+    "Maroc" : "المغرب",
+    "en Toute" : "بكل",
+    "Simplicité" : "بساطة",
+    "La première plateforme P2P de livraison au Maroc" : "أول منصة توصيل تعمل بنظام P2P في المغرب",
+    "Trouver un trajet" : "البحث عن مسار",
+    "features": {
+        "step1": {
+        "title": "انشر إعلانك",
+        "desc": "صف منتجك واعثر على مسافر خلال ثوانٍ"
+        },
+        "step2": {
+        "title": "حسابات موثوقة",
+        "desc": "أرسل بأمان بفضل التحقق من الهوية"
+        },
+        "step3": {
+        "title": "تتبع مباشر",
+        "desc": "تابع شحنتك من البداية إلى النهاية"
+        }
+    }
+
+
+
 }
