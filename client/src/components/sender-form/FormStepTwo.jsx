@@ -59,7 +59,7 @@ const FormStepTwo = () => {
                             <select {...register('cityTwo')} className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[0.95rem] rounded-xl appearance-none px-4 py-3 focus:bg-white focus:outline-none focus:border-[#0984E3] focus:ring-4 focus:ring-[#0984E3]/10 transition-all cursor-pointer" >
                                 <option value="">Sélectionner une ville</option>
                                 {
-                                    cities.filter(city => city.name !== cityOne)
+                                    cities.filter(city => city.id !== Number(cityOne))
                                     .map((city)=>(
                                         <option className="capitalize" key={city.id} value={city.id} >{city.name}</option>
                                     ))

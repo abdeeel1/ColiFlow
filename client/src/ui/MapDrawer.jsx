@@ -29,11 +29,11 @@ export default function MapDrawer({travelsAnnouncement, MapBoundsFilter}) {
                             <MapBoundsFilter />
                 
                             {travelsAnnouncement.map((travel) => (
-                              <Marker key={travel.id} position={[travel.lat, travel.lng]}>
+                              <Marker key={travel.id} position={[travel.latitude, travel.longitude]}>
                                 <Popup>
-                                  <strong>{travel.traveler}</strong>
+                                  <strong>{travel.user?.name}</strong>
                                   <br />
-                                  De : {travel.ville_depart} à {travel.ville_darrive}
+                                  De : {travel.from_city?.name} à {travel.to_city?.name}
                                 </Popup>
                               </Marker>
                             ))}

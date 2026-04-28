@@ -1,14 +1,38 @@
+import axiosClient from "@/services/axios";
 import ColisCheckbox from "@/ui/components/ColisCheckbox";
 import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 const TravelerFormOne = () => {
     
-    const {register, watch, formState : {errors}} = useFormContext()
+    const {register, watch, setValue, formState : {errors}} = useFormContext()
     
-    const cities = ["casablanca", "rabat", "tanger", "agadir", "fez", "marrakech"]
+    const [cities, setCities] = useState([])
+    
+    useEffect(() => {
+        try {
+            axiosClient.get('/api/cities').then((res)=>setCities(res.data))
+        } catch (err) {
+            console.log(err)
+        }
+    }, [])
 
+    
     const travelCityOne = watch('travelCityOne')
+
+    useEffect(() => {
+    if (!travelCityOne || cities.length === 0) return;
+
+    const selectedCity = cities.find(
+        (city) => city.id === Number(travelCityOne)
+    );
+
+    if (selectedCity) {
+        setValue("latitude", selectedCity.latitude);
+        setValue("longitude", selectedCity.longitude);
+    }
+    }, [travelCityOne, cities, setValue]);
     
     
     return ( 
@@ -23,8 +47,8 @@ const TravelerFormOne = () => {
                             <select {...register('travelCityOne')} className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[0.95rem] rounded-xl appearance-none px-4 py-3 focus:bg-white focus:outline-none focus:border-[#0984E3] focus:ring-4 focus:ring-[#0984E3]/10 transition-all cursor-pointer" >
                                 <option value="">Sélectionner une ville</option>
                                 {
-                                    cities.map((city, index) => (
-                                        <option key={index} value={city} className="capitalize">{city}</option>
+                                    cities.map((city) => (
+                                        <option key={city.id} value={city.id} className="capitalize">{city.name}</option>
                                     ))
                                 }
                             </select>
@@ -42,9 +66,9 @@ const TravelerFormOne = () => {
                             <select {...register('travelCityTwo')} className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[0.95rem] rounded-xl appearance-none px-4 py-3 focus:bg-white focus:outline-none focus:border-[#0984E3] focus:ring-4 focus:ring-[#0984E3]/10 transition-all cursor-pointer" >
                                 <option value="">Sélectionner une ville</option>
                                 {
-                                    cities.filter(city => city !== travelCityOne )
-                                    .map((city, index) => (
-                                        <option key={index} value={city} className="capitalize">{city}</option>
+                                    cities.filter(city => city.id !== Number(travelCityOne) )
+                                    .map((city) => (
+                                        <option key={city.id} value={city.id} className="capitalize">{city.name}</option>
                                     ))
                                 }
                             </select>

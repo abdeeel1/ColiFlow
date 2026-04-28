@@ -2,17 +2,26 @@ import TravelerFormLast from "@/components/traveler-form/TravelerFormLast";
 import TravelerFormOne from "@/components/traveler-form/TravelerFormOne";
 import TravelerFormThree from "@/components/traveler-form/TravelerFormThree";
 import TravelerFormTwo from "@/components/traveler-form/TravelerFormTwo";
+import axiosClient from "@/services/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Circle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod";
 
 const AddTravel = () => {
     const nums = [1, 2, 3, 4]
 
     const [step, setStep] = useState(1)
+
+    const [loading, setLoding] = useState(false)
+    const [successMessage, setSuccessMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
 
     const formSchema = z.object({
         travelCityOne : z.string().min(1, "la sélection d'une ville est obligatoire"),
@@ -26,6 +35,8 @@ const AddTravel = () => {
         colisPoids : z.number("la sélection d'un poid est obligatoire"),
         colisAccept : z.array(z.string()).min(1, "choisissez au moins une option"),
         travelPrice: z.coerce.number({ invalid_type_error: "nombre invalide" }).min(1, "Prix requis"),
+        latitude : z.coerce.number().optional(),
+        longitude : z.coerce.number().optional(),
     })
 
 
@@ -42,9 +53,28 @@ const AddTravel = () => {
             carPictures : null,
             colisPoids : "",
             colisAccept : [],
-            travelPrice : ""
+            travelPrice : "",
+            latitude : "",
+            longitude: ""
+
         }
     })
+
+    useEffect(() => {
+            
+            if(successMessage) {
+              toast.success(successMessage)
+            }
+
+    }, [successMessage])
+          
+    useEffect(() => {
+            
+            if(errorMessage) {
+              toast.error(errorMessage)
+            }
+
+    }, [errorMessage])
 
     const nextStep = async () => {
         let fields = []
@@ -64,7 +94,51 @@ const AddTravel = () => {
 
     const prevStep = () => setStep((prev) => prev - 1)
 
-    const onSubmitData = (data) => console.log(data)
+    const onSubmitData = async (data) => {
+        setLoding(true);
+        setSuccessMessage("");
+        setErrorMessage("");
+
+        try {
+            const formData = new FormData();
+
+            formData.append("from_city_id", data.travelCityOne);
+            formData.append("to_city_id", data.travelCityTwo);
+            formData.append("departure_date", data.travelDate);
+            formData.append("max_weight", data.colisPoids);
+            formData.append("price", data.travelPrice);
+
+            formData.append("car_identifier", data.carId);
+            formData.append("car_model", data.carModel);
+            formData.append("car_type", data.carType);
+
+            formData.append("latitude", data.latitude);
+            formData.append("longitude", data.longitude);
+
+            data.colisAccept.forEach((item) => {
+            formData.append("accepted_categories[]", item);
+            });
+
+            if (data.carPictures && data.carPictures.length > 0) {
+            Array.from(data.carPictures).forEach((file) => {
+                formData.append("pictures[]", file);
+            });
+            }
+
+            const res = await axiosClient.post("/api/travels", formData);
+
+            toast.success(capitalize(res.data.message));
+
+        } catch (err) {
+            if (err.response?.data?.message) {
+            toast.error(capitalize(err.response.data.message));
+            } else {
+            toast.error("Une erreur est survenue");
+            }
+        } finally {
+            setLoding(false);
+        }
+        };
 
     return ( 
         <main className="min-h-screen p-4 md:p-8 xl:p-12 bg-slate-50">
@@ -136,7 +210,7 @@ const AddTravel = () => {
                         {step < 4 ? (
                             <button type="button" onClick={nextStep} className="btn btn-ghost px-8 text-[1rem] bg-[#0984E3] border-[#0984E3] rounded-2xl text-white font-bold">Next</button>
                         ) : (
-                            <button type="submit" className="btn btn-ghost bg-green-700 border-green-700 px-8 text-[1rem] rounded-2xl hover:text-white">Submit</button>
+                            <button type="submit" className="btn btn-ghost bg-green-700 border-green-700 px-8 text-[1rem] rounded-2xl hover:text-white text-white">{loading ? <span className="loading loading-spinner loading-sm text-white"></span> : 'Submit'}</button>
                         )}
                         </div>
                     </form>

@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('travel_images', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('travel_id')->constrained('travels')->cascadeOnDelete();
             
-            $table->string('name');
-            $table->string('postal_code')->nullable();
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('path');
+
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cities');
+        Schema::dropIfExists('travel_images');
     }
 };

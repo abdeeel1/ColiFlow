@@ -46,7 +46,7 @@ export default function AuthMenu() {
             <Avatar size="sm">
               <Avatar.Image
                 alt="Jane"
-                src={user.profile_picture}
+                src={user.profile_picture ? user.profile_picture : `https://ui-avatars.com/api/?name=${user.name}+Doe&background=0984E3&color=fff`}
               />
             </Avatar>
             <div className="flex flex-col gap-0">

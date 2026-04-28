@@ -3,5 +3,7 @@
     "Envoyer un colis" : "Send a package",
     "Nouveau colis" : "New package",
     "Mes Colis" : "My Packages",
-    "FAQ" : "FAQ"
+    "FAQ" : "FAQ",
+    "Liste des trajets" : "List of routes",
+    "Dashboard" : "Dashboard"
 }

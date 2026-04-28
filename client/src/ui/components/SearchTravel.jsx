@@ -15,10 +15,10 @@ const SearchTravel = () => {
       depart : z.string().trim().min(3),
       arrive : z.string().trim().min(3),
       dateDepart : z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date invalide"),
-      typeColis : z.string().trim()
+      typeColis : z.coerce.number().optional()
   })
 
-  const {register, handleSubmit, reset} = useForm({
+  const {register, handleSubmit} = useForm({
     resolver : zodResolver(FormSchema),
     defaultValues : {
       depart : "",
@@ -28,16 +28,20 @@ const SearchTravel = () => {
     }
   })
 
-  const onSubmitData = (data) => {
-    console.log(data)
-    reset()
-  }
+  /* const onSubmitData = async (data) => {
+
+    try {
+      
+    } catch (err) {
+      console.log(err)
+    }
+  } */
 
   return (
     <div className="mt-10 bg-gray-100 flex items-center justify-center px-3">
 
       {/* Mobile & md: stacked card */}
-      <form onSubmit={handleSubmit(onSubmitData)} className="flex flex-col lg:hidden bg-white rounded-2xl border border-gray-200 w-full max-w-md overflow-hidden">
+      <form /* onSubmit={handleSubmit(onSubmitData)} */ className="flex flex-col lg:hidden bg-white rounded-2xl border border-gray-200 w-full max-w-md overflow-hidden">
         
         <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
           <MapPin size={14} className="text-gray-400 shrink-0" />
@@ -66,15 +70,22 @@ const SearchTravel = () => {
                 className="border-none outline-none bg-transparent text-sm text-gray-800 w-full" />
             </div>
           </div>
+        </div>
           <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100 flex-1">
             <Package size={14} className="text-gray-400 shrink-0" />
             <div className="flex flex-col w-full">
               <span className="text-[9px] font-semibold uppercase tracking-wide text-gray-400">Type de colis</span>
-              <input {...register('typeColis')} type="text"  placeholder="Fragile, alimentaire..."
-                className="border-none outline-none bg-transparent text-sm text-gray-800 placeholder-gray-300 w-full" />
+              <select {...register('typeColis')}
+                className="border-none select select-xs outline-none bg-white text-sm text-gray-800 w-full" >
+                  <option value="0">Select Type</option>
+                  <option value="1">Petit</option>
+                  <option value="2">Moyen</option>
+                  <option value="3">Grand</option>
+                  <option value="4">Volumineux</option>
+                  
+              </select>
             </div>
           </div>
-        </div>
 
         <div className="p-3">
           <button type="submit" className="w-full bg-[#0984E3] hover:bg-[#0984E3] active:scale-95 text-white text-sm font-semibold py-2.5 rounded-xl transition-all">

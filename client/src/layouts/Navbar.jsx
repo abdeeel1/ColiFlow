@@ -64,8 +64,8 @@ const Navbar = () => {
                             <li className="lg:text-[#2D3436] cursor-pointer font-semibold flex items-center gap-2 hover:bg-gray-200 py-1 px-4 rounded-2xl">{t('Envoyer un colis')}<ChevronDown /></li>
                             <ul tabIndex="-1" className="dropdown-content menu bg-white rounded-box z-1 w-52 p-2 shadow-sm">
                                 <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/packages/create"}>{t('Nouveau colis')}</Link></li>
-                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels"}>Liste des trajets</Link></li>
-                                <li className="hover:bg-gray-200 rounded-2xl"><a>Dashboard</a></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><Link to={"/travels"}>{t('Liste des trajets')}</Link></li>
+                                <li className="hover:bg-gray-200 rounded-2xl"><a>{t('Dashboard')}</a></li>
                             </ul>
                             </div>
                             <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">{t('Mes Colis')}</li>
@@ -103,7 +103,7 @@ const Navbar = () => {
                             ) 
                         }
 
-                        <div className="flex gap-4   items-center pe-4">
+                        <div className="flex gap-4 2xl:gap-0   items-center pe-4">
                             
 
                             <div className="dropdown dropdown-center w-10">
