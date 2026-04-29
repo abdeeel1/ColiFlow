@@ -1,35 +1,36 @@
 {
-    "Acceuil" : "Home",
-    "Envoyer un colis" : "Send a package",
-    "Nouveau colis" : "New package",
-    "Mes Colis" : "My Packages",
-    "FAQ" : "FAQ",
-    "Liste des trajets" : "List of routes",
-    "Dashboard" : "Dashboard",
-    "Publier un trajet" : "Post a route",
-    "Nouveau trajet" : "New route",
-    "Demandes de Réservation" : "Reservation Requests",
-    "Mes Travel" : "My Trips",
-    "DISPONIBLE PARTOUT AU MAROC" : "AVAILABLE THROUGHOUT MOROCCO",
-    "Envoyez vos Colis au" : "Send your packages to",
-    "Maroc" : "Morocco",
-    "en Toute" : "in Total",
-    "Simplicité" : "Simplicity",
-    "La première plateforme P2P de livraison au Maroc" : "Morocco's first peer-to-peer delivery platform",
-    "Trouver un trajet" : "Find a route",
+    "Acceuil": "Home",
+    "Envoyer un colis": "Send a package",
+    "Nouveau colis": "New package",
+    "Mes Colis": "My Packages",
+    "FAQ": "FAQ",
+    "Liste des trajets": "List of routes",
+    "Dashboard": "Dashboard",
+    "Publier un trajet": "Post a route",
+    "Nouveau trajet": "New route",
+    "Demandes de Réservation": "Reservation Requests",
+    "Mes Travel": "My Trips",
+    "DISPONIBLE PARTOUT AU MAROC": "AVAILABLE THROUGHOUT MOROCCO",
+    "Envoyez vos Colis au": "Send your packages to",
+    "Maroc": "Morocco",
+    "en Toute": "in Total",
+    "Simplicité": "Simplicity",
+    "La première plateforme P2P de livraison au Maroc": "Morocco's first peer-to-peer delivery platform",
+    "Trouver un trajet": "Find a route",
     "features": {
-    "step1": {
-      "title": "Post your listing",
-      "desc": "Describe your item and find a traveler in seconds"
+        "step1": {
+            "title": "Post your listing",
+            "desc": "Describe your item and find a traveler in seconds"
+        },
+        "step2": {
+            "title": "Verified Profiles",
+            "desc": "Send safely thanks to our identity verification"
+        },
+        "step3": {
+            "title": "Live Tracking",
+            "desc": "Track your delivery from start to finish"
+        }
     },
-    "step2": {
-      "title": "Verified Profiles",
-      "desc": "Send safely thanks to our identity verification"
-    },
-    "step3": {
-      "title": "Live Tracking",
-      "desc": "Track your delivery from start to finish"
-    }
-    }
-
+    "Qu'attendez-vous ? Commencez dès maintenant": "What are you waiting for ? Get started now",
+    "Les meilleures opportunités de livraison": "The best delivery options"
 }

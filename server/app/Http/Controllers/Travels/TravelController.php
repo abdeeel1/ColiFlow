@@ -46,6 +46,10 @@ class TravelController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
+        if ($request->filled('car_type')) {
+            $query->where('car_type', $request->car_type);
+        }
+
         // Filter by verified users only
         if ($request->filled('verified')) {
             $query->whereHas('user', function ($q) {

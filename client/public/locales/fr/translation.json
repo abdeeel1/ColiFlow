@@ -1,18 +1,16 @@
 {
-    
     "features": {
         "step1": {
-        "title": "Publiez votre annonce",
-        "desc": "Décrivez votre objet et trouvez un voyageur en quelques secondes"
+            "title": "Publiez votre annonce",
+            "desc": "Décrivez votre objet et trouvez un voyageur en quelques secondes"
         },
         "step2": {
-        "title": "Profils Vérifiés",
-        "desc": "Envoyez en toute sécurité grâce à notre vérification d'identité par CIN"
+            "title": "Profils Vérifiés",
+            "desc": "Envoyez en toute sécurité grâce à notre vérification d'identité par CIN"
         },
         "step3": {
-        "title": "Suivi en Direct",
-        "desc": "Suivez l'état de votre livraison, du départ jusqu'à l'arrivée"
+            "title": "Suivi en Direct",
+            "desc": "Suivez l'état de votre livraison, du départ jusqu'à l'arrivée"
         }
     }
-
 }

@@ -4,13 +4,13 @@
 }
 
 @font-face {
-  font-family: ClashDisplay-bold;
-  src: url("../src/assets/fonts/ClashDisplay-Bold.ttf");
+    font-family: ClashDisplay-bold;
+    src: url("../src/assets/fonts/ClashDisplay-Bold.ttf");
 }
 
 @font-face {
-  font-family: ClashDisplay;
-  src: url("../src/assets/fonts/ClashDisplay-Regular.ttf");
+    font-family: ClashDisplay;
+    src: url("../src/assets/fonts/ClashDisplay-Regular.ttf");
 }
 
 @import "tailwindcss";
@@ -18,40 +18,39 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import 'flag-icons/css/flag-icons.min.css';
-
+@import "flag-icons/css/flag-icons.min.css";
 
 @custom-variant dark (&:is(.dark *));
 @plugin "daisyui";
 
 @theme {
-    --font-plusjakarta : PlusJakarta, 'sans-serif';
-    --font-clashdisplay-bold : ClashDisplay-bold, 'sans-serif';
-    --font-clashdisplay : ClashDisplay, 'sans-serif';
+    --font-plusjakarta: PlusJakarta, "sans-serif";
+    --font-clashdisplay-bold: ClashDisplay-bold, "sans-serif";
+    --font-clashdisplay: ClashDisplay, "sans-serif";
 }
 
-html, body{
+html,
+body {
     width: 100%;
     scroll-behavior: smooth;
 }
 
-
 @media (max-width: 1149px) {
-  .desktop-only {
-    display: none !important;
-  }
+    .desktop-only {
+        display: none !important;
+    }
 }
 
 /* Cache l'élément sur les écrans supérieurs à 1150px (Laptops, PC) */
 @media (min-width: 1149px) {
-  .mobile-only {
-    display: none !important;
-  }
+    .mobile-only {
+        display: none !important;
+    }
 }
 
 @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: "Geist Variable", sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -163,13 +162,13 @@ html, body{
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
-  html {
-    @apply font-sans;
+    html {
+        @apply font-sans;
     }
 }
