@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const Footer = () => {
     return (
         <footer className="py-15">
@@ -21,9 +23,9 @@ const Footer = () => {
                                 <li className="text-[#141414] text-[0.75rem]">
                                     Publier un trajet
                                 </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/readmore/Cities Covered"} className="text-[#141414] text-[0.75rem]">
                                     Villes couvertes
-                                </li>
+                                </Link>
                                 <li className="text-[#141414] text-[0.75rem]">
                                     Objets autorisés
                                 </li>
@@ -61,23 +63,21 @@ const Footer = () => {
                                 <li className="text-[#141414] text-[0.75rem]">
                                     Sécurité des colis
                                 </li>
-                                <li className="text-[#141414] text-[0.75rem]">
-                                    Signalement
-                                </li>
+                                
                             </ul>
                         </div>
                         <div>
                             <p className="text-[#A4A4A4]">Suivre ColiFlow</p>
                             <ul className="flex flex-col gap-3 py-3">
-                                <li className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/readmore/Customer Support"} className="text-[#141414] text-[0.75rem]">
                                     Support Client
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link className="text-[#141414] text-[0.75rem]">
                                     Devenir Partenaire
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link to={"/readmore/Customer Support"} className="text-[#141414] text-[0.75rem]">
                                     Suivez-nous
-                                </li>
+                                </Link>
                             </ul>
                         </div>
                     </div>
@@ -114,61 +114,58 @@ const Footer = () => {
                             <li className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Publier un trajet
                             </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
-                                Villes couvertes
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
-                                Objets autorisés
-                            </li>
+                            <Link to={"/readmore/Cities Covered"} className="text-[#141414] text-[0.75rem]">
+                                    Villes couvertes
+                            </Link>
+                            <Link to={"/readmore/Terms & Conditions"} className="text-[#141414] text-[0.75rem] cursor-pointer">
+                                Objets interdits
+                            </Link>
                         </ul>
                     </div>
                     <div>
                         <p className="text-[#A4A4A4]">Ressources</p>
                         <ul className="flex flex-col gap-3 py-3">
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            <Link to={"/readmore/How it works"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Comment ça marche ?
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            </Link>
+                            <Link to={"/readmore/Customer Support"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Centre d'assistance
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            </Link>
+                            <Link to={"/readmore/Impact Écologique"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Impact Écologique
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            </Link>
+                            <Link to={"readmore/FAQ"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 FAQ
-                            </li>
+                            </Link>
                         </ul>
                     </div>
 
                     <div>
                         <p className="text-[#A4A4A4]">Légal & Sécurité</p>
                         <ul className="flex flex-col gap-3 py-3">
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            <Link to={'Terms & Conditions'} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Conditions Générales
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            </Link>
+                            <Link to={"/readmore/Privacy Policy"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Confidentialité
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            </Link>
+                            <Link to={"/readmore/Privacy Policy"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Sécurité des colis
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
-                                Signalement
-                            </li>
+                            </Link>
                         </ul>
                     </div>
                     <div>
                         <p className="text-[#A4A4A4]">Suivre ColiFlow</p>
                         <ul className="flex flex-col gap-3 py-3">
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
-                                Support Client
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
-                                Devenir Partenaire
-                            </li>
-                            <li className="text-[#141414] text-[0.75rem] cursor-pointer">
-                                Suivez-nous
-                            </li>
+                            <Link to={"/readmore/Customer Support"} className="text-[#141414] text-[0.75rem]">
+                                    Support Client
+                            </Link>
+                            <Link to={"/readmore/Follow us"} className="text-[#141414] text-[0.75rem]">
+                                    Devenir Partenaire
+                            </Link>
+                            <Link to={"/readmore/Follow us"}  className="text-[#141414] text-[0.75rem]">
+                                    Suivez-nous
+                            </Link>
                         </ul>
                     </div>
                 </div>

@@ -205,6 +205,7 @@ const TravelsList = () => {
         if (nextItems.length === visibleCards.length) return
 
         setVisibleCards(nextItems)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, filterdCards])
 
     useEffect(() => {

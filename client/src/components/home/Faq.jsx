@@ -1,4 +1,5 @@
 import AccordingTabs from "@/ui/AccordingTabs"
+import { Link } from "react-router-dom"
 
 const Faq = () => {
     const QuestionSectionOne = [
@@ -79,7 +80,7 @@ const Faq = () => {
                     or
                     <span className="font-bold ms-1 py-0.5  bg-[#f7f6f6] rounded-2xl px-2">
                         {" "}
-                        <a href="#">Consultez le centre d'aide</a>{" "}
+                        <Link to={"/readmore"}>Consultez le centre d'aide</Link>{" "}
                     </span>
                 </p>
             </div>

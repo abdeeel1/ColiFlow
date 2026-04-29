@@ -20,6 +20,7 @@ import CompleteProfile from "./pages/CompleteProfile"
 import ResetPassword from "./pages/ResetPassword"
 import ProtectedRoute from "./utils/ProtectedRoute"
 import { useTranslation } from "react-i18next"
+import ReadMore from "./pages/ReadMore"
 
 function App() {
     const dispatch = useDispatch()
@@ -106,6 +107,8 @@ function App() {
 
                         <Route path="/travel/:id" element={<TravelDetail />} />
                     </Route>
+
+                    <Route path="/readmore/:page" element={<ReadMore />} />
 
                     {/* Not Found Page */}
 
