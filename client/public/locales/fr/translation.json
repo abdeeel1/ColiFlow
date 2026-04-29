@@ -12,5 +12,249 @@
             "title": "Suivi en Direct",
             "desc": "Suivez l'état de votre livraison, du départ jusqu'à l'arrivée"
         }
+    },
+    "readMore": {
+        "faq": {
+            "title": "FAQ",
+            "subtitle": "Foire aux questions",
+            "badge": "Aide",
+            "description": "Réponses rapides aux questions courantes.",
+            "items": [
+                {
+                    "q": "Est-ce sans danger ?",
+                    "a": "Oui ! L'identité de tous les voyageurs est vérifiée à l'aide de leur pièce d'identité officielle (CIN), et notre système de notation garantit la transparence. Chaque transaction est également protégée par notre système de paiement par dépôt fiduciaire."
+                },
+                {
+                    "q": "Combien ça coûte ?",
+                    "a": "Les prix sont négociés entre l'expéditeur et le voyageur. ColiFlow prélève une modeste commission pour assurer le fonctionnement de la plateforme. Il n'y a pas de frais cachés."
+                },
+                {
+                    "q": "Que se passe-t-il si mon colis est perdu ?",
+                    "a": "Nous encourageons tous les utilisateurs à souscrire à nos options d'assurance « Parcel Security » pour les articles de grande valeur. En cas de perte, notre équipe d'assistance vous aidera à régler le problème."
+                },
+                {
+                    "q": "Comment puis-je faire vérifier mon compte ?",
+                    "a": "Rendez-vous dans les paramètres de votre profil et téléchargez une photo lisible de votre carte d'identité. La vérification prend généralement moins de 24 heures. Les utilisateurs vérifiés reçoivent un badge sur leur profil."
+                },
+                {
+                    "q": "Puis-je annuler une livraison ?",
+                    "a": "Oui, les annulations sont autorisées avant la phase de remise. Une fois la remise effectuée, la transaction ne peut plus être annulée. Veuillez consulter nos Conditions générales pour connaître l'intégralité de notre politique d'annulation."
+                }
+            ]
+        },
+        "howItWorks": {
+            "title": "How it works",
+            "subtitle": "Comment ça marche ?",
+            "badge": "Guide",
+            "description": "La révolution du transport entre particuliers. ColiFlow met en relation les personnes qui ont besoin d'envoyer des colis avec des voyageurs disposant d'espace libre dans leurs bagages.",
+            "onThisPage": [
+                "Étape 1 : Publier ou rechercher",
+                "Étape 2 : Se connecter",
+                "Étape 3 : Remise des clés",
+                "Étape 4 : Livraison"
+            ],
+            "steps": [
+                {
+                    "step": "01",
+                    "title": "Publier ou Rechercher",
+                    "desc": "Que vous soyez expéditeur ou voyageur, indiquez vos besoins ou votre prochain voyage en quelques secondes."
+                },
+                {
+                    "step": "02",
+                    "title": "Se connecter",
+                    "desc": "Utilisez notre système de messagerie sécurisé pour convenir d'un prix et d'un lieu de rendez-vous."
+                },
+                {
+                    "step": "03",
+                    "title": "Remise",
+                    "desc": "Rencontrez-vous, remettez le colis et suivez son acheminement via l'application."
+                },
+                {
+                    "step": "04",
+                    "title": "Livraison",
+                    "desc": "Une fois l'article reçu, le voyageur est payé, puis les deux parties laissent un avis."
+                }
+            ],
+            "stepLabel": "Étape"
+        },
+        "impactEcologique": {
+            "title": "Impact Écologique",
+            "subtitle": "Environmental Impact",
+            "badge": "Guide",
+            "description": "Découvrez comment ColiFlow réduit l'empreinte carbone en optimisant les trajets existants.",
+            "onThisPage": [
+                "Réduction CO2",
+                "Optimisation des trajets",
+                "Transport collaboratif"
+            ],
+            "content": "En utilisant les trajets déjà existants des voyageurs, ColiFlow réduit considérablement les émissions de CO₂."
+        },
+        "customerSupport": {
+            "title": "Customer Support",
+            "subtitle": "Support Client",
+            "badge": "Aide",
+            "description": "Nous sommes là pour vous aider. Notre équipe met tout en œuvre pour que votre expérience avec ColiFlow se déroule dans les meilleures conditions possibles.",
+            "onThisPage": [
+                "E-mail",
+                "Téléphone",
+                "Bureau",
+                "Chat en direct"
+            ],
+            "items": [
+                {
+                    "label": "E-mail",
+                    "value": "support@coliflow.ma",
+                    "sub": "Nous vous répondons dans les 24 heures"
+                },
+                {
+                    "label": "Téléphone",
+                    "value": "+212 697 48 31 66",
+                    "sub": "Disponible du lun-ven, de 9 h à 18 h"
+                },
+                {
+                    "label": "Bureau",
+                    "value": "Casablanca, Maroc",
+                    "sub": "Ain chock"
+                },
+                {
+                    "label": "Chat en direct",
+                    "value": "Disponible sur votre tableau de bord",
+                    "sub": "Cliquez sur l'icône de chat en bas à droite pour obtenir une aide immédiate"
+                }
+            ]
+        },
+        "termsConditions": {
+            "title": "Terms & Conditions",
+            "subtitle": "Conditions Générales",
+            "badge": "Mentions légales",
+            "description": "La transparence avant tout. En utilisant ColiFlow, vous acceptez de respecter les règles de notre communauté.",
+            "onThisPage": [
+                "Identification",
+                "Paiements et dépôt fiduciaire",
+                "Articles interdits",
+                "Responsabilité de la plateforme"
+            ],
+            "warningTitle": "Veuillez lire attentivement",
+            "warningText": "En utilisant ColiFlow, vous acceptez les conditions suivantes. Dernière mise à jour : juin 2026",
+            "items": [
+                {
+                    "title": "Identification",
+                    "desc": "Les utilisateurs doivent fournir une pièce d'identité valide (CIN) afin d'être vérifiés sur la plateforme. Cela garantit la sécurité et la responsabilité de tous les membres de la communauté."
+                },
+                {
+                    "title": "Paiements et dépôt fiduciaire",
+                    "desc": "Les paiements sont conservés en dépôt fiduciaire via notre système de portefeuille électronique jusqu'à ce que la livraison soit confirmée par le destinataire. Les fonds ne sont débloqués qu'une fois la livraison marquée comme effectuée."
+                },
+                {
+                    "title": "Articles interdits",
+                    "desc": "Les substances illégales, les marchandises dangereuses et tout article enfreignant la législation marocaine ou internationale sont strictement interdits. Toute infraction entraînera la suspension immédiate du compte."
+                },
+                {
+                    "title": "Responsabilité de la plateforme",
+                    "desc": "ColiFlow sert de plateforme pour mettre en relation les utilisateurs et n'est pas responsable du contenu des colis. Les utilisateurs sont seuls responsables des articles qu'ils envoient ou transportent."
+                }
+            ]
+        },
+        "citiesCovered": {
+            "title": "Cities Covered",
+            "subtitle": "Villes Couvertes",
+            "badge": "Réseau",
+            "description": "Nous relions le Maroc, ville après ville. ColiFlow connaît une expansion rapide à travers tout le Royaume. Nous proposons actuellement des services d'expédition entre particuliers dans les grands centres suivants.",
+            "onThisPage": [
+                "Statistiques de couverture",
+                "Annuaire de la ville",
+                "À venir"
+            ],
+            "stats": [
+                {
+                    "label": "Villes actives",
+                    "value": "10"
+                },
+                {
+                    "label": "Régions couvertes",
+                    "value": "7"
+                },
+                {
+                    "label": "Disponibilité",
+                    "value": "100%"
+                }
+            ],
+            "searchPlaceholder": "Filtrer par ville ou région...",
+            "tableHeaders": [
+                "Ville",
+                "Région",
+                "Disponibilité"
+            ],
+            "noResults": "Aucune ville ne correspond à votre recherche.",
+            "status": "Active",
+            "footer": "D'autres villes seront bientôt disponibles. Contactez-nous pour sélectionner votre ville."
+        },
+        "followUs": {
+            "title": "Follow us",
+            "subtitle": "Suivez-nous",
+            "badge": "Réseau",
+            "description": "Restez connecté avec ColiFlow sur nos réseaux sociaux et suivez toutes nos actualités.",
+            "onThisPage": [
+                "GitHub",
+                "Facebook",
+                "Instagram"
+            ],
+            "items": [
+                {
+                    "name": "GitHub",
+                    "followText": "Suivez-nous sur GitHub"
+                },
+                {
+                    "name": "Facebook",
+                    "followText": "Suivez-nous sur Facebook"
+                },
+                {
+                    "name": "Instagram",
+                    "followText": "Suivez-nous sur Instagram"
+                }
+            ]
+        },
+        "privacyPolicy": {
+            "title": "Privacy Policy",
+            "subtitle": "Confidentiality",
+            "badge": "Mentions légales",
+            "description": "Vos données vous appartiennent. Nous prenons la protection de votre vie privée très au sérieux.",
+            "onThisPage": [
+                "Protection des données",
+                "Lieu",
+                "Cookies"
+            ],
+            "warningTitle": "Nous accordons de l'importance à la protection de vos données personnelles",
+            "warningText": "Nous ne vendons jamais vos données et ne les partageons jamais avec des tiers sans votre consentement.",
+            "items": [
+                {
+                    "title": "Protection des données",
+                    "desc": "Vos informations personnelles et vos documents CIN sont cryptés à l'aide de l'algorithme AES-256 et ne sont jamais communiqués à des tiers."
+                },
+                {
+                    "title": "Lieu",
+                    "desc": "Nous n'utilisons votre position géographique que pour vous aider à trouver des voyageurs ou des expéditeurs à proximité. Les données de localisation ne sont jamais conservées de manière permanente."
+                },
+                {
+                    "title": "Cookies",
+                    "desc": "Nous utilisons des cookies uniquement pour vous permettre de rester connecté et pour améliorer votre expérience utilisateur. Nous n'utilisons aucun cookie de suivi tiers."
+                }
+            ]
+        },
+        "sidebar": {
+            "helpCenter": "Help Center",
+            "legal": "Legal",
+            "support": "Support",
+            "copyright": "© 2026 ColiFlow · Casablanca, MA"
+        },
+        "navigation": {
+            "previous": "Previous",
+            "next": "Next",
+            "home": "Acceuil",
+            "onThisPage": "On This Page"
+        },
+        "breadcrumb": {
+            "home": "ColiFlow"
+        }
     }
 }
