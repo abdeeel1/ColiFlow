@@ -248,10 +248,10 @@
             "copyright": "© 2026 ColiFlow · Casablanca, MA"
         },
         "navigation": {
-            "previous": "Previous",
-            "next": "Next",
+            "previous": "Précédent",
+            "next": "Suivant",
             "home": "Acceuil",
-            "onThisPage": "On This Page"
+            "onThisPage": "Sur cette page"
         },
         "breadcrumb": {
             "home": "ColiFlow"

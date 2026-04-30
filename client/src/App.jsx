@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next"
 import ReadMore from "./pages/ReadMore"
 
 function App() {
-    const dispatch = useDispatch()
+    /* const dispatch = useDispatch()
 
     const [checkingServer, setCheckingServer] = useState(true)
 
@@ -58,7 +58,7 @@ function App() {
                 </p>
             </div>
         )
-    }
+    } */
 
     return (
         <div className="font-plusjakarta">

@@ -790,7 +790,7 @@ function TopNav({ setMobileOpen }) {
                         </li>
                         <li value="ar">
                             <button onClick={() => handleTranslateLang("ar")}>
-                                <span className="fi fi-sa"></span>
+                                <span class="fi fi-ma"></span>
                             </button>
                         </li>
                         <li value="fr">

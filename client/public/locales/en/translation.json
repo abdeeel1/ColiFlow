@@ -32,5 +32,232 @@
         }
     },
     "Qu'attendez-vous ? Commencez dès maintenant": "What are you waiting for ? Get started now",
-    "Les meilleures opportunités de livraison": "The best delivery options"
+    "Les meilleures opportunités de livraison": "The best delivery options",
+    "readMore": {
+        "faq": {
+            "title": "FAQ",
+            "subtitle": "Frequently Asked Questions",
+            "badge": "Help",
+            "description": "Quick answers to common questions.",
+            "items": [
+                {
+                    "q": "Is it safe ?",
+                    "a": "Yes! We verify the identity of all travelers using their official ID (CIN), and our rating system ensures transparency. Every transaction is also protected by our escrow payment system."
+                },
+                {
+                    "q": "How much does it cost ?",
+                    "a": "Prices are negotiated between the sender and the traveler. ColiFlow charges a small commission to cover the costs of operating the platform. There are no hidden fees."
+                },
+                {
+                    "q": "What happens if my package is lost ?",
+                    "a": "We encourage all users to purchase our “Parcel Security” insurance options for high-value items. In the event of loss, our support team will help you resolve the issue."
+                },
+                {
+                    "q": "How can I have my account verified ?",
+                    "a": "Go to your profile settings and upload a clear photo of your ID. Verification usually takes less than 24 hours. Verified users receive a badge on their profile."
+                },
+                {
+                    "q": "Can I cancel a delivery ?",
+                    "a": "Yes, cancellations are permitted before the delivery phase. Once delivery has been made, the transaction cannot be canceled. Please refer to our Terms and Conditions for our full cancellation policy."
+                }
+            ]
+        },
+        "howItWorks": {
+            "title": "How it works",
+            "subtitle": "",
+            "badge": "Guide",
+            "description": "The revolution in peer-to-peer shipping. ColiFlow connects people who need to send packages with travelers who have extra space in their luggage.",
+            "onThisPage": [
+                "Step 1: Post or search",
+                "Step 2: Log in",
+                "Step 3: Key handover",
+                "Step 4: Delivery"
+            ],
+            "steps": [
+                {
+                    "step": "01",
+                    "title": "Post or Search",
+                    "desc": "Whether you're a shipper or a traveler, enter your needs or your next trip in just a few seconds."
+                },
+                {
+                    "step": "02",
+                    "title": "Sign in",
+                    "desc": "Use our secure messaging system to agree on a price and a meeting place."
+                },
+                {
+                    "step": "03",
+                    "title": "Discount",
+                    "desc": "Meet up, hand over the package, and track its delivery via the app."
+                },
+                {
+                    "step": "04",
+                    "title": "Delivery",
+                    "desc": "Once the item has been received, the seller is paid, and then both parties leave a review."
+                }
+            ],
+            "stepLabel": "Step"
+        },
+        "impactEcologique": {
+            "title": "Environmental Impact",
+            "subtitle": "",
+            "badge": "Guide",
+            "description": "Learn how ColiFlow reduces the carbon footprint by optimizing existing routes.",
+            "onThisPage": [
+                "CO2 Reduction",
+                "Route Optimization",
+                "Ride-sharing"
+            ],
+            "content": "By utilizing travelers' existing routes, ColiFlow significantly reduces CO₂ emissions."
+        },
+        "customerSupport": {
+            "title": "Customer Support",
+            "subtitle": "",
+            "badge": "Help",
+            "description": "We're here to help. Our team is committed to ensuring that your experience with ColiFlow is as smooth as possible.",
+            "onThisPage": ["Email", "Phone", "Office", "Live Chat"],
+            "items": [
+                {
+                    "label": "Email",
+                    "value": "support@coliflow.ma",
+                    "sub": "We will respond within 24 hours"
+                },
+                {
+                    "label": "Phone",
+                    "value": "+212 697 48 31 66",
+                    "sub": "Available Monday through Friday, from 9 a.m. to 6 p.m"
+                },
+                {
+                    "label": "Office",
+                    "value": "Casablanca, Morocco",
+                    "sub": "Ain Chock"
+                },
+                {
+                    "label": "Live Chat",
+                    "value": "Available on your dashboard",
+                    "sub": "Click the chat icon in the bottom right corner for immediate assistance"
+                }
+            ]
+        },
+        "termsConditions": {
+            "title": "Terms & Conditions",
+            "subtitle": "",
+            "badge": "Legal Notice",
+            "description": "Transparency above all. By using ColiFlow, you agree to abide by our community guidelines.",
+            "onThisPage": [
+                "Identification",
+                "Payments and Escrow",
+                "Prohibited items",
+                "Platform Liability"
+            ],
+            "warningTitle": "Please read carefully",
+            "warningText": "By using ColiFlow, you agree to the following terms. Last updated: June 2026",
+            "items": [
+                {
+                    "title": "Identification",
+                    "desc": "Users must provide a valid ID (CIN) in order to be verified on the platform. This ensures the safety and accountability of all community members."
+                },
+                {
+                    "title": "Payments and Escrow",
+                    "desc": "Payments are held in escrow through our e-wallet system until the recipient confirms delivery. Funds are released only once the delivery is marked as complete."
+                },
+                {
+                    "title": "Prohibited items",
+                    "desc": "Illegal substances, hazardous materials, and any items that violate Moroccan or international law are strictly prohibited. Any violation will result in the immediate suspension of the account."
+                },
+                {
+                    "title": "Platform Liability",
+                    "desc": "ColiFlow serves as a platform to connect users and is not responsible for the contents of packages. Users are solely responsible for the items they send or transport."
+                }
+            ]
+        },
+        "citiesCovered": {
+            "title": "Cities Covered",
+            "subtitle": "",
+            "badge": "Network",
+            "description": "We are connecting cities across Morocco, one by one. ColiFlow is expanding rapidly throughout the Kingdom. We currently offer person-to-person shipping services in the following major cities.",
+            "onThisPage": [
+                "Coverage statistics",
+                "City Directory",
+                "Coming soon"
+            ],
+            "stats": [
+                {
+                    "label": "Active Cities",
+                    "value": "10"
+                },
+                {
+                    "label": "Regions covered",
+                    "value": "7"
+                },
+                {
+                    "label": "Availability",
+                    "value": "100%"
+                }
+            ],
+            "searchPlaceholder": "Filter by city or region...",
+            "tableHeaders": ["City", "Region", "Availability"],
+            "noResults": "No cities match your search.",
+            "status": "Active",
+            "footer": "Other cities will be available soon. Contact us to select your city."
+        },
+        "followUs": {
+            "title": "Follow us",
+            "subtitle": "",
+            "badge": "Network",
+            "description": "Stay connected with ColiFlow on our social media channels and follow all our news.",
+            "onThisPage": ["GitHub", "Facebook", "Instagram"],
+            "items": [
+                {
+                    "name": "GitHub",
+                    "followText": "Follow us on GitHub"
+                },
+                {
+                    "name": "Facebook",
+                    "followText": "Follow us on Facebook"
+                },
+                {
+                    "name": "Instagram",
+                    "followText": "Follow us on Instagram"
+                }
+            ]
+        },
+        "privacyPolicy": {
+            "title": "Privacy Policy",
+            "subtitle": "",
+            "badge": "Legal Notice",
+            "description": "Your data belongs to you. We take the protection of your privacy very seriously.",
+            "onThisPage": ["Data Protection", "Location", "Cookies"],
+            "warningTitle": "We take the protection of your personal data seriously",
+            "warningText": "We never sell your data or share it with third parties without your consent.",
+            "items": [
+                {
+                    "title": "Data Protection",
+                    "desc": "Your personal information and CIN documents are encrypted using the AES-256 algorithm and are never shared with third parties."
+                },
+                {
+                    "title": "Location",
+                    "desc": "We use your location only to help you find travelers or shippers nearby. Location data is never stored permanently."
+                },
+                {
+                    "title": "Cookies",
+                    "desc": "We use cookies solely to keep you logged in and to enhance your user experience. We do not use any third-party tracking cookies."
+                }
+            ]
+        },
+        "sidebar": {
+            "helpCenter": "Help Center",
+            "legal": "",
+            "support": "Support",
+            "copyright": "© 2026 ColiFlow · Casablanca, MA"
+        },
+        "navigation": {
+            "previous": "Previous",
+            "next": "Next",
+            "home": "Acceuil",
+            "onThisPage": "On This Page"
+        },
+        "breadcrumb": {
+            "home": "ColiFlow"
+        }
+    }
 }
