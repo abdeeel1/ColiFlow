@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { CookieIcon, Globe, Lock, Mail, MapPin, MessageCircleCheckIcon, Phone } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { useTranslation } from "react-i18next"

@@ -129,9 +129,11 @@ export default function MobileMenu({ isTraveler }) {
                     </nav>
 
                     <div className="border-t flex flex-col gap-4 border-gray-200 pt-4 mt-4">
-                        <div>
+                        {
+                            isAuth && (<div>
                             <ToggleButton />
-                        </div>
+                        </div>)
+                        }
 
                         {!isAuth ? (
                             <Link to={"/login"}>

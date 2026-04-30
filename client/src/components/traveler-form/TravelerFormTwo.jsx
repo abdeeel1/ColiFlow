@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 
 const TravelerFormTwo = () => {
-    const cars = ["voiture", "moto", "camionnette", "petit camion"]
+    const cars = ["voiture", "moto", "camionnette", "petit_camion"]
 
     const {
         register,

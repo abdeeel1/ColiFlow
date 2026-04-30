@@ -1,9 +1,10 @@
-import { Package, Zap } from "lucide-react"
+import { AwardIcon, Package, Zap } from "lucide-react"
 import Features from "../../ui/components/Features"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+
 
 const Hero = () => {
     const { t } = useTranslation()
@@ -52,6 +53,8 @@ const Hero = () => {
             ease: "linear",
         })
     }, [])
+
+    
 
     return (
         <section className="mt-5 min-h-dvh" id="hero">

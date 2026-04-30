@@ -16,6 +16,8 @@ Route::get('/cities', [CityController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/packages', [PackageController::class, 'store']);
 
 Route::middleware('auth:sanctum')->post('/travels', [TravelController::class, 'store']);
-Route::middleware('auth:sanctum')->get('/travels', [TravelController::class, 'index']);
+Route::get('/travels/featured', [TravelController::class, 'featured']);
+Route::get('/travels', [TravelController::class, 'index']);
 
 Route::middleware('auth:sanctum')->post('/switch-role', [UserController::class, 'switchRole']);
+

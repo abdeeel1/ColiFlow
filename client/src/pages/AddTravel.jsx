@@ -31,7 +31,7 @@ const AddTravel = () => {
             .min(1, "la sélection d'une ville est obligatoire"),
         travelDate: z.string().min(1, "date invalide"),
         travelDescription: z.string().optional(),
-        carType: z.enum(["voiture", "moto", "camionnette", "petit camion"], {
+        carType: z.enum(["voiture", "moto", "camionnette", "petit_camion"], {
             error: () => ({
                 message: "la sélection d'une voiture est obligatoire",
             }),

@@ -27,7 +27,7 @@ function App() {
 
     const [checkingServer, setCheckingServer] = useState(true)
 
-    const { i18n } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     useEffect(() => {
         document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr"
@@ -54,7 +54,7 @@ function App() {
             <div className="min-h-screen gap-2 flex items-center justify-center transition-opacity duration-300">
                 <span className="loading loading-spinner loading-lg text-[#0984E3]"></span>
                 <p className="text-center text-[1rem] font-bold">
-                    Veuillez patienter
+                    {t('Veuillez patienter')}
                 </p>
             </div>
         )

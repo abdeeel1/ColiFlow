@@ -25,7 +25,7 @@ class CitieSeeder extends Seeder
             ['name' => 'Oujda', 'postal_code' => '60000', 'latitude' => 34.6814, 'longitude' => -1.9086],
             ['name' => 'Kenitra', 'postal_code' => '14000', 'latitude' => 34.2610, 'longitude' => -6.5802],
             ['name' => 'Tetouan', 'postal_code' => '93000', 'latitude' => 35.5889, 'longitude' => -5.3626],
-            ['name' => 'El Jadida', 'postal_code' => '24000', 'latitude' => 33.2316, 'longitude' => -8.5007],
+            ['name' => 'ElJadida', 'postal_code' => '24000', 'latitude' => 33.2316, 'longitude' => -8.5007],
         ];
 
         foreach ($cities as $city) {

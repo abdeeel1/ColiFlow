@@ -62,6 +62,10 @@ class TravelController extends Controller
         return $travels;
     }
 
+    public function featured() {
+        return Travel::with(['user', 'from_city', 'to_city', 'images'])->take(4)->get();
+    }
+
     /**
      * Show the form for creating a new resource.
      */

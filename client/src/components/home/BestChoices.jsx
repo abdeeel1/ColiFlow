@@ -4,9 +4,11 @@ import { Button } from "../ui/button"
 import { Zap } from "lucide-react"
 import ActionLink from "@/ui/ActionLink"
 import { useTranslation } from "react-i18next"
+import { useEffect, useState } from "react"
+import axiosClient from "@/services/axios"
 
 const BestChoices = () => {
-    const { t, i18n } = useTranslation()
+    const { t } = useTranslation()
 
     const dataCard = [
         {
@@ -55,6 +57,23 @@ const BestChoices = () => {
         },
     ]
 
+    const [travelsFeatured, setTravelFeatured] = useState([])
+
+    useEffect(() => {
+        
+        const fetchFeatured = async () => {
+            try {
+                const res = await axiosClient.get('/api/travels/featured')
+                setTravelFeatured(res.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        fetchFeatured()
+
+    }, [])
+
     return (
         <section>
             <div className="flex justify-center items-center flex-col space-y-10">
@@ -70,17 +89,17 @@ const BestChoices = () => {
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-10 lg:gap-14 place-items-center justify-center items-center  md:py-0">
-                        {dataCard.map((card) => (
-                            <div className="w-full" key={card.id}>
+                        {travelsFeatured.map((travel) => (
+                            <div className="w-full" key={travel.id}>
                                 <CardTravel
-                                    ville_depart={card.ville_depart}
-                                    ville_darrive={card.ville_darrive}
-                                    prix={card.prix}
-                                    type={card.type}
-                                    date={card.date}
-                                    voyageur={card.voyageur}
-                                    verified={card.verified}
-                                    image={card.image}
+                                    ville_depart={travel.from_city?.name}
+                                    ville_darrive={travel.to_city?.name}
+                                    prix={travel.price}
+                                    type={travel.max_weight}
+                                    date={travel.departure_date}
+                                    voyageur={travel.user?.name}
+                                    verified={travel.user?.statut_verification}
+                                    image={""}
                                 />
                             </div>
                         ))}
