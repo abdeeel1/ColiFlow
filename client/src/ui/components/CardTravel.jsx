@@ -9,6 +9,9 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { ArrowRight, BadgeCheck, MoveVertical, Verified } from "lucide-react"
+import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 const CardTravel = ({
     ville_depart,
@@ -32,9 +35,28 @@ const CardTravel = ({
         ElJadida: "/images/cities/ElJadida.png",
     }
 
+    const navigate = useNavigate();
+
+    const {user, isAuth} = useSelector((state) => state.auth)
+
+    const isTraveler = user?.is_traveler
+
+    console.log(isTraveler)
+
+    const handleClick = (e) => {
+
+        e.preventDefault()
+
+        if(isTraveler) {
+            toast.error('Passez en mode expéditeur pour réserver')
+        }else{
+            navigate('/travels')
+        }
+    }
+
     return (
         <Card className="relative mx-auto w-full max-w-sm pt-0 flex flex-col">
-            <div className="absolute inset-0 z-30 aspect-video" />
+            <div className="absolute inset-0 z-30 aspect-video pointer-events-none" />
             <img
                 src={cityImages[ville_depart]}
                 alt=""
@@ -63,7 +85,7 @@ const CardTravel = ({
                                 </p>
                             </div>
 
-                            <button className="btn btn-sm btn-ghost hover:border-[#0984E3] rounded-4xl  bg-[#0984E3] text-white py-2 px-4 cursor-pointer  hover:bg-[#076bc8]">
+                            <button type="button" onClick={handleClick} className="btn btn-sm btn-ghost hover:border-[#0984E3] rounded-4xl  bg-[#0984E3] text-white py-2 px-4 cursor-pointer  hover:bg-[#076bc8]">
                                 <ArrowRight size={16} />
                             </button>
                         </div>
