@@ -17,7 +17,6 @@ const CardTravel = ({
     type,
     date,
     voyageur,
-    image,
     verified,
 }) => {
     const cityImages = {

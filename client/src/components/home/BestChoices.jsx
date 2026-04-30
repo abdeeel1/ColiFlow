@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import CardTravel from "@/ui/components/CardTravel"
 import SearchTravel from "../../ui/components/SearchTravel"
 import { Button } from "../ui/button"
@@ -60,10 +61,9 @@ const BestChoices = () => {
     const [travelsFeatured, setTravelFeatured] = useState([])
 
     useEffect(() => {
-        
         const fetchFeatured = async () => {
             try {
-                const res = await axiosClient.get('/api/travels/featured')
+                const res = await axiosClient.get("/api/travels/featured")
                 setTravelFeatured(res.data)
             } catch (err) {
                 console.log(err)
@@ -71,7 +71,6 @@ const BestChoices = () => {
         }
 
         fetchFeatured()
-
     }, [])
 
     return (
