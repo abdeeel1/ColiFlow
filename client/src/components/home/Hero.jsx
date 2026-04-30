@@ -4,46 +4,38 @@ import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-
+import { ScrollTrigger } from "gsap/all"
 
 const Hero = () => {
     const { t } = useTranslation()
 
+    const tl = gsap.timeline()
+
+    gsap.registerPlugin(ScrollTrigger)
+
     useGSAP(() => {
-        gsap.to("#tag-website", {
-            y: 20,
-            duration: 2,
-            yoyo: true,
-            repeat: -1,
-            ease: "linear",
-        })
+        tl.from("#tag-website", { y: -50, opacity: 0, duration: 0.7 })
+            .from(
+                "#header-title",
+                { y: -30, opacity: 0, duration: 0.7 },
+                "-=0.1",
+            )
+            .from("#span1", { x: 300, opacity: 0, duration: 0.4 })
+            .from("#desciption", { y: 30, opacity: 0, duration: 0.6 }, "-=0.1")
+            .from("#cta-buttons", { y: 30, opacity: 0, duration: 0.6 }, "-=0.3")
 
-        gsap.from("#header-title", {
-            scale: 2,
-            opacity: 0,
-            duration: 1.5,
-        })
-
-        gsap.fromTo(
-            "#span1",
-            {
-                x: 500,
+        gsap.from("#hero-image img", {
+            scrollTrigger: {
+                trigger: "#hero-image img",
+                start: "-=1050",
+                end: "+=400",
+                scrub: true,
+                toggleActions: "play reverse play reverse",
             },
-            {
-                x: 0,
-                duration: 1.3,
-            },
-        )
 
-        gsap.from("#desciption", {
+            y: 200,
             opacity: 0,
-            duration: 4,
-        })
-
-        gsap.from("#cta-buttons", {
-            y: 50,
             duration: 0.8,
-            ease: "linear",
         })
 
         gsap.to("#progress", {
@@ -54,13 +46,11 @@ const Hero = () => {
         })
     }, [])
 
-    
-
     return (
-        <section className="mt-5 min-h-dvh" id="hero">
+        <section className="mt-5 2xl:mt-20 min-h-dvh" id="hero">
             <div
                 id="tag-website"
-                className="flex gap-2 bg-[#0984E3] rounded-2xl md:mx-55 rtl:mx-70 lg:mx-80 xl:mx-100 2xl:mx-100 justify-center text-sm items-center mx-14"
+                className="flex gap-2 bg-[#0984E3] rounded-2xl md:mx-55 rtl:lg:mx-70 lg:mx-80 xl:mx-100 2xl:mx-100 justify-center text-sm items-center mx-14"
             >
                 <div className="flex gap-2 items-center">
                     <div>
@@ -74,10 +64,10 @@ const Hero = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col space-y-2 justify-center items-center py-10 2xl:py-20">
+            <div className="flex flex-col space-y-2 justify-center items-center py-8 2xl:py-10">
                 <p
                     id="header-title"
-                    className="font-bold font-clashdisplay-bold  text-center text-[32px] md:text-[48px] lg:text-[4.5rem] leading-tight text-[#2D3436]"
+                    className="font-bold font-clashdisplay-bold  text-center text-[32px] md:text-[48px] lg:text-[4.5rem]  leading-tight text-[#2D3436]"
                 >
                     {t("Envoyez vos Colis au")} <br />
                     <span className="text-[#0984E3]">{t("Maroc")}</span>{" "}
@@ -86,12 +76,12 @@ const Hero = () => {
                         id="span1"
                         className="inline-flex items-center gap-2 text-[#0984E3] ml-2"
                     >
-                        <Package className="size-10 " />
+                        <Package className="size-10 rtl:size-6 " />
                         {t("Simplicité")}
                     </span>
                 </p>
 
-                <div id="desciption" className="mb-4 lg:mb-8">
+                <div id="desciption" className="mb-4 lg:my-8">
                     <span className="text-center text-[12px] lg:text-[18px] text-[#141414]">
                         {t("La première plateforme P2P de livraison au Maroc")}
                     </span>
@@ -121,7 +111,10 @@ const Hero = () => {
                     ></div>
                 </div>
 
-                <div className="md:flex md:justify-center md:items-center">
+                <div
+                    id="hero-image"
+                    className="md:flex md:justify-center md:items-center 2xl:pt-14"
+                >
                     <img
                         src="/images/HeroSection-Picture.png"
                         alt=""

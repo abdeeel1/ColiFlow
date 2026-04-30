@@ -160,7 +160,7 @@ const Navbar = () => {
                                                     handleTranslateLang("ar")
                                                 }
                                             >
-                                                <span class="fi fi-ma"></span>
+                                                <span className="fi fi-ma"></span>
                                             </button>
                                         </li>
                                         <li value="fr">

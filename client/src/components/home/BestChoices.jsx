@@ -6,14 +6,19 @@ import ActionLink from "@/ui/ActionLink"
 import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import axiosClient from "@/services/axios"
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
+import { ScrollTrigger } from "gsap/all"
 
 const BestChoices = () => {
     const { t } = useTranslation()
+    gsap.registerPlugin(ScrollTrigger)
 
     
-
+    
+    
     const [travelsFeatured, setTravelFeatured] = useState([])
-
+    
     useEffect(() => {
         const fetchFeatured = async () => {
             try {
@@ -23,23 +28,40 @@ const BestChoices = () => {
                 console.log(err)
             }
         }
-
         
-
         fetchFeatured()
+    }, [])
+    
+    useGSAP(() => {
+        
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#element_one",
+                start: "top bottom",
+                end: "+=500",
+                immediateRender : false,
+                toggleActions : "play none none none"
+            },
+        })
+        
+        tl.from("#text-one", { y: 100, opacity: 0, duration: 0.4 })
+        tl.from("#text-two", { y: 50, opacity: 0, duration: 0.4 }, "+=0.5")
     }, [])
 
     return (
-        <section>
-            <div className="flex justify-center items-center flex-col space-y-10">
-                <p className="text-center font-clashdisplay font-bold text-2xl xl:text-3xl">
+        <section >
+            <div id="element_one" className="flex justify-center items-center flex-col space-y-10">
+                <p
+                    id="text-one"
+                    className="text-center font-clashdisplay font-bold text-2xl xl:text-3xl"
+                >
                     {t("Qu'attendez-vous ? Commencez dès maintenant")}
                 </p>
 
                 <SearchTravel />
 
                 <div className="md:py-10 flex flex-col gap-12">
-                    <p className="text-center font-semibold text-xl xl:text-2xl font-clashdisplay">
+                    <p id="text-two" className="text-center font-semibold text-xl xl:text-2xl font-clashdisplay">
                         {t("Les meilleures opportunités de livraison")}
                     </p>
 

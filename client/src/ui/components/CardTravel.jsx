@@ -41,8 +41,6 @@ const CardTravel = ({
 
     const isTraveler = user?.is_traveler
 
-    console.log(isTraveler)
-
     const handleClick = (e) => {
 
         e.preventDefault()
