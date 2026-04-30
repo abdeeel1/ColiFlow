@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import CardTravel from "@/ui/components/CardTravel"
 import SearchTravel from "../../ui/components/SearchTravel"
 import { Button } from "../ui/button"

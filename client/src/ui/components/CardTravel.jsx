@@ -37,7 +37,7 @@ const CardTravel = ({
 
     const navigate = useNavigate();
 
-    const {user, isAuth} = useSelector((state) => state.auth)
+    const {user} = useSelector((state) => state.auth)
 
     const isTraveler = user?.is_traveler
 
