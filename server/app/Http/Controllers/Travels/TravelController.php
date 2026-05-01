@@ -117,7 +117,7 @@ class TravelController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'message' => $err->getMessage()
+                'message' => "Erreur lors de l'envoi des données. Veuillez vérifier les informations saisies dans le formulaire"
             ], 500);
         }
     }

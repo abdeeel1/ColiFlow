@@ -36,6 +36,7 @@ class GoogleController extends Controller
                     'email' => $googleUser->getEmail(),
                     'email_verified_at' => now(),
                     'password' => bcrypt(Str::random(16)),
+                    'accept' => true,
                     'profile_picture' => $googleUser->getAvatar(),
                 ]);
             }else{

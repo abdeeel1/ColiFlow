@@ -41,6 +41,13 @@ body {
     }
 }
 
+@media (prefers-color-scheme: dark) {
+    [data-theme="light"] {
+        color-scheme: light;
+    }
+}
+
+
 /* Cache l'élément sur les écrans supérieurs à 1150px (Laptops, PC) */
 @media (min-width: 1149px) {
     .mobile-only {
@@ -93,6 +100,7 @@ body {
 
 :root {
     color-scheme: light only;
+
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);

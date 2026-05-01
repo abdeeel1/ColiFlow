@@ -4,13 +4,13 @@ import {
     Popup,
     TileLayer,
     useMapEvent,
-} from "react-leaflet"
-import "leaflet/dist/leaflet.css"
+} from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
 
-import L from "leaflet"
-import markerIcon from "leaflet/dist/images/marker-icon.png"
-import markerShadow from "leaflet/dist/images/marker-shadow.png"
-import { useEffect, useRef, useState } from "react"
+import L from 'leaflet'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import { useEffect, useRef, useState } from 'react'
 import {
     ArrowRight,
     BadgeCheck,
@@ -22,19 +22,19 @@ import {
     Package,
     Search,
     Star,
-} from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
-import { Dropdown } from "@heroui/react"
-import DropdownFilter from "@/ui/DropdownFilter"
-import SelectFilter from "@/ui/SelectFilter"
-import DrawerRight from "@/ui/DrawerRight"
-import MapDrawer from "@/ui/MapDrawer"
-import ModalSend from "@/ui/ModalSend"
-import axiosClient from "@/services/axios"
-import { useSelector } from "react-redux"
-import z from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+} from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Dropdown } from '@heroui/react'
+import DropdownFilter from '@/ui/DropdownFilter'
+import SelectFilter from '@/ui/SelectFilter'
+import DrawerRight from '@/ui/DrawerRight'
+import MapDrawer from '@/ui/MapDrawer'
+import ModalSend from '@/ui/ModalSend'
+import axiosClient from '@/services/axios'
+import { useSelector } from 'react-redux'
+import z from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 let DefaultIcon = L.icon({
     iconUrl: markerIcon,
@@ -43,6 +43,25 @@ let DefaultIcon = L.icon({
     iconAnchor: [12, 41],
 })
 L.Marker.prototype.options.icon = DefaultIcon
+
+const SkeletonCard = ({ className = '' }) => (
+    <div className={`bg-white rounded-2xl mb-4 p-8 ${className}`}>
+        <div className="flex justify-between items-center mb-3">
+            <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+            <div className="h-5 w-5 bg-gray-200 rounded-full animate-pulse"></div>
+        </div>
+        <div className="h-7 bg-gray-200 rounded w-3/4 mb-5 animate-pulse"></div>
+        <div className="flex gap-4 items-center py-4 mb-4">
+            <div className="h-3 bg-gray-200 rounded w-28 animate-pulse"></div>
+            <div className="h-3 bg-gray-200 rounded w-20 animate-pulse"></div>
+            <div className="h-3 bg-gray-200 rounded w-24 animate-pulse"></div>
+        </div>
+        <div className="h-5 bg-gray-200 rounded w-36 mb-8 animate-pulse"></div>
+        <div className="flex justify-end">
+            <div className="h-7 bg-gray-200 rounded w-48 animate-pulse"></div>
+        </div>
+    </div>
+)
 
 const TravelsList = () => {
     const { user } = useSelector((state) => state.auth)
@@ -60,17 +79,17 @@ const TravelsList = () => {
     const FormSchema = z.object({
         depart: z.string().trim().min(3),
         arrive: z.string().trim().min(3),
-        dateDepart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date invalide"),
+        dateDepart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date invalide'),
         typeColis: z.string().trim(),
     })
 
     const { register, handleSubmit, reset, watch } = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            depart: "",
-            arrive: "",
-            dateDepart: "",
-            typeColis: "",
+            depart: '',
+            arrive: '',
+            dateDepart: '',
+            typeColis: '',
         },
     })
 
@@ -99,7 +118,7 @@ const TravelsList = () => {
     const handleVehicleTypeChange = (vehicleType) => {
         const updated = {
             ...extraFilters,
-            vehicleType: vehicleType === "tous" ? null : vehicleType,
+            vehicleType: vehicleType === 'tous' ? null : vehicleType,
         }
         setExtraFilters(updated)
         applyAllFilters(filters, updated)
@@ -133,7 +152,7 @@ const TravelsList = () => {
                 if (allExtraFilters.vehicleType)
                     params.car_type = allExtraFilters.vehicleType
 
-                const res = await axiosClient.get("/api/travels", { params })
+                const res = await axiosClient.get('/api/travels', { params })
 
                 setTravelsAnnouncement(res.data)
                 setPage(1)
@@ -155,7 +174,7 @@ const TravelsList = () => {
     useEffect(() => {
         const fetchAnnounement = async () => {
             try {
-                const res = await axiosClient.get("/api/travels")
+                const res = await axiosClient.get('/api/travels')
                 setTravelsAnnouncement(res.data)
             } catch (err) {
                 console.log(err)
@@ -180,15 +199,21 @@ const TravelsList = () => {
 
     useEffect(() => {
         if (user?.is_traveler) {
-            navigate("/")
+            navigate('/')
         }
     }, [user, navigate])
 
     const MapBoundsFilter = () => {
-        useMapEvent("moveend", (e) => {
+        const travelsRef = useRef(travelsAnnouncement)
+
+        useEffect(() => {
+            travelsRef.current = travelsAnnouncement
+        }, [travelsAnnouncement])
+
+        useMapEvent('moveend', (e) => {
             const bounds = e.target.getBounds()
 
-            const visible = travelsAnnouncement.filter((travel) =>
+            const visible = travelsRef.current.filter((travel) =>
                 bounds.contains([travel.latitude, travel.longitude]),
             )
 
@@ -201,11 +226,7 @@ const TravelsList = () => {
 
     useEffect(() => {
         const nextItems = filterdCards.slice(0, page * ITEMS_PER_PAGE)
-
-        if (nextItems.length === visibleCards.length) return
-
         setVisibleCards(nextItems)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, filterdCards])
 
     useEffect(() => {
@@ -220,7 +241,7 @@ const TravelsList = () => {
             },
             {
                 root: null,
-                rootMargin: "100px",
+                rootMargin: '100px',
                 threshold: 0.1,
             },
         )
@@ -264,7 +285,7 @@ const TravelsList = () => {
                 rating: null,
             })
 
-            const res = await axiosClient.get("/api/travels")
+            const res = await axiosClient.get('/api/travels')
 
             setTravelsAnnouncement(res.data)
             setPage(1)
@@ -281,7 +302,6 @@ const TravelsList = () => {
 
     return (
         <main>
-            {/* Desktop Version +lg */}
             <form
                 onSubmit={handleSubmit(onSubmitData)}
                 className="hidden lg:flex justify-center items-center bg-white rounded-full border border-gray-200 px-2.5 py-0 gap-1 max-w-4xl mx-auto mt-2 "
@@ -289,7 +309,7 @@ const TravelsList = () => {
                 <div className="flex w-full items-center gap-2 px-3 xl:px-4 flex-1 min-w-0">
                     <div className="flex flex-col min-w-0 w-full">
                         <input
-                            {...register("depart")}
+                            {...register('depart')}
                             type="text"
                             placeholder="Ville de départ"
                             className="border-none outline-none bg-transparent text-xs xl:text-sm text-gray-800 placeholder-gray-300 py-0.5 w-full"
@@ -302,7 +322,7 @@ const TravelsList = () => {
                 <div className="flex items-center gap-2 px-3 xl:px-4 flex-1 min-w-0">
                     <div className="flex flex-col min-w-0 w-full">
                         <input
-                            {...register("arrive")}
+                            {...register('arrive')}
                             type="text"
                             placeholder="Ville d'arrivée"
                             className="border-none outline-none bg-transparent text-xs xl:text-sm text-gray-800 placeholder-gray-300 py-0.5 w-full"
@@ -314,11 +334,11 @@ const TravelsList = () => {
 
                 <div
                     className="flex items-center gap-2 px-3 xl:px-4"
-                    style={{ flex: "0.8" }}
+                    style={{ flex: '0.8' }}
                 >
                     <div className="flex flex-col min-w-0 w-full">
                         <input
-                            {...register("dateDepart")}
+                            {...register('dateDepart')}
                             type="date"
                             className="border-none outline-none bg-transparent text-xs xl:text-sm text-gray-800 py-0.5 w-full"
                         />
@@ -329,11 +349,11 @@ const TravelsList = () => {
 
                 <div
                     className="flex items-center gap-2 px-3 xl:px-4"
-                    style={{ flex: "0.9" }}
+                    style={{ flex: '0.9' }}
                 >
                     <div className="flex flex-col min-w-0 w-full">
                         <select
-                            {...register("typeColis")}
+                            {...register('typeColis')}
                             className="border-none select select-xs outline-none bg-white text-sm text-gray-800 w-full  flex items-center"
                         >
                             <option value="" disabled>
@@ -376,8 +396,8 @@ const TravelsList = () => {
                         }}
                         className={`px-4 py-[0.52rem] rounded-2xl font-bold text-sm cursor-pointer transition-all ${
                             extraFilters.verified
-                                ? "bg-[#0984E3] text-white"
-                                : "bg-white text-[#757575] border border-gray-300"
+                                ? 'bg-[#0984E3] text-white'
+                                : 'bg-white text-[#757575] border border-gray-300'
                         }`}
                     >
                         Vérifiés
@@ -389,7 +409,6 @@ const TravelsList = () => {
             </div>
 
             <div className="hidden lg:flex w-full gap-4 h-screen mt-10">
-                {/* LEFT: CARDS */}
                 <div className="w-full flex flex-col gap-4 overflow-y-auto h-full">
                     <div className="flex justify-between items-center px-10">
                         <h3 className="text-[#6B7280] text-[1rem]">
@@ -407,7 +426,13 @@ const TravelsList = () => {
                     </div>
                     <hr className="bg-gray-400 my-4" />
 
-                    {filterdCards.length > 0 ? (
+                    {loading ? (
+                        <>
+                            <SkeletonCard className="mx-10" />
+                            <SkeletonCard className="mx-10" />
+                            <SkeletonCard className="mx-10" />
+                        </>
+                    ) : filterdCards.length > 0 ? (
                         <>
                             {visibleCards.map((travel) => (
                                 <div
@@ -423,7 +448,7 @@ const TravelsList = () => {
                                                 {travel.user?.name}
                                                 {travel.user
                                                     ?.statut_verification ===
-                                                    "verified" && (
+                                                    'verified' && (
                                                     <BadgeCheck
                                                         className="text-[#0095F6] size-5"
                                                         fill="#0095F6"
@@ -446,8 +471,8 @@ const TravelsList = () => {
                                                         savedTravel.includes(
                                                             travel.id,
                                                         )
-                                                            ? "#FFA2A3"
-                                                            : "#FFF"
+                                                            ? '#FFA2A3'
+                                                            : '#FFF'
                                                     }
                                                 />
                                             </button>
@@ -455,7 +480,7 @@ const TravelsList = () => {
                                     </div>
 
                                     <h4 className="flex py-1 text-[1.4rem] items-center capitalize gap-1">
-                                        {travel.from_city?.name} <ArrowRight />{" "}
+                                        {travel.from_city?.name} <ArrowRight />{' '}
                                         {travel.to_city?.name}
                                     </h4>
 
@@ -468,12 +493,12 @@ const TravelsList = () => {
                                         <p>{travel.car_type}</p>
                                         <p>
                                             {travel.max_weight == 1
-                                                ? "- 1"
+                                                ? '- 1'
                                                 : travel.max_weight == 2
-                                                  ? "1-5"
+                                                  ? '1-5'
                                                   : travel.max_weight == 3
-                                                    ? "5-15"
-                                                    : "+ 15"}{" "}
+                                                    ? '5-15'
+                                                    : '+ 15'}{' '}
                                             kg max
                                         </p>
                                     </div>
@@ -481,42 +506,25 @@ const TravelsList = () => {
                                     <div className="text-[#0984E3]">
                                         <ModalSend
                                             className="text-[#0984E3]"
-                                            text={"Envoyer un colis"}
+                                            text={'Envoyer un colis'}
                                             travel={travel}
                                         />
                                     </div>
 
                                     <div className="mt-10 justify-between flex items-center">
-                                        {/* <div className="flex wfy  gap-1 items-center">
-                      {[...Array(5)].map((star, i) => (
-                        <Star
-                          key={i}
-                          className={
-                            i < travel.rating
-                              ? "fill-yellow-400 stroke-yellow-500"
-                              : "text-gray-300"
-                          }
-                        />
-                      ))}
-
-                      <span className="text-[0.8rem]">
-                        ({travel.review} Review)
-                      </span>
-                    </div> */}
-
                                         <div>
                                             <p className="capitalize text-[1.3rem] font-bold text-[#374151]">
-                                                {travel.price} MAD{" "}
+                                                {travel.price} MAD{' '}
                                                 <span className="text-[0.8rem] text-gray-400 font-normal">
-                                                    /{" "}
+                                                    /{' '}
                                                     {travel.max_weight == 1
-                                                        ? "Petit"
+                                                        ? 'Petit'
                                                         : travel.max_weight == 2
-                                                          ? "Moyen"
+                                                          ? 'Moyen'
                                                           : travel.max_weight ==
                                                               3
-                                                            ? "Grand"
-                                                            : "Volumineux"}{" "}
+                                                            ? 'Grand'
+                                                            : 'Volumineux'}{' '}
                                                     colis
                                                 </span>
                                             </p>
@@ -525,7 +533,6 @@ const TravelsList = () => {
                                 </div>
                             ))}
 
-                            {/* loader */}
                             {visibleCards.length < filterdCards.length && (
                                 <div
                                     ref={loaderRef}
@@ -543,7 +550,6 @@ const TravelsList = () => {
                     )}
                 </div>
 
-                {/* RIGHT: MAP */}
                 <div className="w-full z-40">
                     <MapContainer
                         center={[31.7917, -7.0926]}
@@ -566,7 +572,7 @@ const TravelsList = () => {
                                 <Popup>
                                     <strong>{travel.user?.name}</strong>
                                     <br />
-                                    De : {travel.from_city?.name} à{" "}
+                                    De : {travel.from_city?.name} à{' '}
                                     {travel.to_city?.name}
                                 </Popup>
                             </Marker>
@@ -575,7 +581,6 @@ const TravelsList = () => {
                 </div>
             </div>
 
-            {/* Mobile Version -lg */}
             <div className="lg:hidden flex flex-col gap-5">
                 <div className="flex flex-col lg:hidden bg-white rounded-2xl border border-gray-200 w-full max-w-md overflow-hidden">
                     <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
@@ -641,7 +646,13 @@ const TravelsList = () => {
                         </div>
                         <hr className="bg-gray-400 my-4" />
 
-                        {filterdCards.length > 0 ? (
+                        {loading ? (
+                            <>
+                                <SkeletonCard className="w-full" />
+                                <SkeletonCard className="w-full" />
+                                <SkeletonCard className="w-full" />
+                            </>
+                        ) : filterdCards.length > 0 ? (
                             <>
                                 <div className="flex gap-3 mb-3 overflow-x-auto no-scrollbar">
                                     <div className="shrink-0">
@@ -695,8 +706,8 @@ const TravelsList = () => {
                                                             savedTravel.includes(
                                                                 travel.id,
                                                             )
-                                                                ? "#FFA2A3"
-                                                                : "#FFF"
+                                                                ? '#FFA2A3'
+                                                                : '#FFF'
                                                         }
                                                     />
                                                 </button>
@@ -704,8 +715,8 @@ const TravelsList = () => {
                                         </div>
 
                                         <h4 className="flex py-1 text-[1.3rem] items-center capitalize gap-1">
-                                            {travel.from_city?.name}{" "}
-                                            <ArrowRight />{" "}
+                                            {travel.from_city?.name}{' '}
+                                            <ArrowRight />{' '}
                                             {travel.to_city?.name}
                                         </h4>
 
@@ -718,12 +729,12 @@ const TravelsList = () => {
                                             <p>{travel.car_type}</p>
                                             <p>
                                                 {travel.max_weight == 1
-                                                    ? "- 1"
+                                                    ? '- 1'
                                                     : travel.max_weight == 2
-                                                      ? "1-5"
+                                                      ? '1-5'
                                                       : travel.max_weight == 3
-                                                        ? "5-15"
-                                                        : "+ 15"}{" "}
+                                                        ? '5-15'
+                                                        : '+ 15'}{' '}
                                                 kg max
                                             </p>
                                         </div>
@@ -731,48 +742,29 @@ const TravelsList = () => {
                                         <div className="text-[#0984E3]">
                                             <ModalSend
                                                 className="text-[#0984E3]"
-                                                text={"Envoyer un colis"}
+                                                text={'Envoyer un colis'}
                                                 travel={travel}
                                             />
                                         </div>
 
                                         <div className="mt-5 justify-between flex flex-col gap-4 items-center">
                                             <div className="flex flex-col w-32  gap-1 items-center">
-                                                {/* <div className="flex">
-                          {[...Array(5)].map((star, i) => (
-                            <Star
-                              size={15}
-                              key={i}
-                              className={
-                                i < travel.rating
-                                  ? "fill-yellow-400 stroke-yellow-500"
-                                  : "text-gray-300"
-                              }
-                            />
-                          ))}
-                        </div> */}
-
-                                                {/* <div>
-                          <span className="text-[0.7rem]">
-                            ({travel.review} Review)
-                          </span>
-                        </div> */}
                                             </div>
 
                                             <div>
                                                 <p className="capitalize text-[1.3rem] font-bold text-[#374151]">
-                                                    {travel.price} MAD{" "}
+                                                    {travel.price} MAD{' '}
                                                     <span className="text-[0.8rem] text-gray-400 font-normal">
-                                                        /{" "}
+                                                        /{' '}
                                                         {travel.max_weight == 1
-                                                            ? "Petit"
+                                                            ? 'Petit'
                                                             : travel.max_weight ==
                                                                 2
-                                                              ? "Moyen"
+                                                              ? 'Moyen'
                                                               : travel.max_weight ==
                                                                   3
-                                                                ? "Grand"
-                                                                : "Volumineux"}{" "}
+                                                                ? 'Grand'
+                                                                : 'Volumineux'}{' '}
                                                         colis
                                                     </span>
                                                 </p>
@@ -781,7 +773,6 @@ const TravelsList = () => {
                                     </div>
                                 ))}
 
-                                {/* loader */}
                                 {visibleCards.length < filterdCards.length && (
                                     <div
                                         ref={loaderRef}
