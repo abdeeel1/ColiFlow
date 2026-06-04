@@ -21,6 +21,9 @@ import ResetPassword from "./pages/ResetPassword"
 import ProtectedRoute from "./utils/ProtectedRoute"
 import { useTranslation } from "react-i18next"
 import ReadMore from "./pages/ReadMore"
+import SenderDashboard from "./pages/SenderDashboard"
+import TravelerDashboard from "./pages/TravelerDashboard"
+import AdminDashboard from "./pages/AdminDashboard"
 
 function App() {
     const dispatch = useDispatch()
@@ -107,6 +110,10 @@ function App() {
 
                         <Route path="/travel/:id" element={<TravelDetail />} />
                     </Route>
+
+                    <Route exact path="/sender/dashboard" element={<SenderDashboard />} />
+                    <Route exact path="/traveler/dashboard" element={<TravelerDashboard />} />
+                    <Route exact path="/admin/dashboard" element={<AdminDashboard />} />
 
                     <Route path="/readmore/:page" element={<ReadMore />} />
 
