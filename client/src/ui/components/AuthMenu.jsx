@@ -3,7 +3,7 @@ import { logout } from "@/store/slices/authSlice"
 import { Avatar, Dropdown, Label } from "@heroui/react"
 import { LayoutDashboard, LogOut, User } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function AuthMenu() {
     const { user } = useSelector((state) => state.auth)
@@ -21,6 +21,8 @@ export default function AuthMenu() {
             console.log(error)
         }
     }
+
+    const isTraveler = user?.is_traveler
 
     return (
         <Dropdown>
@@ -59,10 +61,17 @@ export default function AuthMenu() {
                         </div>
                     </div>
                 </div>
-                <Dropdown.Menu>
+                <Dropdown.Menu
+                onAction={(key) => {
+                    if (key === "dashboard") {
+                        navigate(isTraveler ? "/traveler/dashboard" : "/sender/dashboard");
+                    }
+                    if (key === "profile") navigate("/profile");
+                }}
+                >
                     <Dropdown.Item id="dashboard" textValue="Dashboard">
                         <div className="flex w-full items-center justify-between gap-2 text-neutral-700">
-                            <Label>Dashboard</Label>
+                            <Label className="cursor-pointer">Dashboard</Label>
                             <LayoutDashboard size={14} />
                         </div>
                     </Dropdown.Item>
