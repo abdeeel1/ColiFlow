@@ -4,7 +4,11 @@ import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
 
 const FormStepTwo = () => {
-    const levels = ["standard", "urgent", "très urgent"]
+    const levels = [
+        { value: 'standard',    label: 'Standard' },
+        { value: 'urgent',       label: 'Urgent' },
+        { value: 'très_urgent',  label: 'Très urgent' },
+    ]
 
     const {
         register,
@@ -122,20 +126,20 @@ const FormStepTwo = () => {
                     Niveau d'urgence
                 </label>
                 <div className="flex flex-wrap gap-3 items-center">
-                    {levels.map((level, index) => (
+                    {levels.map((level) => (
                         <button
                             {...register("emergencies")}
                             type="button"
                             onClick={() =>
-                                setValue("emergencies", level, {
+                                setValue("emergencies", level.value, {
                                     shouldValidate: true,
                                     shouldDirty: true,
                                 })
                             }
-                            key={index}
-                            className={`px-6 py-2.5 rounded-full capitalize text-sm cursor-pointer font-bold transition-all duration-200 ${level === emergency ? "bg-[#0984E3] text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
+                            key={level.value}
+                            className={`px-6 py-2.5 rounded-full capitalize text-sm cursor-pointer font-bold transition-all duration-200 ${level.value === emergency ? "bg-[#0984E3] text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
                         >
-                            {level}
+                            {level.label}
                         </button>
                     ))}
                 </div>

@@ -46,7 +46,7 @@ const AddPackage = () => {
         cityOne: z.string().min(1, "la sélection d'une ville est obligatoire"),
         cityTwo: z.string().min(1, "la sélection d'une ville est obligatoire"),
         dateDelivery: z.string().min(1, "date invalide"),
-        emergencies: z.enum(["standard", "urgent", "très urgent"], {
+        emergencies: z.enum(["standard", "urgent", "très_urgent"], {
             error: () => ({
                 message: "la sélection d'une urgence est obligatoire",
             }),
@@ -126,10 +126,13 @@ const AddPackage = () => {
             const response = await axiosClient.post("/api/packages", formData)
             setSuccessMessage(capitalize(response.data.message))
         } catch (error) {
-            const errorsData = error.response.data.errors
-
-            const firstError = Object.values(errorsData)[0][0]
-            setErrorMessage(capitalize(firstError))
+            const errorsData = error.response?.data?.errors
+            if (errorsData) {
+                const firstError = Object.values(errorsData)[0][0]
+                setErrorMessage(capitalize(firstError))
+            } else {
+                setErrorMessage(error.response?.data?.message || "Une erreur est survenue lors de la création du colis.")
+            }
         } finally {
             setLoding(false)
         }

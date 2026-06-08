@@ -127,7 +127,9 @@ class TravelController extends Controller
      */
     public function show(Travel $travel)
     {
-        //
+        return response()->json(
+            $travel->load(['user', 'from_city', 'to_city', 'images'])
+        );
     }
 
     /**

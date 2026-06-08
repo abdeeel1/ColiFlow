@@ -36,6 +36,21 @@ class Package extends Model
         return $this->hasMany(PackageImage::class);
     }
 
+    public function from_city()
+    {
+        return $this->belongsTo(\App\Models\City::class, 'from_city_id');
+    }
+
+    public function to_city()
+    {
+        return $this->belongsTo(\App\Models\City::class, 'to_city_id');
+    }
+
+    public function travelRequests()
+    {
+        return $this->hasMany(\App\Models\TravelRequest::class);
+    }
+
     protected static function booted()
     {
         static::deleting(function ($package) {

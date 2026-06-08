@@ -1,28 +1,53 @@
-import React, { useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Transition from '../utils/Transition';
+import axiosClient from '../services/axios';
 
-function ModalSearch({
-  id,
-  searchId,
-  modalOpen,
-  setModalOpen
-}) {
+// Plane icon for travel results
+const PlaneIcon = () => (
+  <svg className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3" width="16" height="16" viewBox="0 0 16 16">
+    <path d="M15 5.94c0-.32-.2-.62-.5-.78L10 3V1.5A1.5 1.5 0 008.5 0 1.5 1.5 0 007 1.5V3L2.5 5.16c-.3.16-.5.46-.5.78v.94c0 .54.52.92 1.03.75L7 6.25V8.5l-1.7 1.13c-.19.13-.3.34-.3.57v.47c0 .43.41.73.82.6L8 10.75l2.18.52c.41.13.82-.17.82-.6v-.47c0-.23-.11-.44-.3-.57L9 8.5V6.25l3.97 1.38c.51.17 1.03-.21 1.03-.75v-.94z" />
+  </svg>
+);
 
+// Page icon for static nav results
+const PageIcon = () => (
+  <svg className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3" width="16" height="16" viewBox="0 0 16 16">
+    <path d="M14 0H2c-.6 0-1 .4-1 1v14c0 .6.4 1 1 1h8l5-5V1c0-.6-.4-1-1-1zM3 2h10v8H9v4H3V2z" />
+  </svg>
+);
+
+// Static pages available to navigate to
+const STATIC_PAGES = [
+  { label: 'Home', path: '/' },
+  { label: 'Travels List', path: '/travels' },
+  { label: 'Add Travel', path: '/travels/create' },
+  { label: 'Add Package', path: '/packages/create' },
+  { label: 'Sender Dashboard', path: '/sender/dashboard' },
+  { label: 'Traveler Dashboard', path: '/traveler/dashboard' },
+];
+
+function ModalSearch({ id, searchId, modalOpen, setModalOpen }) {
   const modalContent = useRef(null);
   const searchInput = useRef(null);
+  const navigate = useNavigate();
+
+  const [query, setQuery] = useState('');
+  const [travels, setTravels] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const debounceRef = useRef(null);
 
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
-      if (!modalOpen || modalContent.current.contains(target)) return
+      if (!modalOpen || modalContent.current.contains(target)) return;
       setModalOpen(false);
     };
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
   });
 
-  // close if the esc key is pressed
+  // close on Escape
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {
       if (!modalOpen || keyCode !== 27) return;
@@ -32,9 +57,65 @@ function ModalSearch({
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
+  // focus input when opened
   useEffect(() => {
-    modalOpen && searchInput.current.focus();
+    if (modalOpen) {
+      searchInput.current.focus();
+    } else {
+      // reset state when closed
+      setQuery('');
+      setTravels([]);
+    }
   }, [modalOpen]);
+
+  // debounced API search
+  const searchTravels = useCallback((value) => {
+    clearTimeout(debounceRef.current);
+    if (!value.trim()) {
+      setTravels([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await axiosClient.get('/api/travels', {
+          params: { search: value },
+        });
+        // API may return { data: [...] } or directly an array
+        const results = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
+        setTravels(results.slice(0, 6));
+      } catch {
+        setTravels([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 350);
+  }, []);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    searchTravels(value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    setModalOpen(false);
+    navigate(`/travels?search=${encodeURIComponent(query.trim())}`);
+  };
+
+  const handleClose = () => setModalOpen(false);
+
+  // Filter static pages by query
+  const filteredPages = query.trim()
+    ? STATIC_PAGES.filter((p) =>
+        p.label.toLowerCase().includes(query.toLowerCase())
+      )
+    : STATIC_PAGES;
+
+  const hasResults = travels.length > 0 || filteredPages.length > 0;
 
   return (
     <>
@@ -50,6 +131,7 @@ function ModalSearch({
         leaveEnd="opacity-0"
         aria-hidden="true"
       />
+
       {/* Modal dialog */}
       <Transition
         id={id}
@@ -69,24 +151,22 @@ function ModalSearch({
           className="bg-white dark:bg-gray-800 border border-transparent dark:border-gray-700/60 overflow-auto max-w-2xl w-full max-h-full rounded-lg shadow-lg"
         >
           {/* Search form */}
-          <form className="border-b border-gray-200 dark:border-gray-700/60">
+          <form onSubmit={handleSubmit} className="border-b border-gray-200 dark:border-gray-700/60">
             <div className="relative">
-              <label htmlFor={searchId} className="sr-only">
-                Search
-              </label>
+              <label htmlFor={searchId} className="sr-only">Search</label>
               <input
                 id={searchId}
                 className="w-full dark:text-gray-300 bg-white dark:bg-gray-800 border-0 focus:ring-transparent placeholder-gray-400 dark:placeholder-gray-500 appearance-none py-3 pl-10 pr-4"
                 type="search"
-                placeholder="Search Anything…"
+                placeholder="Search travels, destinations…"
                 ref={searchInput}
+                value={query}
+                onChange={handleChange}
               />
               <button className="absolute inset-0 right-auto group" type="submit" aria-label="Search">
                 <svg
                   className="shrink-0 fill-current text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400 ml-4 mr-2"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
+                  width="16" height="16" viewBox="0 0 16 16"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
@@ -95,161 +175,87 @@ function ModalSearch({
               </button>
             </div>
           </form>
+
           <div className="py-4 px-2">
-            {/* Recent searches */}
-            <div className="mb-3 last:mb-0">
-              <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">Recent searches</div>
-              <ul className="text-sm">
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M15.707 14.293v.001a1 1 0 01-1.414 1.414L11.185 12.6A6.935 6.935 0 017 14a7.016 7.016 0 01-5.173-2.308l-1.537 1.3L0 8l4.873 1.12-1.521 1.285a4.971 4.971 0 008.59-2.835l1.979.454a6.971 6.971 0 01-1.321 3.157l3.107 3.112zM14 6L9.127 4.88l1.521-1.28a4.971 4.971 0 00-8.59 2.83L.084 5.976a6.977 6.977 0 0112.089-3.668l1.537-1.3L14 6z" />
-                    </svg>
-                    <span>Form Builder - 23 hours on-demand video</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M15.707 14.293v.001a1 1 0 01-1.414 1.414L11.185 12.6A6.935 6.935 0 017 14a7.016 7.016 0 01-5.173-2.308l-1.537 1.3L0 8l4.873 1.12-1.521 1.285a4.971 4.971 0 008.59-2.835l1.979.454a6.971 6.971 0 01-1.321 3.157l3.107 3.112zM14 6L9.127 4.88l1.521-1.28a4.971 4.971 0 00-8.59 2.83L.084 5.976a6.977 6.977 0 0112.089-3.668l1.537-1.3L14 6z" />
-                    </svg>
-                    <span>Access Mosaic on mobile and TV</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M15.707 14.293v.001a1 1 0 01-1.414 1.414L11.185 12.6A6.935 6.935 0 017 14a7.016 7.016 0 01-5.173-2.308l-1.537 1.3L0 8l4.873 1.12-1.521 1.285a4.971 4.971 0 008.59-2.835l1.979.454a6.971 6.971 0 01-1.321 3.157l3.107 3.112zM14 6L9.127 4.88l1.521-1.28a4.971 4.971 0 00-8.59 2.83L.084 5.976a6.977 6.977 0 0112.089-3.668l1.537-1.3L14 6z" />
-                    </svg>
-                    <span>Product Update - Q4 2024</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M15.707 14.293v.001a1 1 0 01-1.414 1.414L11.185 12.6A6.935 6.935 0 017 14a7.016 7.016 0 01-5.173-2.308l-1.537 1.3L0 8l4.873 1.12-1.521 1.285a4.971 4.971 0 008.59-2.835l1.979.454a6.971 6.971 0 01-1.321 3.157l3.107 3.112zM14 6L9.127 4.88l1.521-1.28a4.971 4.971 0 00-8.59 2.83L.084 5.976a6.977 6.977 0 0112.089-3.668l1.537-1.3L14 6z" />
-                    </svg>
-                    <span>Master Digital Marketing Strategy course</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M15.707 14.293v.001a1 1 0 01-1.414 1.414L11.185 12.6A6.935 6.935 0 017 14a7.016 7.016 0 01-5.173-2.308l-1.537 1.3L0 8l4.873 1.12-1.521 1.285a4.971 4.971 0 008.59-2.835l1.979.454a6.971 6.971 0 01-1.321 3.157l3.107 3.112zM14 6L9.127 4.88l1.521-1.28a4.971 4.971 0 00-8.59 2.83L.084 5.976a6.977 6.977 0 0112.089-3.668l1.537-1.3L14 6z" />
-                    </svg>
-                    <span>Dedicated forms for products</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M15.707 14.293v.001a1 1 0 01-1.414 1.414L11.185 12.6A6.935 6.935 0 017 14a7.016 7.016 0 01-5.173-2.308l-1.537 1.3L0 8l4.873 1.12-1.521 1.285a4.971 4.971 0 008.59-2.835l1.979.454a6.971 6.971 0 01-1.321 3.157l3.107 3.112zM14 6L9.127 4.88l1.521-1.28a4.971 4.971 0 00-8.59 2.83L.084 5.976a6.977 6.977 0 0112.089-3.668l1.537-1.3L14 6z" />
-                    </svg>
-                    <span>Product Update - Q4 2024</span>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            {/* Recent pages */}
-            <div className="mb-3 last:mb-0">
-              <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">Recent pages</div>
-              <ul className="text-sm">
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M14 0H2c-.6 0-1 .4-1 1v14c0 .6.4 1 1 1h8l5-5V1c0-.6-.4-1-1-1zM3 2h10v8H9v4H3V2z" />
-                    </svg>
-                    <span>
-                      <span className="font-medium">Messages</span> -{' '}
-                      <span className="text-gray-600 dark:text-gray-400">Conversation / … / Mike Mills</span>
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
-                    to="#0"
-                    onClick={() => setModalOpen(!modalOpen)}
-                  >
-                    <svg
-                  className="fill-current text-gray-400 dark:text-gray-500 shrink-0 mr-3"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                    >
-                      <path d="M14 0H2c-.6 0-1 .4-1 1v14c0 .6.4 1 1 1h8l5-5V1c0-.6-.4-1-1-1zM3 2h10v8H9v4H3V2z" />
-                    </svg>
-                    <span>
-                      <span className="font-medium">Messages</span> -{' '}
-                      <span className="text-gray-600 dark:text-gray-400">Conversation / … / Eva Patrick</span>
-                    </span>
-                  </Link>
-                </li>
-              </ul>
-            </div>
+
+            {/* Loading state */}
+            {loading && (
+              <div className="flex items-center justify-center py-6 text-sm text-gray-400 dark:text-gray-500">
+                <svg className="animate-spin mr-2" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+                Searching travels…
+              </div>
+            )}
+
+            {/* No results */}
+            {!loading && query.trim() && !hasResults && (
+              <div className="text-center py-6 text-sm text-gray-400 dark:text-gray-500">
+                No results for "<span className="font-medium text-gray-600 dark:text-gray-300">{query}</span>"
+              </div>
+            )}
+
+            {/* Travel results from API */}
+            {!loading && travels.length > 0 && (
+              <div className="mb-3 last:mb-0">
+                <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">
+                  Travels
+                </div>
+                <ul className="text-sm">
+                  {travels.map((travel) => (
+                    <li key={travel.id}>
+                      <Link
+                        className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                        to={`/travel/${travel.id}`}
+                        onClick={handleClose}
+                      >
+                        <PlaneIcon />
+                        <span className="flex-1 min-w-0">
+                          <span className="font-medium">
+                            {travel.from_city?.name ?? travel.from_city} → {travel.to_city?.name ?? travel.to_city}
+                          </span>
+                          {travel.departure_date && (
+                            <span className="text-gray-500 dark:text-gray-400 ml-2 text-xs">
+                              {new Date(travel.departure_date).toLocaleDateString()}
+                            </span>
+                          )}
+                          {travel.max_weight && (
+                            <span className="text-gray-400 dark:text-gray-500 ml-2 text-xs">
+                              · {travel.max_weight} kg
+                            </span>
+                          )}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Pages / navigation */}
+            {!loading && filteredPages.length > 0 && (
+              <div className="mb-3 last:mb-0">
+                <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">
+                  Pages
+                </div>
+                <ul className="text-sm">
+                  {filteredPages.map((page) => (
+                    <li key={page.path}>
+                      <Link
+                        className="flex items-center p-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/20 rounded-lg"
+                        to={page.path}
+                        onClick={handleClose}
+                      >
+                        <PageIcon />
+                        <span className="font-medium">{page.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
           </div>
         </div>
       </Transition>

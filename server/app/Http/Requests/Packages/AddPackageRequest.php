@@ -23,18 +23,18 @@ class AddPackageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-            'from_city_id' => 'required|exists:cities,id|different:to_city_id',
-            'to_city_id' => 'required|exists:cities,id',
-            'package_name' => 'required|string|min:3|max:255',
-            'package_size' => 'required|integer',
-            'description' => 'nullable|string|max:1000',
-            'date_delivery' => 'required',
-            'urgency' => 'required|in:standard,urgent,très urgent',
+            'from_city_id'    => 'required|exists:cities,id|different:to_city_id',
+            'to_city_id'      => 'required|exists:cities,id',
+            'package_name'    => 'required|string|min:3|max:255',
+            'category'        => 'required|in:electronique,documents,mode,maison,autre',
+            'package_size'    => 'required|numeric',
+            'description'     => 'nullable|string|max:1000',
+            'date_delivery'   => 'required|date',
+            'urgency'         => 'required|in:standard,urgent,très_urgent',
             'accept_condition' => 'accepted',
-            'price' => 'required',
-            'pictures' => 'required|array|min:1|max:3',
-            'pictures.*' => 'image|mimes:jpg,jpeg,png|max:2048'
+            'price'           => 'required|numeric|min:1',
+            'pictures'        => 'required|array|min:1|max:3',
+            'pictures.*'      => 'image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 }
