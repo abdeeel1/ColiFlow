@@ -38,6 +38,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'document_cin',
         'statut_verification',
         'google_id',
+        'vehicle_type',
+        'vehicle_brand_model',
+        'vehicle_plate',
+        'vehicle_color',
+        'vehicle_capacity',
+        'vehicle_photo',
+        'permis_document',
+        'assurance_document',
     ];
 
     /**

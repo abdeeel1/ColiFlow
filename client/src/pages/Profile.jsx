@@ -1,10 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
-import { Pencil, ShieldAlert, ShieldCheck, UploadCloud } from 'lucide-react'
+import {
+    Pencil, ShieldAlert, ShieldCheck, UploadCloud,
+    Clock3, CircleAlert, CheckCircle2, ChevronDown,
+} from 'lucide-react'
 import axiosClient from '@/services/axios'
 import { setUser } from '@/store/slices/authSlice'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import Sidebar from '../partials/Sidebar'
+import TravelerSidebar from '../partials/TravelerSidebar'
 import Header from '../partials/Header'
 
 const avatarOf = (user) =>
@@ -47,7 +53,9 @@ const Field = ({ label, name, value, onChange, disabled = false, ...props }) => 
     </div>
 )
 
-const DropZone = ({ inputRef, uploading, onSelect, accept, label }) => (
+const isImage = (url) => typeof url === 'string' && /\.(png|jpe?g|gif|webp)$/i.test(url)
+
+const DropZone = ({ inputRef, uploading, onSelect, accept, label, preview }) => (
     <div
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
@@ -55,7 +63,7 @@ const DropZone = ({ inputRef, uploading, onSelect, accept, label }) => (
             e.preventDefault()
             onSelect(e.dataTransfer.files?.[0])
         }}
-        className="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 py-8 px-4 text-center cursor-pointer hover:border-[#0984E3]/50 transition-colors"
+        className="relative border-2 border-dashed border-blue-200 dark:border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 py-8 px-4 text-center cursor-pointer hover:border-[#0984E3] transition-colors overflow-hidden"
     >
         <input
             ref={inputRef}
@@ -64,14 +72,26 @@ const DropZone = ({ inputRef, uploading, onSelect, accept, label }) => (
             hidden
             onChange={(e) => onSelect(e.target.files?.[0])}
         />
-        <div className="w-9 h-9 rounded-full bg-[#0984E3]/10 flex items-center justify-center text-[#0984E3]">
+
+        {/* Existing upload preview */}
+        {preview && !uploading && (
+            isImage(preview) ? (
+                <img src={preview} alt="aperçu" className="absolute inset-0 w-full h-full object-cover opacity-90" />
+            ) : (
+                <div className="absolute top-2 right-2 text-[10px] font-semibold text-green-600 bg-green-50 border border-green-200 rounded-full px-2 py-0.5">
+                    ✓ Document reçu
+                </div>
+            )
+        )}
+
+        <div className={`relative w-9 h-9 rounded-full bg-[#0984E3]/10 flex items-center justify-center text-[#0984E3] ${preview && isImage(preview) ? 'bg-white/90 shadow' : ''}`}>
             <UploadCloud size={18} />
         </div>
         {uploading ? (
-            <span className="text-xs text-gray-400">Envoi en cours...</span>
+            <span className="relative text-xs text-gray-400">Envoi en cours...</span>
         ) : (
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-                <span className="text-[#0984E3] font-semibold">Cliquez pour uploader</span> ou glissez-déposez
+            <p className={`relative text-xs ${preview && isImage(preview) ? 'text-white drop-shadow font-medium bg-black/30 px-2 py-1 rounded' : 'text-gray-500 dark:text-gray-400'}`}>
+                <span className="text-[#0984E3] font-semibold">Cliquez</span> pour uploader ou glissez-déposez
                 <br />
                 {label}
             </p>
@@ -79,9 +99,19 @@ const DropZone = ({ inputRef, uploading, onSelect, accept, label }) => (
     </div>
 )
 
+const VEHICLE_TYPES = [
+    { value: 'moto',     label: 'Moto' },
+    { value: 'voiture',  label: 'Voiture' },
+    { value: 'camionnette', label: 'Camionnette' },
+    { value: 'camion',   label: 'Camion' },
+]
+
 const Profile = () => {
     const dispatch = useDispatch()
     const user = useSelector((state) => state.auth.user)
+
+    const [searchParams] = useSearchParams()
+    const activeTab = searchParams.get('tab') === 'vehicle' ? 'vehicle' : 'profil'
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -101,6 +131,20 @@ const Profile = () => {
     const [uploadingPhoto, setUploadingPhoto] = useState(false)
     const [uploadingDocument, setUploadingDocument] = useState(false)
 
+    // ── vehicle tab
+    const [vehicle, setVehicle] = useState({
+        vehicle_type: '',
+        vehicle_brand_model: '',
+        vehicle_plate: '',
+        vehicle_color: '',
+        vehicle_capacity: '',
+    })
+    const [savingVehicle, setSavingVehicle] = useState(false)
+    const vehiclePhotoRef = useRef(null)
+    const permisRef = useRef(null)
+    const assuranceRef = useRef(null)
+    const [uploadingDoc, setUploadingDoc] = useState(null) // which doc type is uploading
+
     useEffect(() => {
         if (!user) return
 
@@ -112,6 +156,14 @@ const Profile = () => {
             city: user.city ?? '',
             country: user.country ?? '',
             bio: user.bio ?? '',
+        })
+
+        setVehicle({
+            vehicle_type: user.vehicle_type ?? '',
+            vehicle_brand_model: user.vehicle_brand_model ?? '',
+            vehicle_plate: user.vehicle_plate ?? '',
+            vehicle_color: user.vehicle_color ?? '',
+            vehicle_capacity: user.vehicle_capacity ?? '',
         })
     }, [user])
 
@@ -157,8 +209,50 @@ const Profile = () => {
         }
     }
 
+    const handleVehicleChange = (e) => {
+        const { name, value } = e.target
+        setVehicle((prev) => ({ ...prev, [name]: value }))
+    }
+
+    const handleVehicleSubmit = async (e) => {
+        e.preventDefault()
+        setSavingVehicle(true)
+        try {
+            const res = await axiosClient.patch('/api/profile/vehicle', vehicle)
+            dispatch(setUser(res.data.user))
+            toast.success(res.data.message)
+        } catch (err) {
+            const errorsData = err.response?.data?.errors
+            const message = errorsData
+                ? Object.values(errorsData)[0][0]
+                : err.response?.data?.message ?? 'Erreur lors de l\'enregistrement du véhicule'
+            toast.error(message)
+        } finally {
+            setSavingVehicle(false)
+        }
+    }
+
+    const uploadVehicleDoc = async (type, file) => {
+        if (!file) return
+        const formData = new FormData()
+        formData.append('type', type)
+        formData.append('file', file)
+
+        setUploadingDoc(type)
+        try {
+            const res = await axiosClient.post('/api/profile/vehicle-document', formData)
+            dispatch(setUser(res.data.user))
+            toast.success(res.data.message)
+        } catch (err) {
+            toast.error(err.response?.data?.message ?? 'Erreur lors de l\'envoi du fichier')
+        } finally {
+            setUploadingDoc(null)
+        }
+    }
+
     const verification = VERIFICATION[user?.statut_verification] ?? VERIFICATION.pending
     const VerificationIcon = verification.icon
+    const isVerified = user?.statut_verification === 'verified'
 
     const handleConnectGoogle = () => {
         window.location.href = 'http://localhost:8000/auth/google'
@@ -166,7 +260,9 @@ const Profile = () => {
 
     return (
         <div className="flex h-screen overflow-hidden">
-            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            {user?.is_traveler
+                ? <TravelerSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                : <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
 
             <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                 <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -176,13 +272,155 @@ const Profile = () => {
 
                         <div className="mb-6">
                             <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold mb-1">
-                                Mon Profil
+                                {activeTab === 'vehicle' ? 'Paramètres | Mon Véhicule & Documents' : 'Mon Profil'}
                             </h1>
                             <p className="text-sm text-gray-500">
-                                Gérez vos informations personnelles et la sécurité de votre compte.
+                                {activeTab === 'vehicle'
+                                    ? 'Renseignez les informations de votre véhicule et téléchargez vos documents pour validation.'
+                                    : 'Gérez vos informations personnelles et la sécurité de votre compte.'}
                             </p>
                         </div>
 
+                        {/* ── VEHICLE TAB ───────────────────────────────────── */}
+                        {activeTab === 'vehicle' && (
+                            <div className="flex flex-col gap-6">
+
+                                {/* Verification in-progress alert (hidden once verified) */}
+                                {!isVerified && (user?.vehicle_photo || user?.permis_document || user?.assurance_document) && (
+                                    <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/50">
+                                        <Clock3 className="text-amber-500" />
+                                        <AlertTitle className="text-amber-800 dark:text-amber-300">Vérification en cours</AlertTitle>
+                                        <AlertDescription className="text-amber-700/90 dark:text-amber-400/80">
+                                            Vos documents (Permis, Assurance et Photo du véhicule) ont été reçus. Un administrateur les examine
+                                            actuellement. Vous serez notifié par email dès que votre profil voyageur sera activé.
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
+
+                                {/* Verified success alert */}
+                                {isVerified && (
+                                    <Alert className="border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900/50">
+                                        <CheckCircle2 className="text-green-500" />
+                                        <AlertTitle className="text-green-800 dark:text-green-300">Véhicule validé</AlertTitle>
+                                        <AlertDescription className="text-green-700/90 dark:text-green-400/80">
+                                            Votre véhicule et vos documents ont été validés. Vous pouvez désormais accepter des colis.
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
+
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+                                    {/* Détails du compte (véhicule) */}
+                                    <form
+                                        onSubmit={handleVehicleSubmit}
+                                        className="lg:col-span-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700/60 rounded-2xl p-6 shadow-xs"
+                                    >
+                                        <h2 className="font-bold text-gray-800 dark:text-gray-100 mb-5">Détails du compte</h2>
+
+                                        {/* Destructive (must-validate) alert — hidden once verified */}
+                                        {!isVerified && (
+                                            <Alert variant="destructive" className="border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900/50 mb-6">
+                                                <CircleAlert />
+                                                <AlertDescription className="text-red-600 dark:text-red-400">
+                                                    Les informations de votre véhicule doivent être validées par l'administrateur avant que vous ne
+                                                    puissiez accepter des colis.
+                                                </AlertDescription>
+                                            </Alert>
+                                        )}
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                            {/* Type de véhicule */}
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-sm font-semibold text-gray-600 dark:text-gray-300">Type de véhicule</label>
+                                                <div className="relative">
+                                                    <select
+                                                        name="vehicle_type"
+                                                        value={vehicle.vehicle_type}
+                                                        onChange={handleVehicleChange}
+                                                        className="w-full appearance-none bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-700 rounded-lg pl-3 pr-9 py-2.5 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#0984E3] cursor-pointer"
+                                                    >
+                                                        <option value="">Sélectionner…</option>
+                                                        {VEHICLE_TYPES.map((t) => (
+                                                            <option key={t.value} value={t.value}>{t.label}</option>
+                                                        ))}
+                                                    </select>
+                                                    <ChevronDown className="absolute right-3 top-3 text-gray-300 pointer-events-none" size={16} />
+                                                </div>
+                                            </div>
+
+                                            <Field label="Marque & Modèle" name="vehicle_brand_model" value={vehicle.vehicle_brand_model} onChange={handleVehicleChange} placeholder="Kia Picanto" />
+                                            <Field label="Plaque d'immatriculation" name="vehicle_plate" value={vehicle.vehicle_plate} onChange={handleVehicleChange} placeholder="XXXXX - A - 72" />
+                                            <Field label="Couleur" name="vehicle_color" value={vehicle.vehicle_color} onChange={handleVehicleChange} placeholder="Noire" />
+                                        </div>
+
+                                        <div className="mt-5">
+                                            <Field label="Capacité de chargement" name="vehicle_capacity" value={vehicle.vehicle_capacity} onChange={handleVehicleChange} placeholder="50 Kg / 300 L" />
+                                        </div>
+
+                                        {/* Photo du véhicule */}
+                                        <div className="mt-5 flex flex-col gap-1.5">
+                                            <label className="text-sm font-semibold text-gray-600 dark:text-gray-300">
+                                                Photo du Véhicule (Extérieur + Coffre)
+                                            </label>
+                                            <DropZone
+                                                inputRef={vehiclePhotoRef}
+                                                uploading={uploadingDoc === 'vehicle_photo'}
+                                                onSelect={(file) => uploadVehicleDoc('vehicle_photo', file)}
+                                                accept="image/png, image/jpeg, image/gif"
+                                                label="SVG, PNG, JPG or GIF"
+                                                preview={user?.vehicle_photo}
+                                            />
+                                        </div>
+
+                                        <div className="mt-6 flex justify-end">
+                                            <button
+                                                type="submit"
+                                                disabled={savingVehicle}
+                                                className="px-5 py-2.5 text-sm font-bold rounded-lg bg-[#0984E3] hover:bg-blue-600 active:scale-95 text-white shadow-sm transition cursor-pointer disabled:opacity-60"
+                                            >
+                                                {savingVehicle ? 'Enregistrement...' : 'Enregistrer le véhicule'}
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    {/* Documents & Photos */}
+                                    <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700/60 rounded-2xl p-6 shadow-xs flex flex-col gap-6">
+                                        <h2 className="font-bold text-gray-800 dark:text-gray-100">Documents &amp; Photos</h2>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-sm font-semibold text-gray-600 dark:text-gray-300">
+                                                Permis de Conduire ( Recto &amp; Verso )
+                                            </label>
+                                            <DropZone
+                                                inputRef={permisRef}
+                                                uploading={uploadingDoc === 'permis_document'}
+                                                onSelect={(file) => uploadVehicleDoc('permis_document', file)}
+                                                accept="image/png, image/jpeg, image/gif, application/pdf"
+                                                label="SVG, PNG, JPG or GIF"
+                                                preview={user?.permis_document}
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-sm font-semibold text-gray-600 dark:text-gray-300">
+                                                Assurance du Véhicule
+                                            </label>
+                                            <DropZone
+                                                inputRef={assuranceRef}
+                                                uploading={uploadingDoc === 'assurance_document'}
+                                                onSelect={(file) => uploadVehicleDoc('assurance_document', file)}
+                                                accept="image/png, image/jpeg, image/gif, application/pdf"
+                                                label="SVG, PNG, JPG or GIF"
+                                                preview={user?.assurance_document}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ── PROFILE TAB ───────────────────────────────────── */}
+                        {activeTab === 'profil' && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
                             {/* Détails du compte */}
@@ -324,6 +562,7 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
+                        )}
                     </div>
                 </main>
             </div>

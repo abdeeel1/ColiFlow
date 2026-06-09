@@ -50,6 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update']);
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto']);
     Route::post('/profile/document', [ProfileController::class, 'updateDocument']);
+    Route::patch('/profile/vehicle', [ProfileController::class, 'updateVehicle']);
+    Route::post('/profile/vehicle-document', [ProfileController::class, 'updateVehicleDocument']);
 });
 
 Route::middleware('auth:sanctum')->post('/switch-role', [UserController::class, 'switchRole']);
@@ -58,6 +60,7 @@ Route::middleware('auth:sanctum')->post('/switch-role', [UserController::class, 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/traveler/dashboard', [TravelerController::class, 'dashboard']);
     Route::get('/traveler/travels',   [TravelerController::class, 'travels']);
+    Route::get('/traveler/gains',     [TravelerController::class, 'gains']);
     Route::delete('/traveler/travels/{travel}', [TravelerController::class, 'destroy']);
 });
 

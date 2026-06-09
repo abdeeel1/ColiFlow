@@ -95,7 +95,7 @@ class TravelRequestController extends Controller
     public function updateStatus(Request $request, TravelRequest $travelRequest)
     {
         $request->validate([
-            'status' => 'required|in:accepted,rejected',
+            'status' => 'required|in:accepted,rejected,delivered',
         ]);
 
         // Only the traveler of that travel can update
@@ -103,27 +103,40 @@ class TravelRequestController extends Controller
             return response()->json(['message' => 'Non autorisé.'], 403);
         }
 
+        // A traveler must have a verified vehicle/documents before accepting colis
+        if ($request->status === 'accepted' && Auth::user()->statut_verification !== 'verified') {
+            return response()->json([
+                'message' => "Votre véhicule n'est pas encore vérifié. Faites valider vos documents avant d'accepter des colis.",
+            ], 403);
+        }
+
         $travelRequest->update(['status' => $request->status]);
 
-        $accepted = $request->status === 'accepted';
         $packageName = $travelRequest->package->package_name ?? 'votre colis';
 
-        // Notify the sender (package owner) about the status change
-        UserNotification::create([
-            'user_id' => $travelRequest->package->user_id,
-            'type'    => $accepted ? 'request_accepted' : 'request_rejected',
-            'title'   => $accepted ? 'Demande acceptée ✓' : 'Demande refusée',
-            'message' => $accepted
-                ? "Un voyageur a accepté de transporter \"{$packageName}\"."
-                : "Un voyageur a refusé de transporter \"{$packageName}\".",
-            'data'    => [
-                'travel_request_id' => $travelRequest->id,
-                'package_id'        => $travelRequest->package_id,
-            ],
-        ]);
+        $notifMap = [
+            'accepted'  => ['type' => 'request_accepted',  'title' => 'Demande acceptée ✓',     'msg' => "Un voyageur a accepté de transporter \"{$packageName}\"."],
+            'rejected'  => ['type' => 'request_rejected',  'title' => 'Demande refusée',         'msg' => "Un voyageur a refusé de transporter \"{$packageName}\"."],
+            'delivered' => ['type' => 'request_delivered', 'title' => 'Colis livré ✓',           'msg' => "Votre colis \"{$packageName}\" a été livré avec succès."],
+        ];
 
+        if (isset($notifMap[$request->status])) {
+            $n = $notifMap[$request->status];
+            UserNotification::create([
+                'user_id' => $travelRequest->package->user_id,
+                'type'    => $n['type'],
+                'title'   => $n['title'],
+                'message' => $n['msg'],
+                'data'    => [
+                    'travel_request_id' => $travelRequest->id,
+                    'package_id'        => $travelRequest->package_id,
+                ],
+            ]);
+        }
+
+        $labels = ['accepted' => 'Demande acceptée.', 'rejected' => 'Demande refusée.', 'delivered' => 'Livraison confirmée.'];
         return response()->json([
-            'message'        => $accepted ? 'Demande acceptée.' : 'Demande refusée.',
+            'message'        => $labels[$request->status] ?? 'Statut mis à jour.',
             'travel_request' => $travelRequest,
         ]);
     }
@@ -136,7 +149,7 @@ class TravelRequestController extends Controller
         $requests = TravelRequest::whereHas('travel', function ($q) {
                 $q->where('user_id', Auth::id());
             })
-            ->with(['travel.from_city', 'travel.to_city', 'package', 'sender'])
+            ->with(['travel.from_city', 'travel.to_city', 'package.images', 'package.to_city', 'sender'])
             ->latest()
             ->get();
 

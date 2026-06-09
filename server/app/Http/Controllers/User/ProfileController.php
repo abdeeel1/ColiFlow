@@ -70,4 +70,53 @@ class ProfileController extends Controller
             'user' => $user,
         ]);
     }
+
+    /**
+     * Update the traveler's vehicle text details.
+     */
+    public function updateVehicle(Request $request)
+    {
+        $validated = $request->validate([
+            'vehicle_type'        => ['nullable', 'string', 'max:50'],
+            'vehicle_brand_model' => ['nullable', 'string', 'max:255'],
+            'vehicle_plate'       => ['nullable', 'string', 'max:50'],
+            'vehicle_color'       => ['nullable', 'string', 'max:50'],
+            'vehicle_capacity'    => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $user = Auth::user();
+        $user->fill($validated);
+        $user->save();
+
+        return response()->json([
+            'message' => 'Informations du véhicule enregistrées',
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Upload a vehicle document/photo (vehicle_photo | permis_document | assurance_document).
+     * Re-uploading resets the verification status to pending.
+     */
+    public function updateVehicleDocument(Request $request)
+    {
+        $request->validate([
+            'type' => ['required', 'in:vehicle_photo,permis_document,assurance_document'],
+            'file' => ['required', 'file', 'mimes:jpg,jpeg,png,gif,pdf', 'max:8192'],
+        ]);
+
+        $user = Auth::user();
+        $field = $request->input('type');
+
+        $path = $request->file('file')->store('vehicles', 'public');
+
+        $user->{$field} = asset('storage/'.$path);
+        $user->statut_verification = 'pending';
+        $user->save();
+
+        return response()->json([
+            'message' => 'Document du véhicule envoyé, en attente de vérification',
+            'user' => $user,
+        ]);
+    }
 }

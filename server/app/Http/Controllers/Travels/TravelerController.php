@@ -172,6 +172,99 @@ class TravelerController extends Controller
         return response()->json($travels);
     }
 
+    public function gains()
+    {
+        $user = Auth::user();
+        $rate = 0.10; // 10% platform commission
+
+        $requests = TravelRequest::whereHas('travel', fn($q) => $q->where('user_id', $user->id))
+            ->whereIn('status', ['accepted', 'delivered'])
+            ->with(['package', 'travel.from_city', 'travel.to_city', 'sender'])
+            ->latest()
+            ->get();
+
+        $delivered = $requests->where('status', 'delivered');
+        $pending   = $requests->where('status', 'accepted');
+
+        $grossEarned = (float) $delivered->sum(fn($r) => $r->package?->price ?? 0);
+        $commissions = round($grossEarned * $rate);
+        $netEarned   = $grossEarned - $commissions;
+
+        $pendingGross = (float) $pending->sum(fn($r) => $r->package?->price ?? 0);
+        $pendingNet   = $pendingGross - round($pendingGross * $rate);
+
+        // ── Monthly series (last 8 months) ──────────────────────────
+        $labels = [];
+        $gainsSeries = [];
+        $trajetsSeries = [];
+        $commissionsSeries = [];
+        $monthsFr = ['', 'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+        for ($i = 7; $i >= 0; $i--) {
+            $month   = now()->subMonths($i);
+            $key     = $month->format('Y-m');
+            $labels[] = $monthsFr[(int) $month->format('n')];
+
+            $monthDelivered = $delivered->filter(fn($r) => $r->created_at->format('Y-m') === $key);
+            $monthGross     = (float) $monthDelivered->sum(fn($r) => $r->package?->price ?? 0);
+            $monthCommission = round($monthGross * $rate);
+
+            $gainsSeries[]       = $monthGross - $monthCommission;
+            $commissionsSeries[] = $monthCommission;
+            $trajetsSeries[]     = $monthDelivered->count();
+        }
+
+        // ── Historique des gains (latest 12) ────────────────────────
+        $history = $requests->take(12)->map(function ($r) use ($rate) {
+            $s = $r->sender;
+            $clientName = $s?->first_name && $s?->last_name
+                ? $s->first_name . ' ' . substr($s->last_name, 0, 1) . '.'
+                : ($s?->name ?? 'Client');
+            $gross = (float) ($r->package?->price ?? 0);
+            return [
+                'id'     => $r->id,
+                'client' => $clientName,
+                'type'   => 'Colis #CF-' . ($r->package?->id ?? 0),
+                'status' => $r->status === 'delivered' ? 'paye' : 'pending',
+                'amount' => $gross - round($gross * $rate),
+                'date'   => $r->created_at,
+            ];
+        })->values();
+
+        // ── Livraisons prévues (upcoming accepted on future travels) ─
+        $upcoming = $pending
+            ->filter(fn($r) => $r->travel?->departure_date && $r->travel->departure_date >= now()->startOfDay())
+            ->sortBy(fn($r) => $r->travel->departure_date)
+            ->map(fn($r) => [
+                'id'        => $r->id,
+                'date'      => $r->travel->departure_date,
+                'from_city' => $r->travel->from_city?->name ?? '—',
+                'to_city'   => $r->travel->to_city?->name   ?? '—',
+                'price'     => (float) ($r->package?->price ?? 0),
+            ])
+            ->values();
+
+        return response()->json([
+            'solde_total' => $netEarned,
+            'total_gagne' => $grossEarned,
+            'en_attente'  => $pendingNet,
+            'card' => [
+                'solde_disponible' => $netEarned,
+                'revenus'          => $netEarned,
+                'commissions'      => $commissions,
+                'last4'            => str_pad((string) $user->id, 4, '0', STR_PAD_LEFT),
+                'holder'           => trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: ($user->name ?? 'ColiFlow'),
+            ],
+            'series' => [
+                'labels'      => $labels,
+                'gains'       => $gainsSeries,
+                'trajets'     => $trajetsSeries,
+                'commissions' => $commissionsSeries,
+            ],
+            'history'  => $history,
+            'upcoming' => $upcoming,
+        ]);
+    }
+
     public function destroy(Travel $travel)
     {
         if ($travel->user_id !== Auth::id()) {
