@@ -21,6 +21,8 @@ import ResetPassword from "./pages/ResetPassword"
 import ProtectedRoute from "./utils/ProtectedRoute"
 import { useTranslation } from "react-i18next"
 import ReadMore from "./pages/ReadMore"
+import Favoris from "./pages/Favoris"
+import Profile from "./pages/Profile"
 import SenderDashboard from "./pages/SenderDashboard"
 import TravelerDashboard from "./pages/TravelerDashboard"
 import AdminDashboard from "./pages/AdminDashboard"
@@ -80,6 +82,10 @@ function App() {
                             path="/packages/create"
                             element={<AddPackage />}
                         />
+
+                        <Route path="/favoris" element={<Favoris />} />
+
+                        <Route path="/profile" element={<Profile />} />
                     </Route>
 
                     <Route path="login" element={<Login />} />

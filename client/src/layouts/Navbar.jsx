@@ -79,7 +79,9 @@ const Navbar = () => {
                                     </ul>
                                 </div>
                                 <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">
-                                    {t("Mes Colis")}
+                                    <Link to={"/sender/dashboard?tab=expedition"}>
+                                        {t("Mes Colis")}
+                                    </Link>
                                 </li>
                                 <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">
                                     <a href="#faq">{t("FAQ")}</a>

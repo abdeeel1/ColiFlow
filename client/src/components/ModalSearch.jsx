@@ -19,12 +19,16 @@ const PageIcon = () => (
 
 // Static pages available to navigate to
 const STATIC_PAGES = [
-  { label: 'Home', path: '/' },
-  { label: 'Travels List', path: '/travels' },
-  { label: 'Add Travel', path: '/travels/create' },
-  { label: 'Add Package', path: '/packages/create' },
-  { label: 'Sender Dashboard', path: '/sender/dashboard' },
-  { label: 'Traveler Dashboard', path: '/traveler/dashboard' },
+  { label: 'Accueil', path: '/' },
+  { label: 'Liste des trajets', path: '/travels' },
+  { label: 'Publier un trajet', path: '/travels/create' },
+  { label: 'Nouveau colis', path: '/packages/create' },
+  // Sender dashboard pages
+  { label: 'Dashboard Expéditeur — Aperçu', path: '/sender/dashboard?tab=apercu' },
+  { label: 'Dashboard Expéditeur — Mes Colis', path: '/sender/dashboard?tab=expedition' },
+  { label: 'Dashboard Expéditeur — Suivi en direct', path: '/sender/dashboard?tab=suivi' },
+  // Traveler dashboard
+  { label: 'Dashboard Voyageur', path: '/traveler/dashboard' },
 ];
 
 function ModalSearch({ id, searchId, modalOpen, setModalOpen }) {
@@ -158,7 +162,7 @@ function ModalSearch({ id, searchId, modalOpen, setModalOpen }) {
                 id={searchId}
                 className="w-full dark:text-gray-300 bg-white dark:bg-gray-800 border-0 focus:ring-transparent placeholder-gray-400 dark:placeholder-gray-500 appearance-none py-3 pl-10 pr-4"
                 type="search"
-                placeholder="Search travels, destinations…"
+                placeholder="Rechercher une page, un trajet, une ville…"
                 ref={searchInput}
                 value={query}
                 onChange={handleChange}
@@ -185,14 +189,14 @@ function ModalSearch({ id, searchId, modalOpen, setModalOpen }) {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                 </svg>
-                Searching travels…
+                Recherche en cours…
               </div>
             )}
 
             {/* No results */}
             {!loading && query.trim() && !hasResults && (
               <div className="text-center py-6 text-sm text-gray-400 dark:text-gray-500">
-                No results for "<span className="font-medium text-gray-600 dark:text-gray-300">{query}</span>"
+                Aucun résultat pour "<span className="font-medium text-gray-600 dark:text-gray-300">{query}</span>"
               </div>
             )}
 
@@ -200,7 +204,7 @@ function ModalSearch({ id, searchId, modalOpen, setModalOpen }) {
             {!loading && travels.length > 0 && (
               <div className="mb-3 last:mb-0">
                 <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">
-                  Travels
+                  Trajets
                 </div>
                 <ul className="text-sm">
                   {travels.map((travel) => (
@@ -237,7 +241,7 @@ function ModalSearch({ id, searchId, modalOpen, setModalOpen }) {
             {!loading && filteredPages.length > 0 && (
               <div className="mb-3 last:mb-0">
                 <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">
-                  Pages
+                  Pages &amp; Navigation
                 </div>
                 <ul className="text-sm">
                   {filteredPages.map((page) => (

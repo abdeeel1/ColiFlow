@@ -7,11 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckCircle, Circle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Link, Navigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import z from "zod"
 
 const AddPackage = () => {
+    const navigate = useNavigate()
+
     const nums = [1, 2, 3, 4]
 
     const [step, setStep] = useState(1)
@@ -125,6 +127,7 @@ const AddPackage = () => {
         try {
             const response = await axiosClient.post("/api/packages", formData)
             setSuccessMessage(capitalize(response.data.message))
+            navigate("/sender/dashboard?tab=expedition")
         } catch (error) {
             const errorsData = error.response?.data?.errors
             if (errorsData) {

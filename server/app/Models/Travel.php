@@ -42,6 +42,14 @@ class Travel extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function favorites(){
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function travelRequests(){
+        return $this->hasMany(\App\Models\TravelRequest::class);
+    }
+
     public function from_city(){
         return $this->belongsTo(City::class, 'from_city_id');
     }

@@ -64,7 +64,7 @@ const SkeletonCard = ({ className = '' }) => (
 )
 
 const TravelsList = () => {
-    const { user } = useSelector((state) => state.auth)
+    const { user, isAuth } = useSelector((state) => state.auth)
 
     const [loading, setLoading] = useState(false)
 
@@ -203,6 +203,18 @@ const TravelsList = () => {
         }
     }, [user, navigate])
 
+    useEffect(() => {
+        if (!isAuth) {
+            setSavedTravel([])
+            return
+        }
+
+        axiosClient
+            .get('/api/favorites')
+            .then((res) => setSavedTravel(res.data.travels.map((t) => t.id)))
+            .catch((err) => console.log(err))
+    }, [isAuth])
+
     const MapBoundsFilter = () => {
         const travelsRef = useRef(travelsAnnouncement)
 
@@ -264,14 +276,25 @@ const TravelsList = () => {
         }
     }, [visibleCards, filterdCards])
 
-    const saveToggle = (e, id) => {
+    const saveToggle = async (e, id) => {
         e.stopPropagation()
 
-        setSavedTravel((prev) =>
-            prev.includes(id)
-                ? prev.filter((item) => item !== id)
-                : [...prev, id],
-        )
+        if (!isAuth) {
+            navigate('/login')
+            return
+        }
+
+        try {
+            const res = await axiosClient.post(`/api/travels/${id}/favorite`)
+
+            setSavedTravel((prev) =>
+                res.data.favorited
+                    ? [...prev, id]
+                    : prev.filter((item) => item !== id),
+            )
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const handleReset = async () => {

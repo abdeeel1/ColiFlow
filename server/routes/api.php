@@ -2,8 +2,12 @@
 
 use App\Http\Controllers\Cities\CityController;
 use App\Http\Controllers\Packages\PackageController;
+use App\Http\Controllers\Travels\FavoriteController;
 use App\Http\Controllers\Travels\TravelController;
 use App\Http\Controllers\Travels\TravelRequestController;
+use App\Http\Controllers\Travels\TravelerController;
+use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,4 +39,31 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/travel-requests/{travelRequest}/status', [TravelRequestController::class, 'updateStatus']);
 });
 
+// Favorites (auth required)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/travels/{travel}/favorite', [FavoriteController::class, 'toggle']);
+});
+
+// Profile (auth required)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::patch('/profile', [ProfileController::class, 'update']);
+    Route::post('/profile/photo', [ProfileController::class, 'updatePhoto']);
+    Route::post('/profile/document', [ProfileController::class, 'updateDocument']);
+});
+
 Route::middleware('auth:sanctum')->post('/switch-role', [UserController::class, 'switchRole']);
+
+// Traveler dashboard
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/traveler/dashboard', [TravelerController::class, 'dashboard']);
+    Route::get('/traveler/travels',   [TravelerController::class, 'travels']);
+    Route::delete('/traveler/travels/{travel}', [TravelerController::class, 'destroy']);
+});
+
+// Notifications (auth required) — read-all must come before {id} to avoid routing conflict
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllRead']);
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+});

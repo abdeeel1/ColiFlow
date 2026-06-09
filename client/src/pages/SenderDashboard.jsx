@@ -8,15 +8,24 @@ import WeeklyBarChart from '@/charts/Weeklybarchart ';
 import { 
   Package, Plus, ChevronLeft, ChevronRight,
   MapPin, Calendar, Clock, DollarSign,
-  ArrowRight, Search, LayoutDashboard, Send, Trash2, Shield, Star,
+  ArrowRight, Search, Trash2, Shield, Star,
   Download, Filter, MoreHorizontal, ArrowUpDown, CheckSquare, Eye
 } from 'lucide-react';
 
 // ── helpers ───────────────────────────────────────────────────────
-const statusOf = (pkg) => {
-  if (pkg.urgency === 'très_urgent' || pkg.urgency === 'urgent')
-    return { label: 'En transit',  dot: 'bg-blue-500',   badge: 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400' };
-  return   { label: 'En attente',  dot: 'bg-orange-400', badge: 'bg-orange-100 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400' };
+// A package is "in transit" only once a traveler has accepted to carry it,
+// not based on its urgency level.
+const isInTransit = (pkg) => (pkg.travel_requests?.length ?? 0) > 0;
+
+const statusOf = (pkg) =>
+  isInTransit(pkg)
+    ? { label: 'En transit',  dot: 'bg-blue-500',   badge: 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400' }
+    : { label: 'En attente',  dot: 'bg-orange-400', badge: 'bg-orange-100 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400' };
+
+const PAGE_HEADER = {
+  apercu:     { title: 'Tableau de Bord Expéditeur', subtitle: 'Gérez vos expéditions, suivez vos colis et consultez vos statistiques.' },
+  expedition: { title: 'Mes Colis',                  subtitle: 'Gérez et visualisez l\'état de tous vos envois ColiFlow.' },
+  suivi:      { title: 'Suivi en direct',            subtitle: 'Suivez en temps réel les colis actuellement pris en charge par un voyageur.' },
 };
 
 const CAT_LABEL = {
@@ -82,13 +91,13 @@ export default function SenderDashboard() {
   const deliveryTimes = data?.delivery_times?.length ? data.delivery_times : Array(14).fill(0);
   const byCategory    = data?.by_category   ?? {};
 
-  const inTransit  = packages.filter(p => p.urgency !== 'standard').length;
+  const inTransit  = packages.filter(isInTransit).length;
   const thisWeek   = data?.this_week   ?? 0;
   const totalSent  = data?.total       ?? 0;
   const totalSpent = data?.total_spent ?? 0;
 
   const pendingPayment = packages
-    .filter(p => p.urgency !== 'standard')
+    .filter(isInTransit)
     .reduce((s, p) => s + Number(p.price || 0), 0);
 
   const recentPkgs = packages.slice(0, 3);
@@ -155,8 +164,8 @@ export default function SenderDashboard() {
   );
 
   // Filter and paginated packages based on activeTab (expedition or suivi)
-  const basePackages = activeTab === 'suivi' 
-    ? packages.filter(p => p.urgency !== 'standard')
+  const basePackages = activeTab === 'suivi'
+    ? packages.filter(isInTransit)
     : packages;
 
   const filteredPackages = basePackages.filter((pkg) => {
@@ -213,9 +222,9 @@ export default function SenderDashboard() {
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
               <div>
                 <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold mb-1">
-                  Tableau de Bord Expéditeur
+                  {(PAGE_HEADER[activeTab] ?? PAGE_HEADER.apercu).title}
                 </h1>
-                <p className="text-sm text-gray-500">Gérez vos expéditions, suivez vos colis et consultez vos statistiques.</p>
+                <p className="text-sm text-gray-500">{(PAGE_HEADER[activeTab] ?? PAGE_HEADER.apercu).subtitle}</p>
               </div>
               <button
                 onClick={() => navigate('/packages/create')}
@@ -223,43 +232,6 @@ export default function SenderDashboard() {
               >
                 <Plus size={16} />
                 Nouveau colis
-              </button>
-            </div>
-
-            {/* Tabs Navigation */}
-            <div className="flex border-b border-gray-200 dark:border-gray-700/60 mb-6 gap-2">
-              <button
-                onClick={() => setSearchParams({ tab: 'apercu' })}
-                className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm border-b-2 transition-all cursor-pointer ${
-                  activeTab === 'apercu'
-                    ? 'border-[#0984E3] text-[#0984E3]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-                }`}
-              >
-                <LayoutDashboard size={18} />
-                Aperçu
-              </button>
-              <button
-                onClick={() => setSearchParams({ tab: 'expedition' })}
-                className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm border-b-2 transition-all cursor-pointer ${
-                  activeTab === 'expedition'
-                    ? 'border-[#0984E3] text-[#0984E3]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-                }`}
-              >
-                <Send size={18} />
-                Mes Expéditions
-              </button>
-              <button
-                onClick={() => setSearchParams({ tab: 'suivi' })}
-                className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm border-b-2 transition-all cursor-pointer ${
-                  activeTab === 'suivi'
-                    ? 'border-[#0984E3] text-[#0984E3]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-                }`}
-              >
-                <Clock size={18} />
-                Suivi en direct
               </button>
             </div>
 
@@ -737,7 +709,9 @@ export default function SenderDashboard() {
                                   </td>
 
                                   {/* Voyageur */}
-                                  <td className="px-4 py-3 text-gray-400 dark:text-gray-500 text-xs">—</td>
+                                  <td className="px-4 py-3 text-gray-700 dark:text-gray-300 text-xs whitespace-nowrap">
+                                    {pkg.travel_requests?.[0]?.travel?.user?.name ?? <span className="text-gray-400 dark:text-gray-500">—</span>}
+                                  </td>
 
                                   {/* Date */}
                                   <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">

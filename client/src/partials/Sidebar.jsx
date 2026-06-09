@@ -12,6 +12,11 @@ function Sidebar({
   const location = useLocation();
   const { pathname } = location;
 
+  const isSearchActive = pathname.startsWith("/travels") || pathname.startsWith("/travel/") || pathname === "/favoris";
+
+  const activeTab = new URLSearchParams(location.search).get("tab");
+  const isExpeditionActive = pathname === "/packages/create" || (pathname === "/sender/dashboard" && (activeTab === "expedition" || activeTab === "suivi"));
+
   const trigger = useRef(null);
   const sidebar = useRef(null);
 
@@ -136,9 +141,11 @@ function Sidebar({
                             <NavLink
                               end
                               to="/sender/dashboard"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
+                              className={() => {
+                                const tab = new URLSearchParams(location.search).get("tab");
+                                const isActive = pathname === "/sender/dashboard" && (!tab || tab === "apercu");
+                                return "block transition duration-150 truncate " + (isActive ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200");
+                              }}
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                                 Dashboard
@@ -154,14 +161,14 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Expédition */}
-              <SidebarLinkGroup activecondition={pathname.includes("expédition")}>
+              <SidebarLinkGroup activecondition={isExpeditionActive}>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
                       <a
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname.includes("expédition") ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          isExpeditionActive ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -171,7 +178,7 @@ function Sidebar({
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <div className={`shrink-0 fill-current ${pathname.includes('expédition') ? 'text-[#0984E3]-500' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                            <div className={`shrink-0 fill-current ${isExpeditionActive ? 'text-[#0984E3]' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                                 <BookTextIcon className="h-5 w-4" />    
                             </div>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
@@ -234,14 +241,14 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Community */}
-              <SidebarLinkGroup activecondition={pathname.includes("community")}>
+              <SidebarLinkGroup activecondition={isSearchActive}>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
                       <a
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname.includes("community") ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          isSearchActive ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -251,7 +258,7 @@ function Sidebar({
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <div className={`shrink-0 fill-current ${pathname.includes('community') ? 'text-violet-500' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                            <div className={`shrink-0 fill-current ${isSearchActive ? 'text-[#0984E3]' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                                 <Search className="h-5 w-4"/>
                             </div>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
@@ -271,9 +278,9 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="/travels"
                               className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                                "block transition duration-150 truncate " + (isActive ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
                             >
                               <span className="text-sm text-orange-400 font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
@@ -284,9 +291,9 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="/favoris"
                               className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                                "block transition duration-150 truncate " + (isActive ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
@@ -302,14 +309,14 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Paramètres */}
-              <SidebarLinkGroup activecondition={pathname.includes("finance")}>
+              <SidebarLinkGroup activecondition={pathname === "/profile"}>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
                       <a
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname.includes("finance") ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          pathname === "/profile" ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -319,7 +326,7 @@ function Sidebar({
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <div className={`shrink-0 fill-current ${pathname.includes('finance') ? 'text-violet-500' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                            <div className={`shrink-0 fill-current ${pathname === "/profile" ? 'text-[#0984E3]' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                               <Settings className="h-5 w-4"/>
                             </div>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
@@ -339,9 +346,9 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="/profile"
                               className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                                "block transition duration-150 truncate " + (isActive ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
@@ -349,7 +356,7 @@ function Sidebar({
                               </span>
                             </NavLink>
                           </li>
-                          
+
                         </ul>
                       </div>
                     </React.Fragment>

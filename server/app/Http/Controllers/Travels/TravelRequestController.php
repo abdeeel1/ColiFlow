@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\Travel;
 use App\Models\TravelRequest;
+use App\Models\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -56,6 +57,19 @@ class TravelRequestController extends Controller
             'message'    => $request->message,
         ]);
 
+        // Notify the traveler about the new request
+        UserNotification::create([
+            'user_id' => $travel->user_id,
+            'type'    => 'request_received',
+            'title'   => 'Nouvelle demande de transport',
+            'message' => "Un expéditeur souhaite envoyer le colis \"{$package->package_name}\" avec vous.",
+            'data'    => [
+                'travel_request_id' => $travelRequest->id,
+                'package_id'        => $package->id,
+                'travel_id'         => $travel->id,
+            ],
+        ]);
+
         return response()->json([
             'message'        => 'Demande envoyée avec succès !',
             'travel_request' => $travelRequest->load(['travel', 'package']),
@@ -91,8 +105,25 @@ class TravelRequestController extends Controller
 
         $travelRequest->update(['status' => $request->status]);
 
+        $accepted = $request->status === 'accepted';
+        $packageName = $travelRequest->package->package_name ?? 'votre colis';
+
+        // Notify the sender (package owner) about the status change
+        UserNotification::create([
+            'user_id' => $travelRequest->package->user_id,
+            'type'    => $accepted ? 'request_accepted' : 'request_rejected',
+            'title'   => $accepted ? 'Demande acceptée ✓' : 'Demande refusée',
+            'message' => $accepted
+                ? "Un voyageur a accepté de transporter \"{$packageName}\"."
+                : "Un voyageur a refusé de transporter \"{$packageName}\".",
+            'data'    => [
+                'travel_request_id' => $travelRequest->id,
+                'package_id'        => $travelRequest->package_id,
+            ],
+        ]);
+
         return response()->json([
-            'message'        => $request->status === 'accepted' ? 'Demande acceptée.' : 'Demande refusée.',
+            'message'        => $accepted ? 'Demande acceptée.' : 'Demande refusée.',
             'travel_request' => $travelRequest,
         ]);
     }

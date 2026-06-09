@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Packages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Packages\AddPackageRequest;
 use App\Models\Package;
+use App\Models\UserNotification;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests as AccessAuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PackageController extends Controller
 {
+    use AccessAuthorizesRequests;
+
     /**
      * Display a listing of the resource (sender's own packages).
      */
@@ -18,7 +22,12 @@ class PackageController extends Controller
     {
         $user = Auth::user();
 
-        $packages = Package::with(['from_city', 'to_city', 'images'])
+        $packages = Package::with([
+                'from_city',
+                'to_city',
+                'images',
+                'travelRequests' => fn($q) => $q->where('status', 'accepted')->with('travel.user'),
+            ])
             ->where('user_id', $user->id)
             ->latest()
             ->get();
@@ -48,13 +57,13 @@ class PackageController extends Controller
             ->get()
             ->pluck('count', 'category');
 
-        // Delivery speed mock data (days between created_at and date_delivery)
+        // Delivery speed data (days between created_at and date_delivery)
         $deliveryTimes = Package::where('user_id', $user->id)
             ->whereNotNull('date_delivery')
             ->orderBy('created_at')
             ->take(14)
             ->get()
-            ->map(fn($p) => max(1, (int) now()->diffInHours($p->date_delivery, false) * -1))
+            ->map(fn($p) => max(1, (int) $p->date_delivery->diffInDays(now())))
             ->values();
 
         return response()->json([
@@ -93,6 +102,14 @@ class PackageController extends Controller
 
             DB::commit();
 
+            UserNotification::create([
+                'user_id' => $user->id,
+                'type'    => 'package_created',
+                'title'   => 'Colis ajouté',
+                'message' => "Votre colis \"{$package->package_name}\" a été créé avec succès.",
+                'data'    => ['package_id' => $package->id],
+            ]);
+
             return response()->json([
                 'message' => 'le paquet a été créé avec succès',
                 'package' => $package
@@ -104,16 +121,40 @@ class PackageController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     */
     public function show(Package $package)
     {
+        $this->authorize('view', $package);
         return response()->json($package->load(['from_city', 'to_city', 'images']));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, Package $package)
     {
-        //
+        $this->authorize('update', $package);
+
+        $validated = $request->validate([
+            'category' => 'string',
+            'price' => 'numeric',
+            'description' => 'string',
+            'date_delivery' => 'date',
+        ]);
+
+        $package->update($validated);
+
+        return response()->json([
+            'message' => 'Paquet mis à jour avec succès',
+            'package' => $package
+        ]);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Package $package)
     {
         $this->authorize('delete', $package);

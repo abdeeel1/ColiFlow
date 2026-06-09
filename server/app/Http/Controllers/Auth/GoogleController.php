@@ -38,12 +38,18 @@ class GoogleController extends Controller
                     'password' => bcrypt(Str::random(16)),
                     'accept' => true,
                     'profile_picture' => $googleUser->getAvatar(),
+                    'google_id' => $googleUser->getId(),
                 ]);
             }else{
                 if(!$user->email_verified_at){
                     $user->email_verified_at = now();
-                    $user->save();
                 }
+
+                if (! $user->google_id) {
+                    $user->google_id = $googleUser->getId();
+                }
+
+                $user->save();
             }
 
             Auth::login($user);
