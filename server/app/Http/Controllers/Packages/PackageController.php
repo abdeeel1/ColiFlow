@@ -126,8 +126,27 @@ class PackageController extends Controller
      */
     public function show(Package $package)
     {
-        $this->authorize('view', $package);
-        return response()->json($package->load(['from_city', 'to_city', 'images']));
+        $userId = Auth::id();
+
+        // The sender who owns it, or the traveler who accepted to carry it.
+        $isOwner = (int) $package->user_id === (int) $userId;
+        $isCarrier = $package->travelRequests()
+            ->where('status', 'accepted')
+            ->whereHas('travel', fn ($q) => $q->where('user_id', $userId))
+            ->exists();
+
+        if (! $isOwner && ! $isCarrier) {
+            return response()->json(['message' => 'Accès non autorisé.'], 403);
+        }
+
+        return response()->json(
+            $package->load([
+                'from_city',
+                'to_city',
+                'images',
+                'travelRequests' => fn ($q) => $q->where('status', 'accepted')->with('travel.user'),
+            ])
+        );
     }
 
     /**
@@ -157,7 +176,11 @@ class PackageController extends Controller
      */
     public function destroy(Package $package)
     {
-        $this->authorize('delete', $package);
+        // Only the sender who owns the package may delete it.
+        if ((int) $package->user_id !== (int) Auth::id()) {
+            return response()->json(['message' => 'Accès non autorisé.'], 403);
+        }
+
         $package->delete();
         return response()->json(['message' => 'Supprimé avec succès']);
     }

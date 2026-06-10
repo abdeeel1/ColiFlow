@@ -74,7 +74,9 @@ const Navbar = () => {
                                             </Link>
                                         </li>
                                         <li className="hover:bg-gray-200 rounded-2xl">
-                                            <a>{t("Dashboard")}</a>
+                                            <Link to={"/sender/dashboard"}>
+                                                {t("Dashboard")}
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -84,7 +86,7 @@ const Navbar = () => {
                                     </Link>
                                 </li>
                                 <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">
-                                    <a href="#faq">{t("FAQ")}</a>
+                                    <Link to={"/#faq"}>{t("FAQ")}</Link>
                                 </li>
                             </ul>
                         ) : (
@@ -104,20 +106,24 @@ const Navbar = () => {
                                             </Link>
                                         </li>
                                         <li className="hover:bg-gray-200 rounded-2xl">
-                                            <a>
+                                            <Link to={"/traveler/dashboard?tab=demandes"}>
                                                 {t("Demandes de Réservation")}
-                                            </a>
+                                            </Link>
                                         </li>
                                         <li className="hover:bg-gray-200 rounded-2xl">
-                                            <a>{t("Dashboard")}</a>
+                                            <Link to={"/traveler/dashboard"}>
+                                                {t("Dashboard")}
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
                                 <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">
-                                    {t("Mes Travel")}
+                                    <Link to={"/traveler/dashboard?tab=trajets"}>
+                                        {t("Mes Travel")}
+                                    </Link>
                                 </li>
                                 <li className="lg:text-[#2D3436] cursor-pointer hover:bg-gray-200 py-1 px-4 rounded-2xl">
-                                    <a href="#faq">{t("FAQ")}</a>
+                                    <Link to={"/#faq"}>{t("FAQ")}</Link>
                                 </li>
                             </ul>
                         )}

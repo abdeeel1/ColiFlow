@@ -17,6 +17,7 @@ import WeeklyBarChart from '@/charts/Weeklybarchart ';
 import RatingLineChart from '@/charts/RatingLineChart';
 import GainsAreaChart from '@/charts/GainsAreaChart';
 import axiosClient from '../services/axios';
+import ConfirmDialog from '../components/ConfirmDialog';
 import BarcodeScannerModal from '../ui/BarcodeScannerModal';
 
 // ── status config ──────────────────────────────────────────────────────────────
@@ -256,6 +257,8 @@ export default function TravelerDashboard() {
   const [sortDir, setSortDir]           = useState('asc');
   const [selectedRows, setSelectedRows] = useState([]);
   const [openMenuId, setOpenMenuId]     = useState(null);
+  // null | { type: 'single', id } | { type: 'bulk' }
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [currentPage, setCurrentPage]   = useState(1);
   const menuRef = useRef(null);
   const itemsPerPage = 10;
@@ -438,8 +441,7 @@ export default function TravelerDashboard() {
     prev.includes(id) ? prev.filter(r => r !== id) : [...prev, id]
   );
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Supprimer ce trajet ?')) return;
+  const performDelete = async (id) => {
     try {
       await axiosClient.delete(`/api/traveler/travels/${id}`);
       setTravels(prev => prev.filter(t => t.id !== id));
@@ -449,9 +451,8 @@ export default function TravelerDashboard() {
     }
   };
 
-  const handleBulkDelete = async () => {
+  const performBulkDelete = async () => {
     if (!selectedRows.length) return;
-    if (!window.confirm(`Supprimer ${selectedRows.length} trajet(s) ?`)) return;
     try {
       await Promise.all(selectedRows.map(id => axiosClient.delete(`/api/traveler/travels/${id}`)));
       fetchTravels();
@@ -459,6 +460,14 @@ export default function TravelerDashboard() {
     } catch (err) {
       alert(err?.response?.data?.message ?? 'Erreur lors de la suppression.');
     }
+  };
+
+  // Run the delete the user confirmed in the AlertDialog, then close it.
+  const handleConfirmDelete = async () => {
+    if (!confirmDelete) return;
+    if (confirmDelete.type === 'bulk') await performBulkDelete();
+    else await performDelete(confirmDelete.id);
+    setConfirmDelete(null);
   };
 
   const handleExport = () => {
@@ -596,7 +605,7 @@ export default function TravelerDashboard() {
                     <div className="text-xs text-gray-400">Confirmées</div>
                   </div>
                 </div>
-              ) : (
+              ) : activeTab !== 'trajets' ? (
                 <button
                   onClick={() => navigate('/travels/create')}
                   className="flex items-center gap-2 bg-[#0984E3] hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition mt-4 sm:mt-0 active:scale-95 shadow-sm cursor-pointer"
@@ -604,7 +613,7 @@ export default function TravelerDashboard() {
                   <Plus size={16} />
                   Publier un Trajet
                 </button>
-              )}
+              ) : null}
             </div>
 
             {/* ── APERÇU TAB ──────────────────────────────────────────── */}
@@ -785,7 +794,7 @@ export default function TravelerDashboard() {
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <button
-                          onClick={handleBulkDelete}
+                          onClick={() => setConfirmDelete({ type: 'bulk' })}
                           disabled={!selectedRows.length}
                           className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 hover:border-red-300 hover:text-red-500 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
                         >
@@ -964,13 +973,13 @@ export default function TravelerDashboard() {
                                         className="absolute right-8 top-1/2 -translate-y-1/2 z-20 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-lg py-1 min-w-36"
                                       >
                                         <button
-                                          onClick={() => { setOpenMenuId(null); navigate(`/travels/${travel.id}`); }}
+                                          onClick={() => { setOpenMenuId(null); navigate(`/travel/${travel.id}`); }}
                                           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
                                         >
                                           <Eye size={14} /> Voir le détail
                                         </button>
                                         <button
-                                          onClick={() => { setOpenMenuId(null); handleDelete(travel.id); }}
+                                          onClick={() => { setOpenMenuId(null); setConfirmDelete({ type: 'single', id: travel.id }); }}
                                           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 cursor-pointer"
                                         >
                                           <Trash2 size={14} /> Supprimer
@@ -1836,6 +1845,19 @@ export default function TravelerDashboard() {
           setShowConfirmCode(prev => ({ ...prev, [scannerOpenId]: true }));
           setTimeout(() => setScannerOpenId(null), 900);
         }}
+      />
+
+      {/* Delete confirmation */}
+      <ConfirmDialog
+        open={!!confirmDelete}
+        onOpenChange={(o) => { if (!o) setConfirmDelete(null); }}
+        onConfirm={handleConfirmDelete}
+        title={confirmDelete?.type === 'bulk' ? 'Supprimer les trajets sélectionnés ?' : 'Supprimer ce trajet ?'}
+        description={
+          confirmDelete?.type === 'bulk'
+            ? `Cette action est irréversible. ${selectedRows.length} trajet(s) seront définitivement supprimés.`
+            : 'Cette action est irréversible. Ce trajet sera définitivement supprimé.'
+        }
       />
     </div>
   );

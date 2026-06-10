@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import axiosClient from '../services/axios';
+import ConfirmDialog from '../components/ConfirmDialog';
 import DeliveryLineChart from '@/charts/DeliverLineChart';
 import WeeklyBarChart from '@/charts/Weeklybarchart ';
 import { 
@@ -51,6 +52,161 @@ function StatCard({ icon, label, value, barColor }) {
   );
 }
 
+// ── skeletons ────────────────────────────────────────────────────
+const Shimmer = ({ className = '' }) => (
+  <div className={`bg-gray-200 dark:bg-gray-700 rounded animate-pulse ${className}`} />
+);
+
+const SkelCard = ({ children, className = '' }) => (
+  <div className={`bg-white dark:bg-gray-800 shadow-xs rounded-xl ${className}`}>{children}</div>
+);
+
+// Mirrors the "Aperçu" layout: chart card + 4 stat tiles + line chart + table on
+// the left, payment / tracking / badges widgets on the right.
+function DashboardSkeleton() {
+  return (
+    <div className="grid grid-cols-12 gap-6">
+      {/* LEFT column */}
+      <div className="col-span-full lg:col-span-8 flex flex-col gap-6">
+
+        {/* Transit chart card */}
+        <SkelCard className="p-5">
+          <Shimmer className="h-3 w-32 mb-4" />
+          <Shimmer className="h-12 w-24 mb-3" />
+          <Shimmer className="h-3 w-48 mb-6" />
+          <div className="flex items-end gap-2 h-24">
+            {[55, 80, 40, 95, 65, 75, 50, 90, 60, 70].map((h, i) => (
+              <div key={i} className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-t animate-pulse" style={{ height: `${h}%` }} />
+            ))}
+          </div>
+        </SkelCard>
+
+        {/* Stat tiles */}
+        <div className="grid grid-cols-12 gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <SkelCard key={i} className="col-span-full sm:col-span-6 xl:col-span-3 p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <Shimmer className="w-9 h-9 rounded-full" />
+                <Shimmer className="h-3 w-16" />
+              </div>
+              <Shimmer className="h-7 w-20 mb-3" />
+              <Shimmer className="h-1 w-full rounded-full" />
+            </SkelCard>
+          ))}
+        </div>
+
+        {/* Line chart card */}
+        <SkelCard className="p-5">
+          <div className="flex justify-between mb-4">
+            <Shimmer className="h-5 w-56" />
+            <Shimmer className="h-4 w-16" />
+          </div>
+          <Shimmer className="h-48 w-full rounded-lg" />
+        </SkelCard>
+
+        {/* Recent table card */}
+        <SkelCard className="overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
+            <Shimmer className="h-4 w-40" />
+            <Shimmer className="h-4 w-16" />
+          </div>
+          <div className="p-4 flex flex-col gap-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center justify-between gap-4">
+                <Shimmer className="h-4 w-32" />
+                <Shimmer className="h-4 w-24" />
+                <Shimmer className="h-4 w-20" />
+                <Shimmer className="h-4 w-14" />
+                <Shimmer className="h-5 w-20 rounded-full" />
+              </div>
+            ))}
+          </div>
+        </SkelCard>
+      </div>
+
+      {/* RIGHT column */}
+      <div className="col-span-full lg:col-span-4 flex flex-col gap-6">
+        {/* Payment card */}
+        <SkelCard className="p-5">
+          <Shimmer className="h-3 w-36 mb-3" />
+          <Shimmer className="h-9 w-28 mb-2" />
+          <Shimmer className="h-3 w-40 mb-5" />
+          <Shimmer className="h-10 w-full rounded-xl" />
+        </SkelCard>
+
+        {/* Tracking list */}
+        <SkelCard className="p-5">
+          <Shimmer className="h-3 w-40 mb-4" />
+          <div className="flex flex-col gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <Shimmer className="w-9 h-9 rounded-full shrink-0" />
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <Shimmer className="h-3 w-3/4" />
+                  <Shimmer className="h-2.5 w-1/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </SkelCard>
+
+        {/* Badges */}
+        <SkelCard className="p-5">
+          <Shimmer className="h-3 w-32 mb-4" />
+          <div className="flex flex-col gap-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <Shimmer className="w-9 h-9 rounded-full shrink-0" />
+                <Shimmer className="h-3 w-2/3" />
+              </div>
+            ))}
+          </div>
+        </SkelCard>
+      </div>
+    </div>
+  );
+}
+
+// Mirrors the "Mes Colis / Suivi" table view.
+function TableSkeleton() {
+  return (
+    <div className="flex flex-col gap-5">
+      {/* Header + actions */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <Shimmer className="h-6 w-64" />
+          <Shimmer className="h-3 w-80" />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Shimmer key={i} className="h-9 w-28 rounded-lg" />
+          ))}
+        </div>
+      </div>
+
+      {/* Table */}
+      <SkelCard className="border border-gray-100 dark:border-gray-700/60 overflow-hidden">
+        <div className="bg-gray-50 dark:bg-gray-700/30 px-4 py-3.5">
+          <Shimmer className="h-3 w-full max-w-3xl" />
+        </div>
+        <div className="divide-y divide-gray-100 dark:divide-gray-700/40">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4 px-4 py-4">
+              <Shimmer className="w-4 h-4 rounded shrink-0" />
+              <Shimmer className="h-4 w-20" />
+              <Shimmer className="h-4 w-32" />
+              <Shimmer className="h-4 w-24" />
+              <Shimmer className="h-4 w-16 ml-auto" />
+              <Shimmer className="h-5 w-20 rounded-full" />
+              <Shimmer className="h-4 w-12" />
+            </div>
+          ))}
+        </div>
+      </SkelCard>
+    </div>
+  );
+}
+
 // ── main ─────────────────────────────────────────────────────────
 export default function SenderDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -71,6 +227,8 @@ export default function SenderDashboard() {
   const [sortDir, setSortDir] = useState('asc');
   const [selectedRows, setSelectedRows] = useState([]);
   const [openMenuId, setOpenMenuId] = useState(null);
+  // null | { type: 'single', id } | { type: 'bulk' }
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const menuRef = useRef(null);
   const itemsPerPage = 10;
 
@@ -108,8 +266,7 @@ export default function SenderDashboard() {
     ...(totalSent >= 1 ? [{ icon: '🛡️', label: 'Fiable' }] : []),
   ];
 
-  const handleDeletePackage = async (id) => {
-    if (!window.confirm('Voulez-vous vraiment supprimer ce colis ?')) return;
+  const performDeletePackage = async (id) => {
     try {
       await axiosClient.delete(`/api/packages/${id}`);
       const res = await axiosClient.get('/api/packages');
@@ -121,9 +278,8 @@ export default function SenderDashboard() {
     }
   };
 
-  const handleBulkDelete = async () => {
+  const performBulkDelete = async () => {
     if (!selectedRows.length) return;
-    if (!window.confirm(`Supprimer ${selectedRows.length} colis sélectionné(s) ?`)) return;
     try {
       await Promise.all(selectedRows.map(id => axiosClient.delete(`/api/packages/${id}`)));
       const res = await axiosClient.get('/api/packages');
@@ -133,6 +289,14 @@ export default function SenderDashboard() {
       console.error(err);
       alert('Erreur lors de la suppression.');
     }
+  };
+
+  // Run the delete the user confirmed in the AlertDialog, then close it.
+  const handleConfirmDelete = async () => {
+    if (!confirmDelete) return;
+    if (confirmDelete.type === 'bulk') await performBulkDelete();
+    else await performDeletePackage(confirmDelete.id);
+    setConfirmDelete(null);
   };
 
   const handleExport = () => {
@@ -226,13 +390,15 @@ export default function SenderDashboard() {
                 </h1>
                 <p className="text-sm text-gray-500">{(PAGE_HEADER[activeTab] ?? PAGE_HEADER.apercu).subtitle}</p>
               </div>
-              <button
-                onClick={() => navigate('/packages/create')}
-                className="flex items-center gap-2 bg-[#0984E3] hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition mt-4 sm:mt-0 active:scale-95 shadow-sm cursor-pointer"
-              >
-                <Plus size={16} />
-                Nouveau colis
-              </button>
+              {activeTab === 'apercu' && (
+                <button
+                  onClick={() => navigate('/packages/create')}
+                  className="flex items-center gap-2 bg-[#0984E3] hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition mt-4 sm:mt-0 active:scale-95 shadow-sm cursor-pointer"
+                >
+                  <Plus size={16} />
+                  Nouveau colis
+                </button>
+              )}
             </div>
 
             {/* Error State */}
@@ -244,36 +410,9 @@ export default function SenderDashboard() {
 
             {/* Skeleton Loading State */}
             {loading && (
-              <div className="w-full flex flex-col gap-6">
-                {activeTab === 'apercu' ? (
-                  <div className="grid grid-cols-12 gap-6">
-                    <div className="col-span-full lg:col-span-8 flex flex-col gap-6">
-                      <div className="h-48 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                      <div className="grid grid-cols-12 gap-6">
-                        <div className="col-span-3 h-24 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                        <div className="col-span-3 h-24 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                        <div className="col-span-3 h-24 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                        <div className="col-span-3 h-24 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                      </div>
-                      <div className="h-64 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                    </div>
-                    <div className="col-span-full lg:col-span-4 flex flex-col gap-6">
-                      <div className="h-32 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                      <div className="h-48 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                      <div className="h-48 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-6">
-                    <div className="h-16 bg-white dark:bg-gray-800 rounded-xl animate-pulse" />
-                    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 flex flex-col gap-4">
-                      {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className="h-12 bg-gray-100 dark:bg-gray-700/50 rounded-lg animate-pulse" />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              activeTab === 'apercu'
+                ? <DashboardSkeleton />
+                : <TableSkeleton />
             )}
 
             {/* Content view when fully loaded */}
@@ -552,7 +691,7 @@ export default function SenderDashboard() {
                       <div className="flex flex-wrap items-center gap-2">
                         {/* Supprimer */}
                         <button
-                          onClick={handleBulkDelete}
+                          onClick={() => setConfirmDelete({ type: 'bulk' })}
                           disabled={!selectedRows.length}
                           className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 hover:border-red-300 hover:text-red-500 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
                         >
@@ -756,7 +895,7 @@ export default function SenderDashboard() {
                                           <Eye size={14} /> Voir le détail
                                         </button>
                                         <button
-                                          onClick={() => { setOpenMenuId(null); handleDeletePackage(pkg.id); }}
+                                          onClick={() => { setOpenMenuId(null); setConfirmDelete({ type: 'single', id: pkg.id }); }}
                                           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 cursor-pointer"
                                         >
                                           <Trash2 size={14} /> Supprimer
@@ -827,6 +966,19 @@ export default function SenderDashboard() {
           </div>
         </main>
       </div>
+
+      {/* Delete confirmation */}
+      <ConfirmDialog
+        open={!!confirmDelete}
+        onOpenChange={(o) => { if (!o) setConfirmDelete(null); }}
+        onConfirm={handleConfirmDelete}
+        title={confirmDelete?.type === 'bulk' ? 'Supprimer les colis sélectionnés ?' : 'Supprimer ce colis ?'}
+        description={
+          confirmDelete?.type === 'bulk'
+            ? `Cette action est irréversible. ${selectedRows.length} colis seront définitivement supprimés.`
+            : 'Cette action est irréversible. Ce colis sera définitivement supprimé.'
+        }
+      />
     </div>
   );
 }

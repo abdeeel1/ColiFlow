@@ -26,6 +26,8 @@ import Profile from "./pages/Profile"
 import SenderDashboard from "./pages/SenderDashboard"
 import TravelerDashboard from "./pages/TravelerDashboard"
 import AdminDashboard from "./pages/AdminDashboard"
+import Messagerie from "./pages/Messagerie"
+import PackageDetail from "./pages/PackageDetail"
 
 function App() {
     const dispatch = useDispatch()
@@ -86,6 +88,10 @@ function App() {
                         <Route path="/favoris" element={<Favoris />} />
 
                         <Route path="/profile" element={<Profile />} />
+
+                        <Route path="/messages" element={<Messagerie />} />
+
+                        <Route path="/packages/:id" element={<PackageDetail />} />
                     </Route>
 
                     <Route path="login" element={<Login />} />

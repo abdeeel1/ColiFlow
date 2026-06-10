@@ -6,6 +6,7 @@ use App\Http\Controllers\Travels\FavoriteController;
 use App\Http\Controllers\Travels\TravelController;
 use App\Http\Controllers\Travels\TravelRequestController;
 use App\Http\Controllers\Travels\TravelerController;
+use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\UserController;
@@ -21,6 +22,7 @@ Route::get('/cities', [CityController::class, 'index']);
 // Packages (auth required)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/packages', [PackageController::class, 'index']);
+    Route::get('/packages/{package}', [PackageController::class, 'show']);
     Route::post('/packages', [PackageController::class, 'store']);
     Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 });
@@ -69,4 +71,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::patch('/notifications/read-all', [NotificationController::class, 'markAllRead']);
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+});
+
+// Messagerie / Chat (auth required)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/conversations', [ChatController::class, 'conversations']);
+    Route::get('/messages/unread-count', [ChatController::class, 'unreadCount']);
+    Route::get('/messages/{userId}', [ChatController::class, 'messages']);
+    Route::post('/messages', [ChatController::class, 'store']);
+    Route::patch('/messages/{message}', [ChatController::class, 'update']);
+    Route::delete('/messages/{message}', [ChatController::class, 'destroy']);
 });

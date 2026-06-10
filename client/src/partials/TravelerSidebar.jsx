@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  Home, Navigation, Package, Wallet, Settings,
+  Home, Navigation, Package, Wallet, Settings, MessageSquare,
 } from "lucide-react";
 import SidebarLinkGroup from "./SidebarLinkGroup";
+import useUnreadMessages from "../hooks/useUnreadMessages";
 
 function TravelerSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   const location = useLocation();
   const { pathname } = location;
   const activeTab = new URLSearchParams(location.search).get("tab");
+  const unreadMessages = useUnreadMessages();
 
   const trigger  = useRef(null);
   const sidebar  = useRef(null);
@@ -53,6 +55,7 @@ function TravelerSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   const isTrajets    = pathname === "/travels/create" || (pathname === "/traveler/dashboard" && activeTab === "trajets");
   const isColis      = pathname === "/traveler/dashboard" && (activeTab === "demandes" || activeTab === "livraisons");
   const isPortefeuille = pathname === "/traveler/dashboard" && activeTab === "gains";
+  const isMessages   = pathname === "/messages";
   const isSettings   = pathname === "/profile";
 
   // helper: icon wrapper matching sidebar pattern
@@ -315,6 +318,36 @@ function TravelerSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                   </>
                 )}
               </SidebarLinkGroup>
+
+              {/* ── MESSAGERIE ────────────────────────────────────────── */}
+              <li className={`pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-linear-to-r ${isMessages && 'from-[#0984E3]-500/[0.12] dark:from-[#0984E3]-500/[0.24] to-violet-500/[0.04]'}`}>
+                <NavLink
+                  end
+                  to="/messages"
+                  className={`block truncate transition duration-150 ${!isMessages && "hover:text-gray-900 dark:hover:text-white"}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className={`relative shrink-0 ${isMessages ? "text-[#0984E3]" : "text-gray-400 dark:text-gray-500"}`}>
+                        <MessageSquare size={16} />
+                        {/* Red dot — visible when the sidebar is collapsed */}
+                        {unreadMessages > 0 && (
+                          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-800 lg:block lg:sidebar-expanded:hidden 2xl:hidden" />
+                        )}
+                      </div>
+                      <span className={`text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${isMessages ? "text-[#0984E3]" : "text-gray-800 dark:text-gray-100"}`}>
+                        Messagerie
+                      </span>
+                    </div>
+                    {/* Count badge — visible when expanded */}
+                    {unreadMessages > 0 && (
+                      <span className="hidden lg:hidden lg:sidebar-expanded:flex 2xl:flex items-center justify-center min-w-5 h-5 px-1.5 text-[11px] font-bold text-white bg-red-500 rounded-full">
+                        {unreadMessages > 99 ? "99+" : unreadMessages}
+                      </span>
+                    )}
+                  </div>
+                </NavLink>
+              </li>
 
               {/* ── PARAMÈTRES ────────────────────────────────────────── */}
               <SidebarLinkGroup activecondition={isSettings}>

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import SidebarLinkGroup from "./SidebarLinkGroup";
-import { BookTextIcon, Search, Settings } from "lucide-react";
+import { BookTextIcon, MessageSquare, Search, Settings } from "lucide-react";
+import useUnreadMessages from "../hooks/useUnreadMessages";
 
 function Sidebar({
   sidebarOpen,
@@ -11,6 +12,7 @@ function Sidebar({
 }) {
   const location = useLocation();
   const { pathname } = location;
+  const unreadMessages = useUnreadMessages();
 
   const isSearchActive = pathname.startsWith("/travels") || pathname.startsWith("/travel/") || pathname === "/favoris";
 
@@ -308,6 +310,38 @@ function Sidebar({
                   );
                 }}
               </SidebarLinkGroup>
+              {/* Messagerie */}
+              <li className={`pl-4 pr-3 py-2 rounded-lg mb-0.5 last:mb-0 bg-linear-to-r ${pathname === "/messages" && 'from-[#0984E3]-500/[0.12] dark:from-[#0984E3]-500/[0.24] to-violet-500/[0.04]'}`}>
+                <NavLink
+                  end
+                  to="/messages"
+                  className={() =>
+                    "block truncate transition duration-150 " +
+                    (pathname === "/messages" ? "" : "hover:text-gray-900 dark:hover:text-white")
+                  }
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className={`relative shrink-0 ${pathname === "/messages" ? "text-[#0984E3]" : "text-gray-400 dark:text-gray-500"}`}>
+                        <MessageSquare className="h-5 w-4" />
+                        {/* Red dot — visible when the sidebar is collapsed */}
+                        {unreadMessages > 0 && (
+                          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-800 lg:block lg:sidebar-expanded:hidden 2xl:hidden" />
+                        )}
+                      </div>
+                      <span className={`text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/messages" ? "text-[#0984E3]" : "text-gray-800 dark:text-gray-100"}`}>
+                        Messagerie
+                      </span>
+                    </div>
+                    {/* Count badge — visible when expanded */}
+                    {unreadMessages > 0 && (
+                      <span className="hidden lg:hidden lg:sidebar-expanded:flex 2xl:flex items-center justify-center min-w-5 h-5 px-1.5 text-[11px] font-bold text-white bg-red-500 rounded-full">
+                        {unreadMessages > 99 ? "99+" : unreadMessages}
+                      </span>
+                    )}
+                  </div>
+                </NavLink>
+              </li>
               {/* Paramètres */}
               <SidebarLinkGroup activecondition={pathname === "/profile"}>
                 {(handleClick, open) => {
