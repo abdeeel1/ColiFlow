@@ -111,7 +111,7 @@ class ProfileController extends Controller
         $path = $request->file('file')->store('vehicles', 'public');
 
         $user->{$field} = asset('storage/'.$path);
-        $user->statut_verification = 'pending';
+        $user->vehicle_verification = 'pending';
         $user->save();
 
         return response()->json([

@@ -53,7 +53,7 @@ class TravelController extends Controller
         // Filter by verified users only
         if ($request->filled('verified')) {
             $query->whereHas('user', function ($q) {
-                $q->where('statut_verification', 'verified');
+                $q->where('vehicle_verification', 'verified');
             });
         }
 
@@ -84,6 +84,12 @@ class TravelController extends Controller
         if(!$user->is_traveler){
             return response()->json([
                 'message' => 'Non autorisé'
+            ], 403);
+        }
+
+        if($user->vehicle_verification !== 'verified'){
+            return response()->json([
+                'message' => 'Vos documents véhicule doivent être approuvés par un administrateur avant de pouvoir publier un trajet.'
             ], 403);
         }
 

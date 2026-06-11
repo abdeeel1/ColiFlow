@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ValidationController;
 use App\Http\Controllers\Cities\CityController;
 use App\Http\Controllers\Packages\PackageController;
 use App\Http\Controllers\Travels\FavoriteController;
@@ -63,6 +65,18 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->post('/switch-role', [UserController::class, 'switchRole']);
+
+// Admin dashboard (admin role required)
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+
+    // Validation center
+    Route::get('/admin/validations', [ValidationController::class, 'index']);
+    Route::patch('/admin/validations/bulk', [ValidationController::class, 'bulk']);
+    Route::get('/admin/validations/{user}', [ValidationController::class, 'show']);
+    Route::patch('/admin/validations/{user}/approve', [ValidationController::class, 'approve']);
+    Route::patch('/admin/validations/{user}/reject', [ValidationController::class, 'reject']);
+});
 
 // Traveler dashboard
 Route::middleware('auth:sanctum')->group(function () {

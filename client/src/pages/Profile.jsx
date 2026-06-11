@@ -252,7 +252,8 @@ const Profile = () => {
 
     const verification = VERIFICATION[user?.statut_verification] ?? VERIFICATION.pending
     const VerificationIcon = verification.icon
-    const isVerified = user?.statut_verification === 'verified'
+    // Identity (CIN) and vehicle/documents are verified independently.
+    const isVehicleVerified = user?.vehicle_verification === 'verified'
 
     const handleConnectGoogle = () => {
         window.location.href = 'http://localhost:8000/auth/google'
@@ -286,7 +287,7 @@ const Profile = () => {
                             <div className="flex flex-col gap-6">
 
                                 {/* Verification in-progress alert (hidden once verified) */}
-                                {!isVerified && (user?.vehicle_photo || user?.permis_document || user?.assurance_document) && (
+                                {!isVehicleVerified && (user?.vehicle_photo || user?.permis_document || user?.assurance_document) && (
                                     <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/50">
                                         <Clock3 className="text-amber-500" />
                                         <AlertTitle className="text-amber-800 dark:text-amber-300">Vérification en cours</AlertTitle>
@@ -298,7 +299,7 @@ const Profile = () => {
                                 )}
 
                                 {/* Verified success alert */}
-                                {isVerified && (
+                                {isVehicleVerified && (
                                     <Alert className="border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900/50">
                                         <CheckCircle2 className="text-green-500" />
                                         <AlertTitle className="text-green-800 dark:text-green-300">Véhicule validé</AlertTitle>
@@ -318,7 +319,7 @@ const Profile = () => {
                                         <h2 className="font-bold text-gray-800 dark:text-gray-100 mb-5">Détails du compte</h2>
 
                                         {/* Destructive (must-validate) alert — hidden once verified */}
-                                        {!isVerified && (
+                                        {!isVehicleVerified && (
                                             <Alert variant="destructive" className="border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900/50 mb-6">
                                                 <CircleAlert />
                                                 <AlertDescription className="text-red-600 dark:text-red-400">

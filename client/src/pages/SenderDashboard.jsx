@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import axiosClient from '../services/axios';
@@ -225,6 +226,7 @@ function TableSkeleton() {
 // ── main ─────────────────────────────────────────────────────────
 export default function SenderDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'apercu';
@@ -276,6 +278,7 @@ export default function SenderDashboard() {
   const recentPkgs = packages.slice(0, 3);
 
   const badges = [
+    ...(user?.statut_verification === 'verified' ? [{ icon: '✅', label: 'Identité Vérifiée' }] : []),
     ...(totalSent >= 1 ? [{ icon: '🌟', label: 'Super Expéditeur' }] : []),
     ...(totalSent >= 5 ? [{ icon: '📦', label: `${totalSent} Colis Envoyés` }] : []),
     ...(totalSent >= 1 ? [{ icon: '🛡️', label: 'Fiable' }] : []),

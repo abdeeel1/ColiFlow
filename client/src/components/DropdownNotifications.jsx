@@ -9,6 +9,8 @@ const TYPE_CONFIG = {
   request_received: { Icon: Inbox,        bg: 'bg-purple-100 dark:bg-purple-950/30', color: 'text-purple-500', link: '/traveler/dashboard' },
   request_accepted: { Icon: CheckCircle,  bg: 'bg-green-100 dark:bg-green-950/30',  color: 'text-green-500',  link: '/sender/dashboard?tab=suivi' },
   request_rejected: { Icon: XCircle,      bg: 'bg-red-100 dark:bg-red-950/30',      color: 'text-red-500',    link: '/sender/dashboard?tab=expedition' },
+  verification_approved: { Icon: CheckCircle, bg: 'bg-green-100 dark:bg-green-950/30', color: 'text-green-500', link: '/profile' },
+  verification_rejected: { Icon: XCircle,     bg: 'bg-red-100 dark:bg-red-950/30',     color: 'text-red-500',   link: '/profile' },
 };
 
 function timeAgo(dateStr) {

@@ -19,6 +19,7 @@ import { logout, setUser } from "./store/slices/authSlice"
 import CompleteProfile from "./pages/CompleteProfile"
 import ResetPassword from "./pages/ResetPassword"
 import ProtectedRoute from "./utils/ProtectedRoute"
+import AdminRoute from "./utils/AdminRoute"
 import { useTranslation } from "react-i18next"
 import ReadMore from "./pages/ReadMore"
 import Favoris from "./pages/Favoris"
@@ -28,6 +29,7 @@ import TravelerDashboard from "./pages/TravelerDashboard"
 import AdminDashboard from "./pages/AdminDashboard"
 import Messagerie from "./pages/Messagerie"
 import PackageDetail from "./pages/PackageDetail"
+import useVerificationSync from "./hooks/useVerificationSync"
 
 function App() {
     const dispatch = useDispatch()
@@ -35,6 +37,9 @@ function App() {
     const [checkingServer, setCheckingServer] = useState(true)
 
     const { t, i18n } = useTranslation()
+
+    // Live-sync the member's verification status (admin approve/reject) into Redux.
+    useVerificationSync()
 
     useEffect(() => {
         document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr"
@@ -92,6 +97,15 @@ function App() {
                         <Route path="/messages" element={<Messagerie />} />
 
                         <Route path="/packages/:id" element={<PackageDetail />} />
+
+                        <Route path="/sender/dashboard" element={<SenderDashboard />} />
+
+                        <Route path="/traveler/dashboard" element={<TravelerDashboard />} />
+                    </Route>
+
+                    {/* Admin-only routes */}
+                    <Route element={<AdminRoute />}>
+                        <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     </Route>
 
                     <Route path="login" element={<Login />} />
@@ -122,10 +136,6 @@ function App() {
 
                         <Route path="/travel/:id" element={<TravelDetail />} />
                     </Route>
-
-                    <Route exact path="/sender/dashboard" element={<SenderDashboard />} />
-                    <Route exact path="/traveler/dashboard" element={<TravelerDashboard />} />
-                    <Route exact path="/admin/dashboard" element={<AdminDashboard />} />
 
                     <Route path="/readmore/:page" element={<ReadMore />} />
 

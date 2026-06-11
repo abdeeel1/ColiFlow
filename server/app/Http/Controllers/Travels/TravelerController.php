@@ -94,8 +94,8 @@ class TravelerController extends Controller
         if ($pkgCount > 0) {
             $badges[] = ['icon' => 'packages', 'label' => "{$pkgCount} Livraisons réussies"];
         }
-        if ($user->document_cin || $user->statut_verification === 'verified') {
-            $badges[] = ['icon' => 'verified', 'label' => 'Identité Vérifiée'];
+        if ($user->vehicle_verification === 'verified') {
+            $badges[] = ['icon' => 'verified', 'label' => 'Véhicule Vérifié'];
         }
 
         return response()->json([

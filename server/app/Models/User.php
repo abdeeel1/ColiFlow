@@ -39,6 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_picture',
         'document_cin',
         'statut_verification',
+        'vehicle_verification',
         'google_id',
         'vehicle_type',
         'vehicle_brand_model',

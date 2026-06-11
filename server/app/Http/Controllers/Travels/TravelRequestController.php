@@ -107,7 +107,7 @@ class TravelRequestController extends Controller
         }
 
         // A traveler must have a verified vehicle/documents before accepting colis
-        if ($request->status === 'accepted' && Auth::user()->statut_verification !== 'verified') {
+        if ($request->status === 'accepted' && Auth::user()->vehicle_verification !== 'verified') {
             return response()->json([
                 'message' => "Votre véhicule n'est pas encore vérifié. Faites valider vos documents avant d'accepter des colis.",
             ], 403);
@@ -307,7 +307,7 @@ class TravelRequestController extends Controller
                 'name'   => trim(($travelRequest->travel->user->first_name ?? '') . ' ' . ($travelRequest->travel->user->last_name ?? '')) ?: ($travelRequest->travel->user->name ?? 'Voyageur'),
                 'phone'  => $travelRequest->travel->user->phone ?? null,
                 'photo'  => $travelRequest->travel->user->profile_picture ?? null,
-                'verified' => ($travelRequest->travel->user->statut_verification ?? null) === 'verified',
+                'verified' => ($travelRequest->travel->user->vehicle_verification ?? null) === 'verified',
             ],
             'package'     => [
                 'name' => $travelRequest->package->package_name ?? null,
