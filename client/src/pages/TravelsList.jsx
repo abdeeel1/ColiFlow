@@ -30,6 +30,7 @@ import SelectFilter from '@/ui/SelectFilter'
 import DrawerRight from '@/ui/DrawerRight'
 import MapDrawer from '@/ui/MapDrawer'
 import ModalSend from '@/ui/ModalSend'
+import ColisSelect from '@/ui/ColisSelect'
 import axiosClient from '@/services/axios'
 import { useSelector } from 'react-redux'
 import z from 'zod'
@@ -83,7 +84,7 @@ const TravelsList = () => {
         typeColis: z.string().trim(),
     })
 
-    const { register, handleSubmit, reset, watch } = useForm({
+    const { register, handleSubmit, reset, watch, setValue } = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             depart: '',
@@ -92,6 +93,10 @@ const TravelsList = () => {
             typeColis: '',
         },
     })
+
+    // sender's own packages → used by the "Mon colis" picker to auto-fill the search
+    const [myPackages, setMyPackages] = useState([])
+    const [selectedColis, setSelectedColis] = useState('')
 
     const filters = watch()
 
@@ -215,6 +220,37 @@ const TravelsList = () => {
             .catch((err) => console.log(err))
     }, [isAuth])
 
+    // load the sender's packages for the "Mon colis" picker
+    useEffect(() => {
+        if (!isAuth) {
+            setMyPackages([])
+            return
+        }
+        axiosClient
+            .get('/api/packages')
+            .then((res) => setMyPackages(res.data?.packages ?? []))
+            .catch(() => setMyPackages([]))
+    }, [isAuth])
+
+    // pick one of my colis → auto-fill the search with its route + size, then filter
+    const handleColisSelect = (pkgId) => {
+        setSelectedColis(pkgId)
+        if (!pkgId) return
+        const pkg = myPackages.find((p) => String(p.id) === String(pkgId))
+        if (!pkg) return
+
+        const depart = pkg.from_city?.name ?? ''
+        const arrive = pkg.to_city?.name ?? ''
+        const typeColis = pkg.package_size
+            ? String(Math.round(Number(pkg.package_size)))
+            : ''
+
+        setValue('depart', depart)
+        setValue('arrive', arrive)
+        setValue('typeColis', typeColis)
+        applyAllFilters({ ...filters, depart, arrive, typeColis }, extraFilters)
+    }
+
     const MapBoundsFilter = () => {
         const travelsRef = useRef(travelsAnnouncement)
 
@@ -300,6 +336,7 @@ const TravelsList = () => {
     const handleReset = async () => {
         try {
             reset()
+            setSelectedColis('')
             setExtraFilters({
                 verified: false,
                 minPrice: 0,
@@ -400,6 +437,18 @@ const TravelsList = () => {
             </form>
 
             <div className="hidden lg:flex gap-2 items-center my-4">
+                {isAuth && myPackages.length > 0 && (
+                    <ColisSelect
+                        value={selectedColis}
+                        onChange={handleColisSelect}
+                        placeholder="Trouver pour mon colis…"
+                        options={myPackages.map((pkg) => ({
+                            value: pkg.id,
+                            label: `#${pkg.id} — ${pkg.package_name}`,
+                            sub: `${pkg.from_city?.name ?? '?'} → ${pkg.to_city?.name ?? '?'}`,
+                        }))}
+                    />
+                )}
                 <DropdownFilter onBudgetChange={handleBudgetChange} />
                 <div>
                     <SelectFilter
@@ -660,7 +709,15 @@ const TravelsList = () => {
                                 +{filterdCards.length} Trajets disponibles
                             </h3>
 
-                            <div>
+                            <div className="flex items-center gap-2">
+                                {isFiltered && (
+                                    <button
+                                        onClick={handleReset}
+                                        className="btn btn-sm btn-error text-white font-semibold"
+                                    >
+                                        Réinitialiser
+                                    </button>
+                                )}
                                 <MapDrawer
                                     travelsAnnouncement={travelsAnnouncement}
                                     MapBoundsFilter={MapBoundsFilter}
@@ -678,15 +735,49 @@ const TravelsList = () => {
                         ) : filterdCards.length > 0 ? (
                             <>
                                 <div className="flex gap-3 mb-3 overflow-x-auto no-scrollbar">
+                                    {isAuth && myPackages.length > 0 && (
+                                        <ColisSelect
+                                            value={selectedColis}
+                                            onChange={handleColisSelect}
+                                            placeholder="Mon colis…"
+                                            className="shrink-0 min-w-44"
+                                            options={myPackages.map((pkg) => ({
+                                                value: pkg.id,
+                                                label: `#${pkg.id} — ${pkg.package_name}`,
+                                                sub: `${pkg.from_city?.name ?? '?'} → ${pkg.to_city?.name ?? '?'}`,
+                                            }))}
+                                        />
+                                    )}
                                     <div className="shrink-0">
-                                        <DropdownFilter />
+                                        <DropdownFilter
+                                            onBudgetChange={handleBudgetChange}
+                                        />
                                     </div>
                                     <div className="shrink-0">
-                                        <SelectFilter />
+                                        <SelectFilter
+                                            onVehicleTypeChange={
+                                                handleVehicleTypeChange
+                                            }
+                                        />
                                     </div>
                                     <div className="shrink-0">
-                                        <button className="px-4 py-[0.52rem] bg-white rounded-2xl font-bold text-sm text-[#757575] cursor-pointer">
-                                            Verification
+                                        <button
+                                            onClick={() => {
+                                                const updated = {
+                                                    ...extraFilters,
+                                                    verified:
+                                                        !extraFilters.verified,
+                                                }
+                                                setExtraFilters(updated)
+                                                applyAllFilters(filters, updated)
+                                            }}
+                                            className={`px-4 py-[0.52rem] rounded-2xl font-bold text-sm cursor-pointer transition-all ${
+                                                extraFilters.verified
+                                                    ? 'bg-[#0984E3] text-white'
+                                                    : 'bg-white text-[#757575]'
+                                            }`}
+                                        >
+                                            Vérifiés
                                         </button>
                                     </div>
                                     <div className="shrink-0">

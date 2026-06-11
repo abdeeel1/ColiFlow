@@ -26,7 +26,10 @@ class PackageController extends Controller
                 'from_city',
                 'to_city',
                 'images',
-                'travelRequests' => fn($q) => $q->where('status', 'accepted')->with('travel.user'),
+                'travelRequests' => fn($q) => $q
+                    ->whereIn('status', ['accepted', 'in_transit', 'delivered'])
+                    ->with('travel.user')
+                    ->latest(),
             ])
             ->where('user_id', $user->id)
             ->latest()
@@ -131,7 +134,7 @@ class PackageController extends Controller
         // The sender who owns it, or the traveler who accepted to carry it.
         $isOwner = (int) $package->user_id === (int) $userId;
         $isCarrier = $package->travelRequests()
-            ->where('status', 'accepted')
+            ->whereIn('status', ['accepted', 'in_transit', 'delivered'])
             ->whereHas('travel', fn ($q) => $q->where('user_id', $userId))
             ->exists();
 
@@ -144,7 +147,10 @@ class PackageController extends Controller
                 'from_city',
                 'to_city',
                 'images',
-                'travelRequests' => fn ($q) => $q->where('status', 'accepted')->with('travel.user'),
+                'travelRequests' => fn ($q) => $q
+                    ->whereIn('status', ['accepted', 'in_transit', 'delivered'])
+                    ->with('travel.user')
+                    ->latest(),
             ])
         );
     }

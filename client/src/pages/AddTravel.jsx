@@ -7,18 +7,30 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckCircle, Circle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 import { toast } from "sonner"
 import z from "zod"
+
+const CAR_TYPES = ["voiture", "moto", "camionnette", "petit_camion"]
 
 const AddTravel = () => {
     const nums = [1, 2, 3, 4]
 
     const [step, setStep] = useState(1)
+    const navigate = useNavigate()
 
     const [loading, setLoding] = useState(false)
     const [successMessage, setSuccessMessage] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
+
+    // Prefill the vehicle step from the traveler's saved (verified) profile.
+    const user = useSelector((state) => state.auth.user)
+    const profileCarType = CAR_TYPES.includes(user?.vehicle_type)
+        ? user.vehicle_type
+        : "voiture"
+    const hasVehiclePhoto = !!user?.vehicle_photo
+    const hasVehicleInfo = !!(user?.vehicle_brand_model || user?.vehicle_plate)
 
     const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
@@ -45,9 +57,14 @@ const AddTravel = () => {
                 4,
                 "la matriculation du voiture doit comporter plus de trois mots",
             ),
-        carPictures: z
-            .any()
-            .refine((files) => files?.length > 0, "Ce champ est obligatoire"),
+        carPictures: hasVehiclePhoto
+            ? z.any().optional()
+            : z
+                  .any()
+                  .refine(
+                      (files) => files?.length > 0,
+                      "Ce champ est obligatoire",
+                  ),
         colisPoids: z.number("la sélection d'un poid est obligatoire"),
         colisAccept: z
             .array(z.string())
@@ -66,9 +83,9 @@ const AddTravel = () => {
             travelCityTwo: "",
             travelDate: "",
             travelDescription: "",
-            carType: "voiture",
-            carModel: "",
-            carId: "",
+            carType: profileCarType,
+            carModel: user?.vehicle_brand_model ?? "",
+            carId: user?.vehicle_plate ?? "",
             carPictures: null,
             colisPoids: "",
             colisAccept: [],
@@ -77,6 +94,17 @@ const AddTravel = () => {
             longitude: "",
         },
     })
+
+    // Keep vehicle fields in sync if the user object arrives after first render.
+    useEffect(() => {
+        if (!user) return
+        if (CAR_TYPES.includes(user.vehicle_type))
+            methods.setValue("carType", user.vehicle_type)
+        if (user.vehicle_brand_model)
+            methods.setValue("carModel", user.vehicle_brand_model)
+        if (user.vehicle_plate) methods.setValue("carId", user.vehicle_plate)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id])
 
     useEffect(() => {
         if (successMessage) {
@@ -148,6 +176,9 @@ const AddTravel = () => {
             const res = await axiosClient.post("/api/travels", formData)
 
             toast.success(capitalize(res.data.message))
+
+            // back to the traveler dashboard travels list after publishing
+            navigate("/traveler/dashboard?tab=trajets")
         } catch (err) {
             if (err.response?.data?.message) {
                 toast.error(capitalize(err.response.data.message))
@@ -248,7 +279,24 @@ const AddTravel = () => {
                         onSubmit={methods.handleSubmit(onSubmitData)}
                     >
                         {step === 1 && <TravelerFormOne />}
-                        {step === 2 && <TravelerFormTwo />}
+                        {step === 2 && (
+                            <>
+                                {hasVehicleInfo && (
+                                    <div className="mb-4 flex items-start gap-2 bg-blue-50 border border-blue-100 text-[#0767B1] rounded-2xl px-4 py-3 text-sm">
+                                        <CheckCircle className="size-5 shrink-0" />
+                                        <span>
+                                            Véhicule pré-rempli depuis votre
+                                            profil.
+                                            {hasVehiclePhoto &&
+                                                " La photo est facultative."}{" "}
+                                            Vous pouvez modifier ces
+                                            informations pour ce trajet.
+                                        </span>
+                                    </div>
+                                )}
+                                <TravelerFormTwo />
+                            </>
+                        )}
                         {step === 3 && <TravelerFormThree />}
                         {step === 4 && <TravelerFormLast />}
 

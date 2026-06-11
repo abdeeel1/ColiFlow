@@ -39,6 +39,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/travel-requests', [TravelRequestController::class, 'index']);           // sender: my sent requests
     Route::get('/travel-requests/received', [TravelRequestController::class, 'received']); // traveler: received requests
     Route::patch('/travel-requests/{travelRequest}/status', [TravelRequestController::class, 'updateStatus']);
+    Route::post('/travel-requests/{travelRequest}/verify-code', [TravelRequestController::class, 'verifyPickupCode']); // traveler confirms pickup
+
+    // Live location tracking
+    Route::post('/travel-requests/{travelRequest}/location', [TravelRequestController::class, 'updateLocation']);   // traveler pushes position
+    Route::delete('/travel-requests/{travelRequest}/location', [TravelRequestController::class, 'stopLocation']);   // traveler stops sharing
+    Route::get('/travel-requests/{travelRequest}/location', [TravelRequestController::class, 'showLocation']);      // sender reads position
 });
 
 // Favorites (auth required)

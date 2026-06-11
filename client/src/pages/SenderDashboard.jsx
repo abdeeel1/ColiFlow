@@ -4,6 +4,7 @@ import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import axiosClient from '../services/axios';
 import ConfirmDialog from '../components/ConfirmDialog';
+import LiveTracking from '../components/LiveTracking';
 import DeliveryLineChart from '@/charts/DeliverLineChart';
 import WeeklyBarChart from '@/charts/Weeklybarchart ';
 import { 
@@ -14,14 +15,28 @@ import {
 } from 'lucide-react';
 
 // ── helpers ───────────────────────────────────────────────────────
-// A package is "in transit" only once a traveler has accepted to carry it,
-// not based on its urgency level.
-const isInTransit = (pkg) => (pkg.travel_requests?.length ?? 0) > 0;
+// The package's lifecycle status comes from its active travel request:
+//   (none)     → En attente
+//   accepted   → En transit (traveler assigned, awaiting pickup)
+//   in_transit → En cours de livraison (picked up)
+//   delivered  → Livré
+const activeStatus = (pkg) => pkg.travel_requests?.[0]?.status ?? null;
 
-const statusOf = (pkg) =>
-  isInTransit(pkg)
-    ? { label: 'En transit',  dot: 'bg-blue-500',   badge: 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400' }
-    : { label: 'En attente',  dot: 'bg-orange-400', badge: 'bg-orange-100 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400' };
+// "In transit" stat = assigned to a traveler but not yet delivered.
+const isInTransit = (pkg) => ['accepted', 'in_transit'].includes(activeStatus(pkg));
+
+const statusOf = (pkg) => {
+  switch (activeStatus(pkg)) {
+    case 'delivered':
+      return { label: 'Livré',                 dot: 'bg-green-500',  badge: 'bg-green-100 text-green-600 dark:bg-green-950/20 dark:text-green-400' };
+    case 'in_transit':
+      return { label: 'En cours de livraison', dot: 'bg-blue-500',   badge: 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400' };
+    case 'accepted':
+      return { label: 'En transit',            dot: 'bg-blue-500',   badge: 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400' };
+    default:
+      return { label: 'En attente',            dot: 'bg-orange-400', badge: 'bg-orange-100 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400' };
+  }
+};
 
 const PAGE_HEADER = {
   apercu:     { title: 'Tableau de Bord Expéditeur', subtitle: 'Gérez vos expéditions, suivez vos colis et consultez vos statistiques.' },
@@ -668,8 +683,15 @@ export default function SenderDashboard() {
                   </div>
                 )}
 
-                {/* ── EXPEDITION & SUIVI TABS ─────────────────────────────────── */}
-                {(activeTab === 'expedition' || activeTab === 'suivi') && (
+                {/* ── SUIVI EN DIRECT TAB ─────────────────────────────────────── */}
+                {activeTab === 'suivi' && (
+                  <div className="col-span-full">
+                    <LiveTracking packages={packages} />
+                  </div>
+                )}
+
+                {/* ── EXPEDITION TAB ──────────────────────────────────────────── */}
+                {activeTab === 'expedition' && (
                   <div className="col-span-full flex flex-col gap-5">
 
                     {/* ── TABLE HEADER ── */}

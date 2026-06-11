@@ -339,13 +339,135 @@ export default function TravelerDashboard() {
     if (activeTab === 'gains') fetchGains();
   }, [activeTab, fetchGains]);
 
-  const handleConfirmDelivery = async (id) => {
+  // Traveler enters the code the sender received by email → confirms pickup → "livraison en cours".
+  const handleVerifyCode = async (id) => {
+    const code = (confirmCodes[id] ?? '').trim();
+    if (!code) {
+      toast.error('Saisissez le code communiqué par l\'expéditeur.');
+      return;
+    }
+    setConfirmLoading(prev => ({ ...prev, [id]: true }));
+    try {
+      await axiosClient.post(`/api/travel-requests/${id}/verify-code`, { code });
+      setDemandesData(prev => prev.map(r => r.id === id ? { ...r, status: 'in_transit' } : r));
+      setConfirmCodes(prev => { const n = { ...prev }; delete n[id]; return n; });
+      toast.success('Code validé. Livraison en cours 🚚');
+    } catch (err) {
+      toast.error(err?.response?.data?.message ?? 'Code incorrect.');
+    } finally {
+      setConfirmLoading(prev => { const n = { ...prev }; delete n[id]; return n; });
+    }
+  };
+
+  // ── live position sharing (geolocation) ──────────────────────────────────
+  const [sharingIds, setSharingIds]   = useState([]);
+  const watchIdRef   = useRef(null);
+  const sharingRef   = useRef([]);
+  const lastPostRef  = useRef(0);
+
+  useEffect(() => { sharingRef.current = sharingIds; }, [sharingIds]);
+
+  // clear the geolocation watcher on unmount
+  useEffect(() => () => {
+    if (watchIdRef.current != null && navigator.geolocation) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+    }
+  }, []);
+
+  const pushLocation = (id, lat, lng) =>
+    axiosClient.post(`/api/travel-requests/${id}/location`, { lat, lng }).catch(() => {});
+
+  const startWatch = () => {
+    if (watchIdRef.current != null) return;
+    if (!navigator.geolocation) {
+      toast.error('La géolocalisation n\'est pas supportée par ce navigateur.');
+      return;
+    }
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (pos) => {
+        const now = Date.now();
+        if (now - lastPostRef.current < 5000) return; // throttle to ~5s
+        lastPostRef.current = now;
+        sharingRef.current.forEach((id) => pushLocation(id, pos.coords.latitude, pos.coords.longitude));
+      },
+      (err) => {
+        toast.error(err.code === 1
+          ? 'Permission de localisation refusée. Activez-la pour partager votre position.'
+          : 'Position indisponible pour le moment.');
+        setSharingIds([]);
+        if (watchIdRef.current != null) {
+          navigator.geolocation.clearWatch(watchIdRef.current);
+          watchIdRef.current = null;
+        }
+      },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 },
+    );
+  };
+
+  const toggleShareLocation = async (id) => {
+    if (sharingIds.includes(id)) {
+      setSharingIds((prev) => prev.filter((x) => x !== id));
+      try { await axiosClient.delete(`/api/travel-requests/${id}/location`); } catch { /* noop */ }
+      // stop the watcher if nothing else is being shared
+      if (sharingRef.current.filter((x) => x !== id).length === 0 && watchIdRef.current != null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+      toast('Partage de position arrêté.');
+    } else {
+      if (!navigator.geolocation) {
+        toast.error('La géolocalisation n\'est pas supportée par ce navigateur.');
+        return;
+      }
+      toast.loading('Récupération de votre position…', { id: `geo-${id}` });
+      // Only mark as "sharing" once a real position has actually been saved.
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          try {
+            await axiosClient.post(`/api/travel-requests/${id}/location`, {
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+            });
+            lastPostRef.current = Date.now();
+            setSharingIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+            startWatch();
+            toast.success('Partage de position activé 📍', { id: `geo-${id}` });
+          } catch (e) {
+            toast.error(e?.response?.data?.message ?? 'Échec de l\'envoi de la position au serveur.', { id: `geo-${id}` });
+          }
+        },
+        (err) => {
+          toast.error(
+            err.code === 1
+              ? 'Permission de localisation refusée. Autorisez la localisation pour ce site (icône 🔒 dans la barre d\'adresse).'
+              : err.code === 3
+              ? 'Délai de localisation dépassé. Réessayez.'
+              : 'Position indisponible pour le moment.',
+            { id: `geo-${id}` },
+          );
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 },
+      );
+    }
+  };
+
+  // Traveler marks an in-transit delivery as completed.
+  const handleMarkDelivered = async (id) => {
     setConfirmLoading(prev => ({ ...prev, [id]: true }));
     try {
       await axiosClient.patch(`/api/travel-requests/${id}/status`, { status: 'delivered' });
       setDemandesData(prev => prev.map(r => r.id === id ? { ...r, status: 'delivered' } : r));
+      // stop sharing the position once delivered
+      if (sharingIds.includes(id)) {
+        setSharingIds(prev => prev.filter(x => x !== id));
+        if (sharingRef.current.filter(x => x !== id).length === 0 && watchIdRef.current != null) {
+          navigator.geolocation.clearWatch(watchIdRef.current);
+          watchIdRef.current = null;
+        }
+      }
+      toast.success('Livraison confirmée ✓');
     } catch (err) {
-      alert(err?.response?.data?.message ?? 'Erreur lors de la confirmation.');
+      toast.error(err?.response?.data?.message ?? 'Erreur lors de la confirmation.');
     } finally {
       setConfirmLoading(prev => { const n = { ...prev }; delete n[id]; return n; });
     }
@@ -529,7 +651,7 @@ export default function TravelerDashboard() {
   );
 
   // ── livraisons computed
-  const livraisonsBase = demandesData.filter(r => r.status === 'accepted');
+  const livraisonsBase = demandesData.filter(r => r.status === 'accepted' || r.status === 'in_transit');
   const livraisonsTravels = [...new Map(livraisonsBase.map(r => [r.travel_id, r.travel])).entries()]
     .map(([id, t]) => ({
       id,
@@ -1365,6 +1487,7 @@ export default function TravelerDashboard() {
                           const pkgImage   = req.package?.images?.[0]?.path ?? null;
                           const toCity     = req.travel?.to_city?.name ?? req.package?.to_city?.name ?? '-';
                           const colisRef   = `EL-${String(req.package?.id ?? 0).padStart(7, '0')}`;
+                          const isInTransit = req.status === 'in_transit';
 
                           const d = new Date(req.created_at);
                           const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
@@ -1391,13 +1514,15 @@ export default function TravelerDashboard() {
                                     ))}
                                   </div>
                                 </div>
-                                <button
-                                  onClick={() => setScannerOpenId(req.id)}
-                                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-xl bg-[#0984E3] hover:bg-blue-600 text-white transition cursor-pointer shrink-0 self-start active:scale-95"
-                                >
-                                  <QrCode size={15} />
-                                  Scanner Code-Barres
-                                </button>
+                                {!isInTransit && (
+                                  <button
+                                    onClick={() => setScannerOpenId(req.id)}
+                                    className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-xl bg-[#0984E3] hover:bg-blue-600 text-white transition cursor-pointer shrink-0 self-start active:scale-95"
+                                  >
+                                    <QrCode size={15} />
+                                    Scanner Code-Barres
+                                  </button>
+                                )}
                               </div>
 
                               {/* ── Middle: Contenu + Destinataire ── */}
@@ -1425,10 +1550,17 @@ export default function TravelerDashboard() {
                                       </p>
                                     </div>
                                   </div>
-                                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-100 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                                    À récupérer
-                                  </span>
+                                  {isInTransit ? (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                      En cours de livraison
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-100 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                                      À récupérer
+                                    </span>
+                                  )}
                                 </div>
 
                                 {/* Destinataire & Contact */}
@@ -1479,37 +1611,82 @@ export default function TravelerDashboard() {
                                   </div>
                                 </div>
 
-                                {/* Confirmation de Livraison */}
-                                <div className="p-6">
-                                  <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-4">Confirmation de Livraison</h4>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Confirmer la réception :</p>
-                                  <div className="relative mb-3">
-                                    <input
-                                      type={showConfirmCode[req.id] ? 'text' : 'password'}
-                                      value={confirmCodes[req.id] ?? ''}
-                                      onChange={e => setConfirmCodes(prev => ({ ...prev, [req.id]: e.target.value }))}
-                                      placeholder="Saisir le code du client"
-                                      className="w-full px-4 py-2.5 pr-10 text-sm bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#0984E3] dark:text-gray-200 placeholder:text-gray-400"
-                                    />
+                                {/* Confirmation — code de récupération (accepted) ou finalisation (in_transit) */}
+                                {isInTransit ? (
+                                  <div className="p-6">
+                                    <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-4">Finaliser la Livraison</h4>
+                                    <div className="flex items-start gap-2 mb-4 text-sm text-gray-500 dark:text-gray-400">
+                                      <CheckCircle size={16} className="text-green-500 shrink-0 mt-0.5" />
+                                      <span>Colis récupéré. Partagez votre position pour que l'expéditeur suive la livraison en direct.</span>
+                                    </div>
+
+                                    {/* Live position sharing toggle */}
                                     <button
-                                      onClick={() => setShowConfirmCode(prev => ({ ...prev, [req.id]: !prev[req.id] }))}
-                                      className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
+                                      onClick={() => toggleShareLocation(req.id)}
+                                      className={`w-full flex items-center justify-center gap-2 py-2.5 mb-3 text-sm font-bold rounded-xl transition cursor-pointer active:scale-[0.98] border ${
+                                        sharingIds.includes(req.id)
+                                          ? 'bg-blue-50 border-blue-200 text-[#0984E3] dark:bg-blue-950/20 dark:border-blue-900'
+                                          : 'bg-white border-gray-200 text-gray-600 hover:border-[#0984E3] hover:text-[#0984E3] dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300'
+                                      }`}
                                     >
-                                      {showConfirmCode[req.id] ? <EyeOff size={16} /> : <Eye size={16} />}
+                                      {sharingIds.includes(req.id) ? (
+                                        <>
+                                          <span className="relative flex h-2.5 w-2.5">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0984E3] opacity-75" />
+                                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0984E3]" />
+                                          </span>
+                                          Position partagée — Arrêter
+                                        </>
+                                      ) : (
+                                        <><Navigation size={15} /> Partager ma position</>
+                                      )}
+                                    </button>
+
+                                    <button
+                                      onClick={() => handleMarkDelivered(req.id)}
+                                      disabled={confirmLoading[req.id]}
+                                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-bold rounded-xl transition cursor-pointer disabled:opacity-60 active:scale-[0.98]"
+                                    >
+                                      {confirmLoading[req.id] ? (
+                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                      ) : (
+                                        <><CheckCircle size={16} /> Marquer comme livré</>
+                                      )}
                                     </button>
                                   </div>
-                                  <button
-                                    onClick={() => handleConfirmDelivery(req.id)}
-                                    disabled={confirmLoading[req.id]}
-                                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#0984E3] hover:bg-blue-600 text-white text-sm font-bold rounded-xl transition cursor-pointer disabled:opacity-60 active:scale-[0.98]"
-                                  >
-                                    {confirmLoading[req.id] ? (
-                                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    ) : (
-                                      <>Confirmer <ArrowRight size={16} /></>
-                                    )}
-                                  </button>
-                                </div>
+                                ) : (
+                                  <div className="p-6">
+                                    <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-4">Confirmation de Récupération</h4>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Saisissez le code reçu par l'expéditeur :</p>
+                                    <div className="relative mb-3">
+                                      <input
+                                        type={showConfirmCode[req.id] ? 'text' : 'password'}
+                                        value={confirmCodes[req.id] ?? ''}
+                                        onChange={e => setConfirmCodes(prev => ({ ...prev, [req.id]: e.target.value }))}
+                                        onKeyDown={e => { if (e.key === 'Enter') handleVerifyCode(req.id); }}
+                                        placeholder="Saisir le code du client"
+                                        className="w-full px-4 py-2.5 pr-10 text-sm bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#0984E3] dark:text-gray-200 placeholder:text-gray-400 uppercase tracking-widest font-mono"
+                                      />
+                                      <button
+                                        onClick={() => setShowConfirmCode(prev => ({ ...prev, [req.id]: !prev[req.id] }))}
+                                        className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
+                                      >
+                                        {showConfirmCode[req.id] ? <EyeOff size={16} /> : <Eye size={16} />}
+                                      </button>
+                                    </div>
+                                    <button
+                                      onClick={() => handleVerifyCode(req.id)}
+                                      disabled={confirmLoading[req.id]}
+                                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#0984E3] hover:bg-blue-600 text-white text-sm font-bold rounded-xl transition cursor-pointer disabled:opacity-60 active:scale-[0.98]"
+                                    >
+                                      {confirmLoading[req.id] ? (
+                                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                      ) : (
+                                        <>Confirmer la récupération <ArrowRight size={16} /></>
+                                      )}
+                                    </button>
+                                  </div>
+                                )}
                               </div>
 
                             </div>

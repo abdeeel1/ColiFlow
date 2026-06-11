@@ -4,6 +4,7 @@ namespace App\Http\Requests\Travels;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AddTravelRequest extends FormRequest
 {
@@ -32,7 +33,9 @@ class AddTravelRequest extends FormRequest
             'car_identifier' => 'required',
             'car_model' => 'required',
             'car_type' => 'required|in:voiture,moto,camionnette,petit_camion',
-            'pictures' => 'required|array|min:1|max:3',
+            // Vehicle photos are mandatory only for travelers who have not already
+            // saved a vehicle photo on their (verified) profile.
+            'pictures' => [Rule::requiredIf(fn () => empty($this->user()?->vehicle_photo)), 'array', 'max:3'],
             'pictures.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
