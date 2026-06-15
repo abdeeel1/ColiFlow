@@ -51,7 +51,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   // active conditions — every admin section lives under /admin/dashboard?tab=…
   const isHome       = pathname === "/admin/dashboard" && (!activeTab || activeTab === "apercu");
   const isValidation = pathname === "/admin/dashboard" && activeTab === "validation";
-  const isMembres    = pathname === "/admin/dashboard" && (activeTab === "expediteurs" || activeTab === "voyageurs");
+  const isMembres    = pathname === "/admin/dashboard" && activeTab === "membres";
   const isLogistique = pathname === "/admin/dashboard" && (activeTab === "colis" || activeTab === "litiges");
   const isFinances   = pathname === "/admin/dashboard" && (activeTab === "transactions" || activeTab === "commissions");
   const isConfig     = pathname === "/admin/dashboard" && activeTab === "config";
@@ -221,8 +221,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                     </a>
                     <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
                       <ul className={`pl-8 mt-3 flex flex-col gap-2 ${!open && "hidden"}`}>
-                        <SubLink to="/admin/dashboard?tab=expediteurs" label="Expéditeurs" active={activeTab === "expediteurs"} />
-                        <SubLink to="/admin/dashboard?tab=voyageurs" label="Voyageurs" active={activeTab === "voyageurs"} />
+                        <SubLink to="/admin/dashboard?tab=membres" label="Tous les Membres" active={activeTab === "membres"} />
                       </ul>
                     </div>
                   </>

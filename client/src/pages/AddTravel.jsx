@@ -3,6 +3,7 @@ import TravelerFormOne from "@/components/traveler-form/TravelerFormOne"
 import TravelerFormThree from "@/components/traveler-form/TravelerFormThree"
 import TravelerFormTwo from "@/components/traveler-form/TravelerFormTwo"
 import axiosClient from "@/services/axios"
+import SuspendedAccountDialog from "@/components/SuspendedAccountDialog"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckCircle, Circle } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -26,6 +27,8 @@ const AddTravel = () => {
 
     // Prefill the vehicle step from the traveler's saved (verified) profile.
     const user = useSelector((state) => state.auth.user)
+    const isSuspended = user?.status === "suspended" || user?.status === "banned"
+    const [suspendedOpen, setSuspendedOpen] = useState(false)
     const profileCarType = CAR_TYPES.includes(user?.vehicle_type)
         ? user.vehicle_type
         : "voiture"
@@ -106,6 +109,11 @@ const AddTravel = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.id])
 
+    // Suspended members can't reach the creation flow — show the alert on entry.
+    useEffect(() => {
+        if (isSuspended) setSuspendedOpen(true)
+    }, [isSuspended])
+
     useEffect(() => {
         if (successMessage) {
             toast.success(successMessage)
@@ -143,6 +151,11 @@ const AddTravel = () => {
     const prevStep = () => setStep((prev) => prev - 1)
 
     const onSubmitData = async (data) => {
+        if (isSuspended) {
+            setSuspendedOpen(true)
+            return
+        }
+
         setLoding(true)
         setSuccessMessage("")
         setErrorMessage("")
@@ -192,6 +205,12 @@ const AddTravel = () => {
 
     return (
         <main className="min-h-screen p-4 md:p-8 xl:p-12 bg-slate-50">
+            <SuspendedAccountDialog
+                open={suspendedOpen}
+                onClose={() => navigate("/traveler/dashboard")}
+                description="Votre compte a été suspendu. Vous ne pouvez pas publier de trajets pour le moment."
+            />
+
             <div className="max-w-5xl mx-auto flex flex-col gap-6">
                 {/* Header */}
                 <div className="flex gap-3 items-center px-2">

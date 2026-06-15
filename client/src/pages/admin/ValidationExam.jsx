@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import axiosClient from '../../services/axios';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import RejectReasonDialog from '../../components/RejectReasonDialog';
 import {
   ArrowLeft, Check, X, FileText, Car, User,
   CheckCircle2, XCircle, Clock, BadgeCheck,
@@ -87,7 +88,8 @@ export default function ValidationExam() {
   const [dossier, setDossier] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
-  const [confirm, setConfirm] = useState(null); // { action, category }
+  const [confirm, setConfirm] = useState(null); // approval confirm: { action, category }
+  const [rejectCategory, setRejectCategory] = useState(null); // 'identity' | 'vehicle' | null
 
   const fetchDossier = useCallback(() => {
     setLoading(true);
@@ -108,6 +110,20 @@ export default function ValidationExam() {
       const { data } = await axiosClient.patch(`/api/admin/validations/${id}/${action}`, { category });
       toast.success(data.message);
       fetchDossier(); // stay on the page so the other track can be handled too
+    } catch (e) {
+      toast.error(e?.response?.data?.message ?? 'Une erreur est survenue.');
+    }
+  };
+
+  // Reject with the motifs chosen in the modal; the dialog handles its own
+  // loading spinner, so let errors bubble up to keep it open on failure.
+  const handleReject = async (reasons) => {
+    const category = rejectCategory;
+    try {
+      const { data } = await axiosClient.patch(`/api/admin/validations/${id}/reject`, { category, reasons });
+      toast.success(data.message);
+      setRejectCategory(null);
+      fetchDossier();
     } catch (e) {
       toast.error(e?.response?.data?.message ?? 'Une erreur est survenue.');
     }
@@ -167,7 +183,7 @@ export default function ValidationExam() {
             <TrackActions
               status={identity.status}
               onApprove={() => setConfirm({ action: 'approve', category: 'identity' })}
-              onReject={() => setConfirm({ action: 'reject', category: 'identity' })}
+              onReject={() => setRejectCategory('identity')}
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -194,7 +210,7 @@ export default function ValidationExam() {
             <TrackActions
               status={vehicle.status}
               onApprove={() => setConfirm({ action: 'approve', category: 'vehicle' })}
-              onReject={() => setConfirm({ action: 'reject', category: 'vehicle' })}
+              onReject={() => setRejectCategory('vehicle')}
             />
           </div>
 
@@ -222,20 +238,21 @@ export default function ValidationExam() {
         open={!!confirm}
         onOpenChange={(o) => { if (!o) setConfirm(null); }}
         onConfirm={handleConfirm}
-        title={
-          confirm?.action === 'approve'
-            ? (confirm?.category === 'identity' ? "Approuver l'identité ?" : 'Approuver le véhicule ?')
-            : (confirm?.category === 'identity' ? "Rejeter l'identité ?" : 'Rejeter le véhicule ?')
-        }
+        title={confirm?.category === 'identity' ? "Approuver l'identité ?" : 'Approuver le véhicule ?'}
         description={
-          confirm?.action === 'approve'
-            ? (confirm?.category === 'identity'
-                ? `L'identité de ${dossier.name} sera confirmée et le membre notifié.`
-                : `Le véhicule de ${dossier.name} sera validé : il pourra publier des trajets et transporter des colis.`)
-            : `${dossier.name} sera notifié et devra renvoyer les documents concernés.`
+          confirm?.category === 'identity'
+            ? `L'identité de ${dossier.name} sera confirmée et le membre notifié.`
+            : `Le véhicule de ${dossier.name} sera validé : il pourra publier des trajets et transporter des colis.`
         }
-        confirmLabel={confirm?.action === 'approve' ? 'Approuver' : 'Rejeter'}
-        loadingLabel={confirm?.action === 'approve' ? 'Approbation…' : 'Rejet…'}
+        confirmLabel="Approuver"
+        loadingLabel="Approbation…"
+      />
+
+      {/* Rejection modal — admin must pick at least one motif before rejecting. */}
+      <RejectReasonDialog
+        open={!!rejectCategory}
+        onOpenChange={(o) => { if (!o) setRejectCategory(null); }}
+        onConfirm={handleReject}
       />
     </div>
   );

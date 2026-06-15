@@ -6,7 +6,7 @@ import {
   Plane, Package, DollarSign, Star,
   MapPin, Inbox, ShieldCheck, Crown, CheckCircle,
   Plus, ChevronRight, ArrowRight, ArrowUpDown,
-  Trash2, Filter, Download, MoreHorizontal, Eye,
+  Trash2, Filter, Download, MoreHorizontal, Eye, Pencil,
   Navigation, RefreshCw, Search, Check, X, Calendar,
   Info, Phone, EyeOff, ChevronDown, QrCode,
   Wallet, TrendingUp, Clock, CreditCard,
@@ -18,6 +18,7 @@ import RatingLineChart from '@/charts/RatingLineChart';
 import GainsAreaChart from '@/charts/GainsAreaChart';
 import axiosClient from '../services/axios';
 import ConfirmDialog from '../components/ConfirmDialog';
+import EditTravelDialog from '../components/EditTravelDialog';
 import BarcodeScannerModal from '../ui/BarcodeScannerModal';
 
 // ── status config ──────────────────────────────────────────────────────────────
@@ -259,6 +260,7 @@ export default function TravelerDashboard() {
   const [openMenuId, setOpenMenuId]     = useState(null);
   // null | { type: 'single', id } | { type: 'bulk' }
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [editTravelId, setEditTravelId] = useState(null); // open the edit modal for this trajet
   const [currentPage, setCurrentPage]   = useState(1);
   const menuRef = useRef(null);
   const itemsPerPage = 10;
@@ -1025,6 +1027,7 @@ export default function TravelerDashboard() {
                             {paginated.map(travel => {
                               const s = STATUS[travel.status] ?? STATUS.ouvert;
                               const selected = selectedRows.includes(travel.id);
+                              const isFinished = travel.status === 'termine';
                               return (
                                 <tr
                                   key={travel.id}
@@ -1099,6 +1102,14 @@ export default function TravelerDashboard() {
                                           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
                                         >
                                           <Eye size={14} /> Voir le détail
+                                        </button>
+                                        <button
+                                          onClick={() => { if (isFinished) return; setOpenMenuId(null); setEditTravelId(travel.id); }}
+                                          disabled={isFinished}
+                                          title={isFinished ? 'Un trajet terminé ne peut plus être modifié' : undefined}
+                                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm ${isFinished ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer'}`}
+                                        >
+                                          <Pencil size={14} /> Modifier
                                         </button>
                                         <button
                                           onClick={() => { setOpenMenuId(null); setConfirmDelete({ type: 'single', id: travel.id }); }}
@@ -2035,6 +2046,14 @@ export default function TravelerDashboard() {
             ? `Cette action est irréversible. ${selectedRows.length} trajet(s) seront définitivement supprimés.`
             : 'Cette action est irréversible. Ce trajet sera définitivement supprimé.'
         }
+      />
+
+      {/* Edit trajet */}
+      <EditTravelDialog
+        open={!!editTravelId}
+        travelId={editTravelId}
+        onOpenChange={(o) => { if (!o) setEditTravelId(null); }}
+        onSaved={() => fetchTravels()}
       />
     </div>
   );

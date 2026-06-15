@@ -88,6 +88,14 @@ class PackageController extends Controller
         $validated = $request->validated();
         $user = Auth::user();
 
+        // Suspended/banned members cannot create packages.
+        if (in_array($user->status, ['suspended', 'banned'], true)) {
+            return response()->json([
+                'message' => 'Votre compte est suspendu. Vous ne pouvez pas créer de colis. Veuillez contacter le support.',
+                'suspended' => true,
+            ], 403);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -160,20 +168,33 @@ class PackageController extends Controller
      */
     public function update(Request $request, Package $package)
     {
-        $this->authorize('update', $package);
+        // Only the sender who owns the package may edit it.
+        if ((int) $package->user_id !== (int) Auth::id()) {
+            return response()->json(['message' => 'Accès non autorisé.'], 403);
+        }
+
+        // A delivered package is locked — it can no longer be edited.
+        if ($package->travelRequests()->where('status', 'delivered')->exists()) {
+            return response()->json(['message' => 'Un colis livré ne peut plus être modifié.'], 422);
+        }
 
         $validated = $request->validate([
-            'category' => 'string',
-            'price' => 'numeric',
-            'description' => 'string',
-            'date_delivery' => 'date',
+            'from_city_id'  => ['sometimes', 'exists:cities,id', 'different:to_city_id'],
+            'to_city_id'    => ['sometimes', 'exists:cities,id'],
+            'package_name'  => ['sometimes', 'string', 'min:3', 'max:255'],
+            'category'      => ['sometimes', 'in:electronique,documents,mode,maison,autre'],
+            'package_size'  => ['sometimes', 'numeric', 'min:0'],
+            'description'   => ['nullable', 'string', 'max:1000'],
+            'date_delivery' => ['sometimes', 'date'],
+            'urgency'       => ['sometimes', 'in:standard,urgent,très_urgent'],
+            'price'         => ['sometimes', 'numeric', 'min:1'],
         ]);
 
         $package->update($validated);
 
         return response()->json([
-            'message' => 'Paquet mis à jour avec succès',
-            'package' => $package
+            'message' => 'Colis mis à jour avec succès.',
+            'package' => $package->fresh(['from_city', 'to_city', 'images']),
         ]);
     }
 

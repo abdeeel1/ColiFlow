@@ -40,6 +40,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'document_cin',
         'statut_verification',
         'vehicle_verification',
+        'status',
+        'identity_rejection_reasons',
+        'vehicle_rejection_reasons',
         'google_id',
         'vehicle_type',
         'vehicle_brand_model',
@@ -71,6 +74,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'identity_rejection_reasons' => 'array',
+            'vehicle_rejection_reasons' => 'array',
         ];
     }
 

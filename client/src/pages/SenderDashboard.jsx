@@ -5,6 +5,7 @@ import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import axiosClient from '../services/axios';
 import ConfirmDialog from '../components/ConfirmDialog';
+import EditPackageDialog from '../components/EditPackageDialog';
 import LiveTracking from '../components/LiveTracking';
 import DeliveryLineChart from '@/charts/DeliverLineChart';
 import WeeklyBarChart from '@/charts/Weeklybarchart ';
@@ -12,7 +13,7 @@ import {
   Package, Plus, ChevronLeft, ChevronRight,
   MapPin, Calendar, Clock, DollarSign,
   ArrowRight, Search, Trash2, Shield, Star,
-  Download, Filter, MoreHorizontal, ArrowUpDown, CheckSquare, Eye
+  Download, Filter, MoreHorizontal, ArrowUpDown, CheckSquare, Eye, Pencil
 } from 'lucide-react';
 
 // ── helpers ───────────────────────────────────────────────────────
@@ -246,6 +247,7 @@ export default function SenderDashboard() {
   const [openMenuId, setOpenMenuId] = useState(null);
   // null | { type: 'single', id } | { type: 'bulk' }
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [editPackage, setEditPackage] = useState(null); // package being edited
   const menuRef = useRef(null);
   const itemsPerPage = 10;
 
@@ -839,6 +841,7 @@ export default function SenderDashboard() {
                             {paginatedPackages.map((pkg) => {
                               const s = statusOf(pkg);
                               const selected = selectedRows.includes(pkg.id);
+                              const isDelivered = activeStatus(pkg) === 'delivered';
                               return (
                                 <tr
                                   key={pkg.id}
@@ -918,6 +921,14 @@ export default function SenderDashboard() {
                                           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
                                         >
                                           <Eye size={14} /> Voir le détail
+                                        </button>
+                                        <button
+                                          onClick={() => { if (isDelivered) return; setOpenMenuId(null); setEditPackage(pkg); }}
+                                          disabled={isDelivered}
+                                          title={isDelivered ? 'Un colis livré ne peut plus être modifié' : undefined}
+                                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm ${isDelivered ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer'}`}
+                                        >
+                                          <Pencil size={14} /> Modifier
                                         </button>
                                         <button
                                           onClick={() => { setOpenMenuId(null); setConfirmDelete({ type: 'single', id: pkg.id }); }}
@@ -1002,6 +1013,20 @@ export default function SenderDashboard() {
           confirmDelete?.type === 'bulk'
             ? `Cette action est irréversible. ${selectedRows.length} colis seront définitivement supprimés.`
             : 'Cette action est irréversible. Ce colis sera définitivement supprimé.'
+        }
+      />
+
+      {/* Edit colis */}
+      <EditPackageDialog
+        open={!!editPackage}
+        pkg={editPackage}
+        onOpenChange={(o) => { if (!o) setEditPackage(null); }}
+        onSaved={(updated) =>
+          setData((prev) =>
+            prev
+              ? { ...prev, packages: prev.packages.map((p) => (p.id === updated.id ? { ...p, ...updated } : p)) }
+              : prev
+          )
         }
       />
     </div>

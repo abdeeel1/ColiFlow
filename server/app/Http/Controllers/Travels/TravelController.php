@@ -81,6 +81,14 @@ class TravelController extends Controller
         $credentials = $request->validated();
         $user = Auth::user();
 
+        // Suspended/banned members cannot publish travels.
+        if (in_array($user->status, ['suspended', 'banned'], true)) {
+            return response()->json([
+                'message' => 'Votre compte est suspendu. Vous ne pouvez pas publier de trajets. Veuillez contacter le support.',
+                'suspended' => true,
+            ], 403);
+        }
+
         if(!$user->is_traveler){
             return response()->json([
                 'message' => 'Non autorisé'

@@ -3,16 +3,22 @@ import FormStepOne from "@/components/sender-form/FormStepOne"
 import FormStepThree from "@/components/sender-form/FormStepThree"
 import FormStepTwo from "@/components/sender-form/FormStepTwo"
 import axiosClient from "@/services/axios"
+import SuspendedAccountDialog from "@/components/SuspendedAccountDialog"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckCircle, Circle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 import { toast } from "sonner"
 import z from "zod"
 
 const AddPackage = () => {
     const navigate = useNavigate()
+
+    const user = useSelector((state) => state.auth.user)
+    const isSuspended = user?.status === "suspended" || user?.status === "banned"
+    const [suspendedOpen, setSuspendedOpen] = useState(false)
 
     const nums = [1, 2, 3, 4]
 
@@ -35,6 +41,11 @@ const AddPackage = () => {
             toast.error(errorMessage)
         }
     }, [errorMessage])
+
+    // Suspended members can't reach the creation flow — show the alert on entry.
+    useEffect(() => {
+        if (isSuspended) setSuspendedOpen(true)
+    }, [isSuspended])
 
     const formSchema = z.object({
         colisName: z
@@ -103,6 +114,11 @@ const AddPackage = () => {
     const prevStep = () => setStep((prev) => prev - 1)
 
     const onSubmitData = async (data) => {
+        if (isSuspended) {
+            setSuspendedOpen(true)
+            return
+        }
+
         setLoding(true)
         setErrorMessage("")
         setSuccessMessage("")
@@ -143,6 +159,12 @@ const AddPackage = () => {
 
     return (
         <main className="min-h-screen p-4 md:p-8 xl:p-12 bg-slate-50">
+            <SuspendedAccountDialog
+                open={suspendedOpen}
+                onClose={() => navigate("/sender/dashboard")}
+                description="Votre compte a été suspendu. Vous ne pouvez pas créer de colis pour le moment."
+            />
+
             <div className="max-w-5xl mx-auto flex flex-col gap-6">
                 {/* Header */}
 

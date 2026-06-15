@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Travels;
 use App\Http\Controllers\Controller;
 use App\Models\Travel;
 use App\Models\TravelRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -262,6 +263,53 @@ class TravelerController extends Controller
             ],
             'history'  => $history,
             'upcoming' => $upcoming,
+        ]);
+    }
+
+    public function update(Request $request, Travel $travel)
+    {
+        if ($travel->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Non autorisé.'], 403);
+        }
+
+        // A finished trajet (departure date already passed) is locked.
+        if ($travel->departure_date && $travel->departure_date < now()) {
+            return response()->json(['message' => 'Un trajet terminé ne peut plus être modifié.'], 422);
+        }
+
+        $validated = $request->validate([
+            'from_city_id'          => ['sometimes', 'exists:cities,id', 'different:to_city_id'],
+            'to_city_id'            => ['sometimes', 'exists:cities,id'],
+            'departure_date'        => ['sometimes', 'date'],
+            'max_weight'            => ['sometimes', 'integer', 'min:1'],
+            'price'                 => ['sometimes', 'integer', 'min:1'],
+            'car_identifier'        => ['sometimes', 'string', 'max:255'],
+            'car_model'             => ['sometimes', 'string', 'max:255'],
+            'car_type'              => ['sometimes', 'in:voiture,moto,camionnette,petit_camion'],
+            'accepted_categories'   => ['sometimes', 'array', 'min:1'],
+            'accepted_categories.*' => ['string'],
+        ]);
+
+        // A travel can't carry less than the weight already committed to accepted colis.
+        if (array_key_exists('max_weight', $validated)) {
+            $usedWeight = $travel->travelRequests()
+                ->where('status', 'accepted')
+                ->with('package')
+                ->get()
+                ->sum(fn ($r) => $r->package?->package_size ?? 0);
+
+            if ($validated['max_weight'] < $usedWeight) {
+                return response()->json([
+                    'message' => "La capacité ne peut pas être inférieure au poids déjà accepté ({$usedWeight} kg).",
+                ], 422);
+            }
+        }
+
+        $travel->update($validated);
+
+        return response()->json([
+            'message' => 'Trajet mis à jour avec succès.',
+            'travel'  => $travel->fresh(['from_city', 'to_city']),
         ]);
     }
 

@@ -254,6 +254,11 @@ const Profile = () => {
     const VerificationIcon = verification.icon
     // Identity (CIN) and vehicle/documents are verified independently.
     const isVehicleVerified = user?.vehicle_verification === 'verified'
+    const isVehicleRejected = user?.vehicle_verification === 'rejected'
+    const isIdentityRejected = user?.statut_verification === 'rejected'
+    // Motifs the admin selected when rejecting (stored as a JSON array).
+    const identityRejectionReasons = user?.identity_rejection_reasons ?? []
+    const vehicleRejectionReasons = user?.vehicle_rejection_reasons ?? []
 
     const handleConnectGoogle = () => {
         window.location.href = 'http://localhost:8000/auth/google'
@@ -286,14 +291,35 @@ const Profile = () => {
                         {activeTab === 'vehicle' && (
                             <div className="flex flex-col gap-6">
 
-                                {/* Verification in-progress alert (hidden once verified) */}
-                                {!isVehicleVerified && (user?.vehicle_photo || user?.permis_document || user?.assurance_document) && (
+                                {/* Verification in-progress alert (hidden once verified or rejected) */}
+                                {!isVehicleVerified && !isVehicleRejected && (user?.vehicle_photo || user?.permis_document || user?.assurance_document) && (
                                     <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/50">
                                         <Clock3 className="text-amber-500" />
                                         <AlertTitle className="text-amber-800 dark:text-amber-300">Vérification en cours</AlertTitle>
                                         <AlertDescription className="text-amber-700/90 dark:text-amber-400/80">
                                             Vos documents (Permis, Assurance et Photo du véhicule) ont été reçus. Un administrateur les examine
                                             actuellement. Vous serez notifié par email dès que votre profil voyageur sera activé.
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
+
+                                {/* Rejection alert — lists the motifs the admin selected. */}
+                                {isVehicleRejected && (
+                                    <Alert variant="destructive" className="border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900/50">
+                                        <ShieldAlert className="text-red-500" />
+                                        <AlertTitle className="text-red-700 dark:text-red-300">Documents véhicule refusés</AlertTitle>
+                                        <AlertDescription className="text-red-600/90 dark:text-red-400/80">
+                                            Votre dossier véhicule a été refusé. Merci de corriger puis de renvoyer les documents concernés.
+                                            {vehicleRejectionReasons.length > 0 && (
+                                                <>
+                                                    <span className="block mt-2 font-semibold">Motif(s) :</span>
+                                                    <ul className="list-disc pl-5 mt-1 space-y-0.5">
+                                                        {vehicleRejectionReasons.map((reason, i) => (
+                                                            <li key={i}>{reason}</li>
+                                                        ))}
+                                                    </ul>
+                                                </>
+                                            )}
                                         </AlertDescription>
                                     </Alert>
                                 )}
@@ -513,6 +539,27 @@ const Profile = () => {
                                         <VerificationIcon className={verification.color} size={18} />
                                         <p className={`text-sm font-medium ${verification.color}`}>{verification.text}</p>
                                     </div>
+
+                                    {/* Rejection alert — lists the motifs the admin selected for the CIN. */}
+                                    {isIdentityRejected && (
+                                        <Alert variant="destructive" className="border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900/50 mb-4">
+                                            <CircleAlert className="text-red-500" />
+                                            <AlertTitle className="text-red-700 dark:text-red-300">Pièce d'identité refusée</AlertTitle>
+                                            <AlertDescription className="text-red-600/90 dark:text-red-400/80">
+                                                Merci de renvoyer votre CIN (lisible et en cours de validité).
+                                                {identityRejectionReasons.length > 0 && (
+                                                    <>
+                                                        <span className="block mt-2 font-semibold">Motif(s) :</span>
+                                                        <ul className="list-disc pl-5 mt-1 space-y-0.5">
+                                                            {identityRejectionReasons.map((reason, i) => (
+                                                                <li key={i}>{reason}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </>
+                                                )}
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
 
                                     <DropZone
                                         inputRef={documentInputRef}

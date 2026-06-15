@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import axiosClient from '../../services/axios';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import RejectReasonDialog from '../../components/RejectReasonDialog';
 import {
   Search, Filter, Download, Check, X, Eye,
   MoreHorizontal, ShieldCheck, ChevronRight,
@@ -30,8 +31,10 @@ export default function ValidationList() {
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [openMenuKey, setOpenMenuKey]   = useState(null);
   const [currentPage, setCurrentPage]   = useState(1);
-  // null | { action, scope: 'single', id, category } | { action, scope: 'bulk', items }
+  // approval confirm — null | { action, scope: 'single', id, category } | { action, scope: 'bulk', items }
   const [confirm, setConfirm] = useState(null);
+  // rejection modal — null | { scope: 'single', id, category } | { scope: 'bulk', items }
+  const [rejectTarget, setRejectTarget] = useState(null);
   const menuRef = useRef(null);
   const itemsPerPage = 10;
 
@@ -61,9 +64,10 @@ export default function ValidationList() {
     dossiers.filter((d) => keys.includes(d.key)).map((d) => ({ id: d.id, category: d.category }));
 
   // ── actions ────────────────────────────────────────────────────────────
-  const performSingle = async (action, id, category) => {
+  const performSingle = async (action, id, category, reasons) => {
     try {
-      const { data } = await axiosClient.patch(`/api/admin/validations/${id}/${action}`, { category });
+      const payload = action === 'reject' ? { category, reasons } : { category };
+      const { data } = await axiosClient.patch(`/api/admin/validations/${id}/${action}`, payload);
       setDossiers((prev) => prev.map((d) => (d.key === data.dossier.key ? data.dossier : d)));
       setSelectedKeys((prev) => prev.filter((k) => k !== `${id}-${category}`));
       toast.success(data.message);
@@ -72,10 +76,11 @@ export default function ValidationList() {
     }
   };
 
-  const performBulk = async (action, items) => {
+  const performBulk = async (action, items, reasons) => {
     if (!items.length) return;
     try {
-      const { data } = await axiosClient.patch('/api/admin/validations/bulk', { items, action });
+      const payload = action === 'reject' ? { items, action, reasons } : { items, action };
+      const { data } = await axiosClient.patch('/api/admin/validations/bulk', payload);
       toast.success(data.message);
       setSelectedKeys([]);
       load();
@@ -89,6 +94,14 @@ export default function ValidationList() {
     if (confirm.scope === 'bulk') await performBulk(confirm.action, confirm.items);
     else await performSingle(confirm.action, confirm.id, confirm.category);
     setConfirm(null);
+  };
+
+  // Reject (single or bulk) with the motifs picked in the modal.
+  const handleReject = async (reasons) => {
+    if (!rejectTarget) return;
+    if (rejectTarget.scope === 'bulk') await performBulk('reject', rejectTarget.items, reasons);
+    else await performSingle('reject', rejectTarget.id, rejectTarget.category, reasons);
+    setRejectTarget(null);
   };
 
   const handleExport = () => {
@@ -158,7 +171,7 @@ export default function ValidationList() {
 
         <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={() => setConfirm({ action: 'reject', scope: 'bulk', items: itemsFromKeys(selectedKeys) })}
+            onClick={() => setRejectTarget({ scope: 'bulk', items: itemsFromKeys(selectedKeys) })}
             disabled={!selectedKeys.length}
             className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 hover:border-red-300 hover:text-red-500 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
           >
@@ -311,7 +324,7 @@ export default function ValidationList() {
                             </button>
                           )}
                           {d.status !== 'rejete' && (
-                            <button onClick={() => { setOpenMenuKey(null); setConfirm({ action: 'reject', scope: 'single', id: d.id, category: d.category }); }} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 cursor-pointer">
+                            <button onClick={() => { setOpenMenuKey(null); setRejectTarget({ scope: 'single', id: d.id, category: d.category }); }} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 cursor-pointer">
                               <X size={14} /> Rejeter
                             </button>
                           )}
@@ -376,18 +389,17 @@ export default function ValidationList() {
         open={!!confirm}
         onOpenChange={(o) => { if (!o) setConfirm(null); }}
         onConfirm={handleConfirm}
-        title={
-          confirm?.action === 'approve'
-            ? (confirm?.scope === 'bulk' ? 'Approuver les dossiers ?' : 'Approuver ce dossier ?')
-            : (confirm?.scope === 'bulk' ? 'Rejeter les dossiers sélectionnés ?' : 'Rejeter ce dossier ?')
-        }
-        description={
-          confirm?.action === 'approve'
-            ? 'Le membre sera notifié. Une identité validée confirme le profil ; un véhicule validé autorise la publication de trajets.'
-            : 'Le membre sera notifié et devra renvoyer les documents concernés.'
-        }
-        confirmLabel={confirm?.action === 'approve' ? 'Approuver' : 'Rejeter'}
-        loadingLabel={confirm?.action === 'approve' ? 'Approbation…' : 'Rejet…'}
+        title={confirm?.scope === 'bulk' ? 'Approuver les dossiers ?' : 'Approuver ce dossier ?'}
+        description="Le membre sera notifié. Une identité validée confirme le profil ; un véhicule validé autorise la publication de trajets."
+        confirmLabel="Approuver"
+        loadingLabel="Approbation…"
+      />
+
+      {/* Rejection modal — admin must pick at least one motif before rejecting. */}
+      <RejectReasonDialog
+        open={!!rejectTarget}
+        onOpenChange={(o) => { if (!o) setRejectTarget(null); }}
+        onConfirm={handleReject}
       />
     </div>
   );

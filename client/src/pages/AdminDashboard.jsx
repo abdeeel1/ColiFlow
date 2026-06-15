@@ -6,6 +6,7 @@ import axiosClient from '../services/axios';
 import WeeklyBarChart from '@/charts/Weeklybarchart ';
 import ValidationList from './admin/ValidationList';
 import ValidationExam from './admin/ValidationExam';
+import MembersList from './admin/MembersList';
 import {
   Users, Package, DollarSign, Star, TrendingUp,
   ShieldCheck, AlertTriangle, Car, ChevronRight, Construction,
@@ -16,8 +17,7 @@ const PAGE_HEADER = {
   apercu:       { title: 'Tableau de Bord Administrateur', subtitle: 'Pilotez la plateforme ColiFlow : membres, logistique, finances et santé du système.' },
   documents:    { title: 'Vérification des Documents',     subtitle: 'Validez les pièces justificatives des nouveaux membres.' },
   vehicules:    { title: 'Approbation des Véhicules',       subtitle: 'Contrôlez et approuvez les véhicules des voyageurs.' },
-  expediteurs:  { title: 'Expéditeurs',                     subtitle: 'Gérez les comptes expéditeurs de la plateforme.' },
-  voyageurs:    { title: 'Voyageurs',                       subtitle: 'Gérez les comptes voyageurs de la plateforme.' },
+  membres:      { title: 'Gestion des Membres',             subtitle: 'Gérez les comptes utilisateurs, modérez les profils et surveillez l\'activité de la communauté ColiFlow.' },
   colis:        { title: 'Tous les Colis',                  subtitle: 'Vue globale de tous les colis en circulation.' },
   litiges:      { title: 'Litiges',                         subtitle: 'Résolvez les litiges entre expéditeurs et voyageurs.' },
   transactions: { title: 'Transactions',                    subtitle: 'Suivez les paiements et mouvements financiers.' },
@@ -165,8 +165,8 @@ export default function AdminDashboard() {
         <main className="grow">
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
-            {/* Title (the validation tab renders its own header) */}
-            {activeTab !== 'validation' && (
+            {/* Title (the validation & membres tabs render their own header) */}
+            {activeTab !== 'validation' && activeTab !== 'membres' && (
               <div className="sm:flex sm:justify-between sm:items-center mb-8">
                 <div>
                   <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold mb-1">
@@ -181,6 +181,9 @@ export default function AdminDashboard() {
             {activeTab === 'validation' && (
               dossier ? <ValidationExam /> : <ValidationList />
             )}
+
+            {/* ── GESTION DES MEMBRES ────────────────────────────────────── */}
+            {activeTab === 'membres' && <MembersList />}
 
             {/* Error State */}
             {activeTab === 'apercu' && error && (
@@ -366,7 +369,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
               )
-            ) : activeTab === 'validation' ? null : (
+            ) : (activeTab === 'validation' || activeTab === 'membres') ? null : (
               /* ── PLACEHOLDER for sections we'll build in the next steps ─── */
               <div className="flex flex-col bg-white dark:bg-gray-800 shadow-xs rounded-xl p-12 items-center gap-4 text-center">
                 <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">

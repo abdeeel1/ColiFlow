@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\ValidationController;
 use App\Http\Controllers\Cities\CityController;
 use App\Http\Controllers\Packages\PackageController;
@@ -13,9 +14,16 @@ use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    // A banned member is logged out so the SPA drops their session immediately.
+    if ($request->user()->status === 'banned') {
+        Auth::guard('web')->logout();
+        return response()->json(['message' => 'Votre compte a été banni.'], 403);
+    }
+
     return $request->user();
 });
 
@@ -26,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/packages', [PackageController::class, 'index']);
     Route::get('/packages/{package}', [PackageController::class, 'show']);
     Route::post('/packages', [PackageController::class, 'store']);
+    Route::patch('/packages/{package}', [PackageController::class, 'update']);
     Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 });
 
@@ -76,6 +85,13 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/admin/validations/{user}', [ValidationController::class, 'show']);
     Route::patch('/admin/validations/{user}/approve', [ValidationController::class, 'approve']);
     Route::patch('/admin/validations/{user}/reject', [ValidationController::class, 'reject']);
+
+    // Member management ("Gestion des Membres")
+    Route::get('/admin/members', [MemberController::class, 'index']);
+    Route::post('/admin/members', [MemberController::class, 'storeAdmin']);
+    Route::patch('/admin/members/{user}/role', [MemberController::class, 'updateRole']);
+    Route::patch('/admin/members/{user}/status', [MemberController::class, 'updateStatus']);
+    Route::delete('/admin/members/{user}', [MemberController::class, 'destroy']);
 });
 
 // Traveler dashboard
@@ -83,6 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/traveler/dashboard', [TravelerController::class, 'dashboard']);
     Route::get('/traveler/travels',   [TravelerController::class, 'travels']);
     Route::get('/traveler/gains',     [TravelerController::class, 'gains']);
+    Route::patch('/traveler/travels/{travel}',  [TravelerController::class, 'update']);
     Route::delete('/traveler/travels/{travel}', [TravelerController::class, 'destroy']);
 });
 

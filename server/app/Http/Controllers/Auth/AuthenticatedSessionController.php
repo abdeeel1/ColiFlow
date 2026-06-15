@@ -31,6 +31,15 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
+        // Banned members cannot sign in.
+        if ($user && $user->status === 'banned') {
+            Auth::logout();
+
+            return response()->json([
+                'message' => 'Votre compte a été banni. Contactez le support pour plus d\'informations.'
+            ], 403);
+        }
+
         return response()->noContent();
     }
 

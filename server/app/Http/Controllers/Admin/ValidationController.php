@@ -65,11 +65,13 @@ class ValidationController extends Controller
                 'has'      => (bool) $user->document_cin,
                 'status'   => $this->mapStatus($user->statut_verification),
                 'document' => $user->document_cin,
+                'rejection_reasons' => $user->identity_rejection_reasons ?? [],
             ],
 
             'vehicle' => [
                 'has'    => (bool) ($user->permis_document || $user->assurance_document || $user->vehicle_photo),
                 'status' => $this->mapStatus($user->vehicle_verification),
+                'rejection_reasons' => $user->vehicle_rejection_reasons ?? [],
                 'documents' => [
                     'permis'    => $user->permis_document,
                     'assurance' => $user->assurance_document,
@@ -98,7 +100,8 @@ class ValidationController extends Controller
     public function reject(User $user, Request $request)
     {
         $category = $this->category($request);
-        $this->setStatus($user, $category, 'rejected');
+        $reasons  = $this->reasons($request);
+        $this->setStatus($user, $category, 'rejected', $reasons);
 
         return response()->json([
             'message' => $category === 'identity' ? 'Identité rejetée.' : 'Véhicule rejeté.',
@@ -116,15 +119,19 @@ class ValidationController extends Controller
             'items.*.id'       => ['required', 'integer', 'exists:users,id'],
             'items.*.category' => ['required', 'in:identity,vehicle'],
             'action'           => ['required', 'in:approve,reject'],
+            'reasons'          => ['required_if:action,reject', 'array', 'min:1'],
+            'reasons.*'        => ['string', 'max:255'],
         ]);
 
-        $value = $validated['action'] === 'approve' ? 'verified' : 'rejected';
-        $count = 0;
+        $isReject = $validated['action'] === 'reject';
+        $value    = $isReject ? 'rejected' : 'verified';
+        $reasons  = $isReject ? array_values($validated['reasons'] ?? []) : [];
+        $count    = 0;
 
         foreach ($validated['items'] as $item) {
             $user = User::where('id', $item['id'])->where('role', '!=', 'admin')->first();
             if ($user) {
-                $this->setStatus($user, $item['category'], $value);
+                $this->setStatus($user, $item['category'], $value, $reasons);
                 $count++;
             }
         }
@@ -138,19 +145,24 @@ class ValidationController extends Controller
 
     // ── core ─────────────────────────────────────────────────────────────────
 
-    private function setStatus(User $user, string $category, string $value): void
+    private function setStatus(User $user, string $category, string $value, array $reasons = []): void
     {
+        // Reasons only persist for a rejection; approving clears any prior motif.
+        $rejectionReasons = $value === 'rejected' ? array_values($reasons) : null;
+
         if ($category === 'identity') {
             $user->statut_verification = $value;
+            $user->identity_rejection_reasons = $rejectionReasons;
         } else {
             $user->vehicle_verification = $value;
+            $user->vehicle_rejection_reasons = $rejectionReasons;
         }
         $user->save();
 
-        $this->notify($user, $category, $value);
+        $this->notify($user, $category, $value, $rejectionReasons ?? []);
     }
 
-    private function notify(User $user, string $category, string $value): void
+    private function notify(User $user, string $category, string $value, array $reasons = []): void
     {
         if ($value === 'verified') {
             $message = $category === 'identity'
@@ -159,9 +171,13 @@ class ValidationController extends Controller
             $title = $category === 'identity' ? 'Identité vérifiée ✅' : 'Véhicule validé 🚗';
             $type  = 'verification_approved';
         } else {
-            $message = $category === 'identity'
+            $base = $category === 'identity'
                 ? 'Votre pièce d\'identité n\'a pas pu être validée. Merci de la renvoyer (lisible et en cours de validité).'
                 : 'Vos documents véhicule n\'ont pas pu être validés. Merci de les renvoyer.';
+            // Append the selected motifs so the member knows what to fix.
+            $message = $reasons
+                ? $base . ' Motif(s) : ' . implode(' ', $reasons)
+                : $base;
             $title = $category === 'identity' ? 'Identité refusée ❌' : 'Véhicule refusé ❌';
             $type  = 'verification_rejected';
         }
@@ -171,7 +187,7 @@ class ValidationController extends Controller
             'type'    => $type,
             'title'   => $title,
             'message' => $message,
-            'data'    => ['category' => $category, 'status' => $value],
+            'data'    => ['category' => $category, 'status' => $value, 'reasons' => $reasons],
         ]);
     }
 
@@ -182,6 +198,17 @@ class ValidationController extends Controller
         return $request->validate([
             'category' => ['required', 'in:identity,vehicle'],
         ])['category'];
+    }
+
+    /**
+     * The motifs the admin selected in the rejection modal (at least one).
+     */
+    private function reasons(Request $request): array
+    {
+        return array_values($request->validate([
+            'reasons'   => ['required', 'array', 'min:1'],
+            'reasons.*' => ['string', 'max:255'],
+        ])['reasons']);
     }
 
     private function rowPayload(User $u, string $category): array

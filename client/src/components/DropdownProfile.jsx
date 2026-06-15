@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Transition from '../utils/Transition'
 
 import UserAvatar from '../images/user-avatar-32.png'
 import { useDispatch, useSelector } from 'react-redux'
 import axiosClient from '@/services/axios'
 import { logout } from '@/store/slices/authSlice'
+import { ShieldCheck, LayoutDashboard, ShieldCheckIcon } from 'lucide-react'
 
 function DropdownProfile({ align }) {
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -15,9 +16,12 @@ function DropdownProfile({ align }) {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const { pathname } = useLocation()
 
     const { user, isAuth } = useSelector((state) => state.auth)
     const isTraveler = user?.is_traveler
+    const isAdmin = user?.role === 'admin'
+    const onAdminSpace = pathname.startsWith('/admin')
 
 
     if (!user) return null
@@ -117,6 +121,29 @@ function DropdownProfile({ align }) {
                         </div>
                     </div>
                     <ul>
+                        {/* Admin-only space toggle — switch between the user dashboard
+                            and the admin dashboard (only rendered for admins). */}
+                        {isAdmin && (
+                            <li>
+                                <Link
+                                    className="font-medium text-sm text-[#0984E3] hover:text-blue-600 flex items-center gap-2 py-1 px-3"
+                                    to={onAdminSpace ? (isTraveler ? '/traveler/dashboard' : '/sender/dashboard') : '/admin/dashboard'}
+                                    onClick={() => setDropdownOpen(false)}
+                                >
+                                    {onAdminSpace ? (
+                                        <>
+                                            
+                                            Espace Utilisateur
+                                        </>
+                                    ) : (
+                                        <>
+                                            
+                                            Espace Administrateur
+                                        </>
+                                    )}
+                                </Link>
+                            </li>
+                        )}
                         <li>
                             <Link
                                 className="font-medium text-sm text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-400 flex items-center py-1 px-3"
