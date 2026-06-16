@@ -53,7 +53,7 @@ function TravelerSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   // active conditions
   const isHome       = pathname === "/traveler/dashboard" && (!activeTab || activeTab === "apercu");
   const isTrajets    = pathname === "/travels/create" || (pathname === "/traveler/dashboard" && activeTab === "trajets");
-  const isColis      = pathname === "/traveler/dashboard" && (activeTab === "demandes" || activeTab === "livraisons");
+  const isColis      = pathname === "/traveler/dashboard" && (activeTab === "demandes" || activeTab === "livraisons" || activeTab === "reclamations" || activeTab === "evaluations");
   const isPortefeuille = pathname === "/traveler/dashboard" && activeTab === "gains";
   const isMessages   = pathname === "/messages";
   const isSettings   = pathname === "/profile";
@@ -271,6 +271,34 @@ function TravelerSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                           >
                             <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                               Livraison en cours
+                            </span>
+                          </NavLink>
+                        </li>
+                        <li className="mb-1 last:mb-0">
+                          <NavLink
+                            end
+                            to="/traveler/dashboard?tab=reclamations"
+                            className={() =>
+                              "block transition duration-150 truncate " +
+                              (activeTab === "reclamations" ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                            }
+                          >
+                            <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                              Mes Réclamations
+                            </span>
+                          </NavLink>
+                        </li>
+                        <li className="mb-1 last:mb-0">
+                          <NavLink
+                            end
+                            to="/traveler/dashboard?tab=evaluations"
+                            className={() =>
+                              "block transition duration-150 truncate " +
+                              (activeTab === "evaluations" ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                            }
+                          >
+                            <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                              Mes Évaluations
                             </span>
                           </NavLink>
                         </li>

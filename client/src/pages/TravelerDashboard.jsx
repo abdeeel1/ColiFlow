@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
+import { motion as Motion, AnimatePresence } from 'motion/react';
 import {
   Plane, Package, DollarSign, Star,
   MapPin, Inbox, ShieldCheck, Crown, CheckCircle,
@@ -20,6 +21,8 @@ import axiosClient from '../services/axios';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EditTravelDialog from '../components/EditTravelDialog';
 import BarcodeScannerModal from '../ui/BarcodeScannerModal';
+import ReclamationsPanel from '../components/reclamations/ReclamationsPanel';
+import RatingsPanel from '../components/ratings/RatingsPanel';
 
 // ── status config ──────────────────────────────────────────────────────────────
 
@@ -54,6 +57,8 @@ const PAGE_HEADER = {
   demandes:   { title: 'Demandes de Réservation',  subtitle: 'Gérez les demandes des expéditeurs pour vos trajets. Acceptez les colis qui correspondent à votre capacité libre.' },
   livraisons: { title: 'Livraisons en Cours',      subtitle: 'Gérez et confirmez vos livraisons actives. Suivez l\'état de chaque colis en temps réel.' },
   gains:      { title: 'Gains et Retraits',         subtitle: 'Suivez vos revenus, consultez votre historique et gérez vos retraits ColiFlow.' },
+  reclamations: { title: 'Mes Réclamations',        subtitle: 'Signalez un problème sur une livraison (colis non remis, contenu suspect, retard…) et suivez son traitement.' },
+  evaluations:  { title: 'Mes Évaluations',          subtitle: 'Notez les expéditeurs après chaque livraison et consultez les avis reçus.' },
 };
 
 const SIZE_LABEL = { 1: '< 1 kg', 2: '1 – 5 kg', 3: '5 – 15 kg', 4: '+ 15 kg' };
@@ -247,6 +252,14 @@ export default function TravelerDashboard() {
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState(null);
 
+  // platform commission (configurable from admin "Configuration Système")
+  const [commissionRate, setCommissionRate] = useState(10);
+  useEffect(() => {
+    axiosClient.get('/api/app-config')
+      .then((r) => { const c = Number(r.data?.platform_commission); if (!Number.isNaN(c)) setCommissionRate(c); })
+      .catch(() => {});
+  }, []);
+
   // ── trajets state
   const [travels, setTravels]           = useState([]);
   const [travelsLoading, setTravelsLoading] = useState(false);
@@ -275,6 +288,7 @@ export default function TravelerDashboard() {
   const [demandesDateTo, setDemandesDateTo]   = useState('');
   const [demandesPage, setDemandesPage]       = useState(1);
   const [demandesPerPage, setDemandesPerPage] = useState(13);
+  const [detailReq, setDetailReq]             = useState(null); // demande affichée dans le modal "Voir détails"
   const [actionLoading, setActionLoading]     = useState({});
 
   // ── livraisons state
@@ -353,7 +367,7 @@ export default function TravelerDashboard() {
       await axiosClient.post(`/api/travel-requests/${id}/verify-code`, { code });
       setDemandesData(prev => prev.map(r => r.id === id ? { ...r, status: 'in_transit' } : r));
       setConfirmCodes(prev => { const n = { ...prev }; delete n[id]; return n; });
-      toast.success('Code validé. Livraison en cours 🚚');
+      toast.success('Code validé. Livraison en cours');
     } catch (err) {
       toast.error(err?.response?.data?.message ?? 'Code incorrect.');
     } finally {
@@ -433,7 +447,7 @@ export default function TravelerDashboard() {
             lastPostRef.current = Date.now();
             setSharingIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
             startWatch();
-            toast.success('Partage de position activé 📍', { id: `geo-${id}` });
+            toast.success('Partage de position activé', { id: `geo-${id}` });
           } catch (e) {
             toast.error(e?.response?.data?.message ?? 'Échec de l\'envoi de la position au serveur.', { id: `geo-${id}` });
           }
@@ -441,7 +455,7 @@ export default function TravelerDashboard() {
         (err) => {
           toast.error(
             err.code === 1
-              ? 'Permission de localisation refusée. Autorisez la localisation pour ce site (icône 🔒 dans la barre d\'adresse).'
+              ? 'Permission de localisation refusée. Autorisez la localisation pour ce site (icône de cadenas dans la barre d\'adresse).'
               : err.code === 3
               ? 'Délai de localisation dépassé. Réessayez.'
               : 'Position indisponible pour le moment.',
@@ -467,7 +481,7 @@ export default function TravelerDashboard() {
           watchIdRef.current = null;
         }
       }
-      toast.success('Livraison confirmée ✓');
+      toast.success('Livraison confirmée');
     } catch (err) {
       toast.error(err?.response?.data?.message ?? 'Erreur lors de la confirmation.');
     } finally {
@@ -729,7 +743,7 @@ export default function TravelerDashboard() {
                     <div className="text-xs text-gray-400">Confirmées</div>
                   </div>
                 </div>
-              ) : activeTab !== 'trajets' ? (
+              ) : activeTab !== 'trajets' && activeTab !== 'reclamations' && activeTab !== 'evaluations' ? (
                 <button
                   onClick={() => navigate('/travels/create')}
                   className="flex items-center gap-2 bg-[#0984E3] hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition mt-4 sm:mt-0 active:scale-95 shadow-sm cursor-pointer"
@@ -739,6 +753,12 @@ export default function TravelerDashboard() {
                 </button>
               ) : null}
             </div>
+
+            {/* ── RÉCLAMATIONS TAB ────────────────────────────────────── */}
+            {activeTab === 'reclamations' && <ReclamationsPanel role="traveler" />}
+
+            {/* ── ÉVALUATIONS TAB ─────────────────────────────────────── */}
+            {activeTab === 'evaluations' && <RatingsPanel role="traveler" />}
 
             {/* ── APERÇU TAB ──────────────────────────────────────────── */}
             {activeTab === 'apercu' && (
@@ -1493,7 +1513,7 @@ export default function TravelerDashboard() {
                           const pkgName    = req.package?.package_name ?? '-';
                           const pkgSize    = req.package?.package_size;
                           const pkgPrice   = Number(req.package?.price ?? 0);
-                          const commission = Math.round(pkgPrice * 0.1) || 10;
+                          const commission = Math.round(pkgPrice * (commissionRate / 100));
                           const gainNet    = pkgPrice - commission;
                           const pkgImage   = req.package?.images?.[0]?.path ?? null;
                           const toCity     = req.travel?.to_city?.name ?? req.package?.to_city?.name ?? '-';
@@ -1811,7 +1831,7 @@ export default function TravelerDashboard() {
                         <table className="table-auto w-full text-sm">
                           <thead className="bg-gray-50 dark:bg-gray-700/30 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                             <tr>
-                              {['Reçu le', 'Expéditeur', 'Colis', 'Trajet', 'Poids & Prix', 'Décision'].map(col => (
+                              {['Reçu le', 'Expéditeur', 'Note', 'Colis', 'Trajet', 'Poids & Prix', 'Décision'].map(col => (
                                 <th key={col} className="px-4 py-3.5 text-left font-semibold whitespace-nowrap">{col}</th>
                               ))}
                               <th className="px-4 py-3.5 w-10" />
@@ -1859,6 +1879,22 @@ export default function TravelerDashboard() {
                                       />
                                       <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{sName}</span>
                                     </div>
+                                  </td>
+
+                                  {/* Note (rating de l'expéditeur) */}
+                                  <td className="px-4 py-3 whitespace-nowrap">
+                                    {req.sender?.ratings_avg != null ? (
+                                      <span className="inline-flex items-center gap-1 text-sm">
+                                        <Star size={13} className="text-[#F39C12]" fill="#F39C12" />
+                                        <span className="font-semibold text-gray-700 dark:text-gray-200">{Number(req.sender.ratings_avg).toFixed(1)}</span>
+                                        <span className="text-xs text-gray-400">({req.sender.ratings_count ?? 0})</span>
+                                      </span>
+                                    ) : (
+                                      <span className="inline-flex items-center gap-1 text-xs text-gray-400">
+                                        <Star size={13} className="text-gray-300" />
+                                        Nouveau
+                                      </span>
+                                    )}
                                   </td>
 
                                   {/* Colis */}
@@ -1932,7 +1968,11 @@ export default function TravelerDashboard() {
 
                                   {/* Eye icon */}
                                   <td className="px-4 py-3">
-                                    <button className="p-1.5 rounded-lg text-gray-400 hover:text-[#0984E3] hover:bg-blue-50 dark:hover:bg-blue-950/20 transition opacity-0 group-hover:opacity-100 cursor-pointer">
+                                    <button
+                                      onClick={() => setDetailReq(req)}
+                                      title="Voir les détails"
+                                      className="p-1.5 rounded-lg text-gray-400 hover:text-[#0984E3] hover:bg-blue-50 dark:hover:bg-blue-950/20 transition opacity-0 group-hover:opacity-100 cursor-pointer"
+                                    >
                                       <Eye size={16} />
                                     </button>
                                   </td>
@@ -1942,7 +1982,7 @@ export default function TravelerDashboard() {
 
                             {filteredDemandes.length === 0 && (
                               <tr>
-                                <td colSpan="7" className="text-center py-16 text-gray-400 dark:text-gray-500">
+                                <td colSpan="8" className="text-center py-16 text-gray-400 dark:text-gray-500">
                                   <Package size={36} className="mx-auto mb-3 opacity-30" />
                                   <p className="font-semibold">Aucune demande</p>
                                   <p className="text-xs mt-1">
@@ -2055,6 +2095,209 @@ export default function TravelerDashboard() {
         onOpenChange={(o) => { if (!o) setEditTravelId(null); }}
         onSaved={() => fetchTravels()}
       />
+
+      {/* Détails d'une demande reçue */}
+      <DemandeDetailModal
+        request={detailReq ? (demandesData.find(r => r.id === detailReq.id) ?? detailReq) : null}
+        commissionRate={commissionRate}
+        actionLoading={actionLoading}
+        onClose={() => setDetailReq(null)}
+        onDecision={handleDecision}
+      />
     </div>
+  );
+}
+
+// ── Modal: détails d'une demande reçue ──────────────────────────────────────────
+function DemandeDetailModal({ request, commissionRate, actionLoading, onClose, onDecision }) {
+  const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+
+  // Fermer avec la touche Échap
+  useEffect(() => {
+    if (!request) return;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [request, onClose]);
+
+  if (!request) return null;
+
+  const req       = request;
+  const sName     = req.sender?.first_name && req.sender?.last_name
+    ? `${req.sender.first_name} ${req.sender.last_name}`
+    : req.sender?.name ?? 'Expéditeur';
+  const fromCity  = req.travel?.from_city?.name ?? '-';
+  const toCity    = req.travel?.to_city?.name ?? req.package?.to_city?.name ?? '-';
+  const pkgName   = req.package?.package_name ?? '-';
+  const pkgCat    = req.package?.category ?? '-';
+  const pkgSize   = req.package?.package_size;
+  const pkgPrice  = Number(req.package?.price ?? 0);
+  const pkgImage  = req.package?.images?.[0]?.path ?? null;
+  const colisRef  = `EL-${String(req.package?.id ?? 0).padStart(7, '0')}`;
+  const commission = Math.round(pkgPrice * (commissionRate / 100));
+  const gainNet    = pkgPrice - commission;
+
+  const d         = new Date(req.created_at);
+  const recuLe    = `${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+
+  const statusBadge = {
+    pending:    { label: 'En attente', cls: 'bg-orange-100 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400', dot: 'bg-orange-500' },
+    accepted:   { label: 'Confirmé',   cls: 'bg-green-100 text-green-600 dark:bg-green-950/20 dark:text-green-400',     dot: 'bg-green-500' },
+    in_transit: { label: 'En transit', cls: 'bg-blue-100 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400',        dot: 'bg-blue-500' },
+    delivered:  { label: 'Livré',      cls: 'bg-green-100 text-green-600 dark:bg-green-950/20 dark:text-green-400',     dot: 'bg-green-500' },
+    rejected:   { label: 'Refusé',     cls: 'bg-red-100 text-red-500 dark:bg-red-950/20 dark:text-red-400',            dot: 'bg-red-500' },
+  }[req.status] ?? { label: req.status, cls: 'bg-gray-100 text-gray-500', dot: 'bg-gray-400' };
+
+  const isAccepting = actionLoading[req.id] === 'accepted';
+  const isRejecting = actionLoading[req.id] === 'rejected';
+
+  return (
+    <AnimatePresence>
+      <Motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+      >
+        <Motion.div
+          className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700/60"
+          initial={{ opacity: 0, y: 24, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 24, scale: 0.97 }}
+          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4 px-6 pt-5 pb-4 border-b border-gray-100 dark:border-gray-700/40">
+            <div>
+              <h3 className="text-base font-bold text-gray-800 dark:text-gray-100">Détails de la demande</h3>
+              <p className="text-xs text-gray-400 mt-0.5">{colisRef} · Reçu le {recuLe}</p>
+            </div>
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold shrink-0 ${statusBadge.cls}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${statusBadge.dot}`} />
+              {statusBadge.label}
+            </span>
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <div className="p-6 flex flex-col gap-6">
+
+            {/* Expéditeur */}
+            <div>
+              <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Expéditeur</h4>
+              <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4">
+                <img
+                  src={req.sender?.profile_picture
+                    ? req.sender.profile_picture
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(sName)}&background=0984E3&color=fff`}
+                  alt={sName}
+                  className="w-11 h-11 rounded-full object-cover shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate">{sName}</p>
+                  <p className="text-xs text-gray-400 flex items-center gap-1.5 mt-0.5">
+                    <Phone size={12} className="shrink-0" />
+                    {req.sender?.phone ?? 'Non renseigné'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Colis */}
+            <div>
+              <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Colis</h4>
+              <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4">
+                {pkgImage ? (
+                  <img
+                    src={`http://localhost:8000/storage/${pkgImage}`}
+                    alt={pkgName}
+                    className="w-14 h-14 rounded-xl object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-14 h-14 rounded-xl bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center shrink-0">
+                    <Package size={24} className="text-[#0984E3]" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 truncate">{pkgName}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{pkgCat}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {SIZE_LABEL[Math.round(pkgSize)] ?? (pkgSize ? `${pkgSize} kg` : '-')}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Trajet */}
+            <div>
+              <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Trajet</h4>
+              <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4 text-sm font-medium text-gray-700 dark:text-gray-200">
+                <MapPin size={15} className="text-[#0984E3] shrink-0" />
+                <span className="capitalize">{fromCity}</span>
+                <ArrowRight size={14} className="text-gray-300 shrink-0" />
+                <span className="capitalize">{toCity}</span>
+              </div>
+            </div>
+
+            {/* Note de l'expéditeur */}
+            {req.message && (
+              <div>
+                <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Note de l'expéditeur</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300 italic bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4">
+                  « {req.message} »
+                </p>
+              </div>
+            )}
+
+            {/* Gains */}
+            <div>
+              <h4 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Gains du voyageur</h4>
+              <div className="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4 flex flex-col gap-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400">Prix du colis</span>
+                  <span className="text-gray-700 dark:text-gray-200 font-medium">{pkgPrice.toLocaleString('fr-MA')} MAD</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400">Commission ({commissionRate}%)</span>
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">- {commission.toLocaleString('fr-MA')} MAD</span>
+                </div>
+                <div className="flex items-center justify-between border-t border-gray-200 dark:border-gray-600/40 pt-2 mt-1">
+                  <span className="text-gray-600 dark:text-gray-300 font-semibold">Gain net</span>
+                  <span className="text-[#0984E3] font-bold">{gainNet.toLocaleString('fr-MA')} MAD</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer — décision si en attente */}
+          {req.status === 'pending' && (
+            <div className="flex items-center gap-3 px-6 py-4 border-t border-gray-100 dark:border-gray-700/40 sticky bottom-0 bg-white dark:bg-gray-800">
+              <button
+                onClick={() => onDecision(req.id, 'rejected')}
+                disabled={isAccepting || isRejecting}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-bold rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 hover:border-red-500 disabled:opacity-50 transition cursor-pointer"
+              >
+                {isRejecting ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : <X size={15} />}
+                Refuser
+              </button>
+              <button
+                onClick={() => onDecision(req.id, 'accepted')}
+                disabled={isAccepting || isRejecting}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-bold rounded-xl bg-green-50 text-green-600 hover:bg-green-500 hover:text-white border border-green-200 hover:border-green-500 disabled:opacity-50 transition cursor-pointer"
+              >
+                {isAccepting ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : <Check size={15} />}
+                Accepter
+              </button>
+            </div>
+          )}
+        </Motion.div>
+      </Motion.div>
+    </AnimatePresence>
   );
 }

@@ -17,7 +17,7 @@ function Sidebar({
   const isSearchActive = pathname.startsWith("/travels") || pathname.startsWith("/travel/") || pathname === "/favoris";
 
   const activeTab = new URLSearchParams(location.search).get("tab");
-  const isExpeditionActive = pathname === "/packages/create" || (pathname === "/sender/dashboard" && (activeTab === "expedition" || activeTab === "suivi"));
+  const isExpeditionActive = pathname === "/packages/create" || (pathname === "/sender/dashboard" && (activeTab === "expedition" || activeTab === "suivi" || activeTab === "reclamations" || activeTab === "evaluations"));
 
   const trigger = useRef(null);
   const sidebar = useRef(null);
@@ -233,6 +233,32 @@ function Sidebar({
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                                 Suivi en direct
+                              </span>
+                            </NavLink>
+                          </li>
+                          <li className="mb-1 last:mb-0">
+                            <NavLink
+                              end
+                              to="/sender/dashboard?tab=reclamations"
+                              className={() =>
+                                "block transition duration-150 truncate " + (pathname === "/sender/dashboard" && new URLSearchParams(location.search).get("tab") === "reclamations" ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                              }
+                            >
+                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                Mes Réclamations
+                              </span>
+                            </NavLink>
+                          </li>
+                          <li className="mb-1 last:mb-0">
+                            <NavLink
+                              end
+                              to="/sender/dashboard?tab=evaluations"
+                              className={() =>
+                                "block transition duration-150 truncate " + (pathname === "/sender/dashboard" && new URLSearchParams(location.search).get("tab") === "evaluations" ? "text-[#0984E3]" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
+                              }
+                            >
+                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                Mes Évaluations
                               </span>
                             </NavLink>
                           </li>

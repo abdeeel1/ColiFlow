@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  Home, ShieldCheck, Users, Boxes, Wallet, Settings,
+  Home, ShieldCheck, Users, Boxes, Wallet, Settings, MessageSquareWarning,
 } from "lucide-react";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 
@@ -52,8 +52,9 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   const isHome       = pathname === "/admin/dashboard" && (!activeTab || activeTab === "apercu");
   const isValidation = pathname === "/admin/dashboard" && activeTab === "validation";
   const isMembres    = pathname === "/admin/dashboard" && activeTab === "membres";
-  const isLogistique = pathname === "/admin/dashboard" && (activeTab === "colis" || activeTab === "litiges");
+  const isLogistique = pathname === "/admin/dashboard" && (activeTab === "trajets" || activeTab === "colis");
   const isFinances   = pathname === "/admin/dashboard" && (activeTab === "transactions" || activeTab === "commissions");
+  const isReclamations = pathname === "/admin/dashboard" && activeTab === "reclamations";
   const isConfig     = pathname === "/admin/dashboard" && activeTab === "config";
 
   // ── reusable bits matching the sender/traveler sidebar pattern ───────────
@@ -64,9 +65,9 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   );
 
   const Chevron = ({ open }) => (
-    <div className="flex shrink-0 ml-2">
+    <div className="flex shrink-0 ml-2 lg:hidden lg:sidebar-expanded:flex 2xl:flex items-center">
       <svg
-        className={`w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500 transition-transform ${open ? "rotate-180" : ""}`}
+        className={`w-3 h-3 shrink-0 fill-current text-gray-400 dark:text-gray-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         viewBox="0 0 12 12"
       >
         <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
@@ -75,7 +76,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
   );
 
   const GroupLabel = ({ label }) => (
-    <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+    <span className="text-sm font-medium ml-4 truncate lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
       {label}
     </span>
   );
@@ -160,7 +161,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                       onClick={(e) => { e.preventDefault(); handleClick(); setSidebarExpanded(true); }}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center min-w-0">
                           <IconWrap active={isHome}><Home size={16} /></IconWrap>
                           <GroupLabel label="Home" />
                         </div>
@@ -186,7 +187,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                       onClick={(e) => { e.preventDefault(); handleClick(); setSidebarExpanded(true); }}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center min-w-0">
                           <IconWrap active={isValidation}><ShieldCheck size={16} /></IconWrap>
                           <GroupLabel label="Centre de Validation" />
                         </div>
@@ -212,7 +213,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                       onClick={(e) => { e.preventDefault(); handleClick(); setSidebarExpanded(true); }}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center min-w-0">
                           <IconWrap active={isMembres}><Users size={16} /></IconWrap>
                           <GroupLabel label="Gestion des Membres" />
                         </div>
@@ -238,7 +239,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                       onClick={(e) => { e.preventDefault(); handleClick(); setSidebarExpanded(true); }}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center min-w-0">
                           <IconWrap active={isLogistique}><Boxes size={16} /></IconWrap>
                           <GroupLabel label="Logistique Globale" />
                         </div>
@@ -247,8 +248,8 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                     </a>
                     <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
                       <ul className={`pl-8 mt-3 flex flex-col gap-2 ${!open && "hidden"}`}>
-                        <SubLink to="/admin/dashboard?tab=colis" label="Tous les Colis" active={activeTab === "colis"} />
-                        <SubLink to="/admin/dashboard?tab=litiges" label="Litiges" active={activeTab === "litiges"} />
+                        <SubLink to="/admin/dashboard?tab=trajets" label="Trajets en Circulation" active={activeTab === "trajets"} />
+                        <SubLink to="/admin/dashboard?tab=colis" label="Suivi des Livraisons" active={activeTab === "colis"} />
                       </ul>
                     </div>
                   </>
@@ -265,7 +266,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                       onClick={(e) => { e.preventDefault(); handleClick(); setSidebarExpanded(true); }}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center min-w-0">
                           <IconWrap active={isFinances}><Wallet size={16} /></IconWrap>
                           <GroupLabel label="Finances & Commissions" />
                         </div>
@@ -282,6 +283,32 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                 )}
               </SidebarLinkGroup>
 
+              {/* ── RÉCLAMATIONS ──────────────────────────────────────── */}
+              <SidebarLinkGroup activecondition={isReclamations}>
+                {(handleClick, open) => (
+                  <>
+                    <a
+                      href="#0"
+                      className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${!isReclamations && "hover:text-gray-900 dark:hover:text-white"}`}
+                      onClick={(e) => { e.preventDefault(); handleClick(); setSidebarExpanded(true); }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center min-w-0">
+                          <IconWrap active={isReclamations}><MessageSquareWarning size={16} /></IconWrap>
+                          <GroupLabel label="Réclamations" />
+                        </div>
+                        <Chevron open={open} />
+                      </div>
+                    </a>
+                    <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                      <ul className={`pl-8 mt-3 ${!open && "hidden"}`}>
+                        <SubLink to="/admin/dashboard?tab=reclamations" label="Litiges & Réclamations" active={isReclamations} />
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </SidebarLinkGroup>
+
               {/* ── CONFIGURATION SYSTÈME ─────────────────────────────── */}
               <SidebarLinkGroup activecondition={isConfig}>
                 {(handleClick, open) => (
@@ -292,7 +319,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
                       onClick={(e) => { e.preventDefault(); handleClick(); setSidebarExpanded(true); }}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center min-w-0">
                           <IconWrap active={isConfig}><Settings size={16} /></IconWrap>
                           <GroupLabel label="Configuration Système" />
                         </div>

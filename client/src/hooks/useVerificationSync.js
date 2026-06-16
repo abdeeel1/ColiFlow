@@ -26,7 +26,7 @@ export default function useVerificationSync(intervalMs = 15000) {
 
     const announce = (track, status) => {
       if (status === "verified") {
-        toast.success(track === "identity" ? "Votre identité a été vérifiée ✅" : "Votre véhicule a été validé 🚗");
+        toast.success(track === "identity" ? "Votre identité a été vérifiée" : "Votre véhicule a été validé");
       } else if (status === "rejected") {
         toast.error(
           track === "identity"

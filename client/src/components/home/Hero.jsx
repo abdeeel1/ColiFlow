@@ -5,9 +5,13 @@ import { useGSAP } from "@gsap/react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { ScrollTrigger } from "gsap/all"
+import { useSelector } from "react-redux"
 
 const Hero = () => {
     const { t } = useTranslation()
+
+    const { user } = useSelector((state) => state.auth)
+    const isTraveler = user?.is_traveler
 
     const tl = gsap.timeline()
 
@@ -88,14 +92,14 @@ const Hero = () => {
                 </div>
 
                 <div id="cta-buttons" className="flex gap-4">
-                    <Link to={"/travels"}>
+                    <Link to={isTraveler ? "/traveler/dashboard?tab=demandes" : "/travels"}>
                         <button className="btn btn-ghost hover:border-[#0984E3]  bg-[#0984E3] rounded-2xl text-white font-bold btn-sm lg:btn-md">
-                            {t("Trouver un trajet")}
+                            {isTraveler ? t("Trouver un colis") : t("Trouver un trajet")}
                         </button>
                     </Link>
-                    <Link to={"/travels/create"}>
+                    <Link to={isTraveler ? "/travels/create" : "/packages/create"}>
                         <button className="btn btn-ghost hover:border-[#c7c9caf6]  bg-[#c7c9caf6] rounded-2xl text-gray-500 font-bold btn-sm lg:btn-md">
-                            {t("Publier un trajet")}
+                            {isTraveler ? t("Publier un trajet") : t("Publier un colis")}
                         </button>
                     </Link>
                 </div>

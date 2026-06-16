@@ -64,6 +64,29 @@ const SkeletonCard = ({ className = '' }) => (
     </div>
 )
 
+// Traveler's average received rating (shows "Nouveau" until first rated).
+const TravelerRating = ({ user }) => {
+    const avg = user?.ratings_avg != null ? Number(user.ratings_avg) : null
+    const count = user?.ratings_count ?? 0
+
+    if (!avg) {
+        return (
+            <span className="flex items-center gap-1 text-[0.8rem] text-gray-400 mt-0.5">
+                <Star size={13} className="text-gray-300" />
+                Nouveau
+            </span>
+        )
+    }
+
+    return (
+        <span className="flex items-center gap-1 text-[0.8rem] text-gray-500 mt-0.5">
+            <Star size={13} className="text-[#F39C12]" fill="#F39C12" />
+            <span className="font-semibold text-gray-700">{avg.toFixed(1)}</span>
+            <span className="text-gray-400">({count})</span>
+        </span>
+    )
+}
+
 const TravelsList = () => {
     const { user, isAuth } = useSelector((state) => state.auth)
 
@@ -528,6 +551,7 @@ const TravelsList = () => {
                                                     />
                                                 )}
                                             </p>
+                                            <TravelerRating user={travel.user} />
                                         </div>
 
                                         <div>

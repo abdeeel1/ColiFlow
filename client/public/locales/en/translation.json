@@ -17,6 +17,8 @@
     "Simplicité": "Simplicity",
     "La première plateforme P2P de livraison au Maroc": "Morocco's first peer-to-peer delivery platform",
     "Trouver un trajet": "Find a route",
+    "Trouver un colis": "Find a package",
+    "Publier un colis": "Post a package",
     "features": {
         "step1": {
             "title": "Post your listing",

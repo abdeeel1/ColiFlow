@@ -60,10 +60,14 @@ class TravelerController extends Controller
             $weeklyCounts[] = (int) ($weeklyRaw[$key]->count ?? 0);
         }
 
-        // Rating history — static 5.0 per delivery until rating system exists
-        $pkgCount      = $acceptedRequests->count();
-        $ratingHistory = $pkgCount > 0
-            ? array_fill(0, min($pkgCount, 10), 5.0)
+        // Ratings received by this traveler (from senders).
+        $myRatings = \App\Models\Rating::where('ratee_id', $user->id)
+            ->latest()
+            ->get();
+        $avgRating = $myRatings->count() ? round((float) $myRatings->avg('stars'), 1) : 5.0;
+        // Rating history (chronological, last 10) for the line chart.
+        $ratingHistory = $myRatings->count()
+            ? $myRatings->reverse()->take(-10)->pluck('stars')->map(fn ($s) => (float) $s)->values()->all()
             : [5.0, 5.0];
 
         // Next steps: pending requests + latest travel to verify
@@ -104,7 +108,7 @@ class TravelerController extends Controller
             'packages_transported' => $pkgCount,
             'total_revenue'        => $totalRevenue,
             'this_week_revenue'    => $thisWeekRevenue,
-            'rating'               => 5.0,
+            'rating'               => $avgRating,
             'pending_gains'        => $totalRevenue,
             'weekly_counts'        => $weeklyCounts,
             'rating_history'       => $ratingHistory,
@@ -176,7 +180,7 @@ class TravelerController extends Controller
     public function gains()
     {
         $user = Auth::user();
-        $rate = 0.10; // 10% platform commission
+        $rate = (float) \App\Models\Setting::get('platform_commission') / 100; // configurable commission
 
         $requests = TravelRequest::whereHas('travel', fn($q) => $q->where('user_id', $user->id))
             ->whereIn('status', ['accepted', 'delivered'])

@@ -7,12 +7,14 @@ import axiosClient from '../services/axios';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EditPackageDialog from '../components/EditPackageDialog';
 import LiveTracking from '../components/LiveTracking';
+import ReclamationsPanel from '../components/reclamations/ReclamationsPanel';
+import RatingsPanel from '../components/ratings/RatingsPanel';
 import DeliveryLineChart from '@/charts/DeliverLineChart';
 import WeeklyBarChart from '@/charts/Weeklybarchart ';
 import { 
   Package, Plus, ChevronLeft, ChevronRight,
   MapPin, Calendar, Clock, DollarSign,
-  ArrowRight, Search, Trash2, Shield, Star,
+  ArrowRight, Search, Trash2, Shield, Star, BadgeCheck,
   Download, Filter, MoreHorizontal, ArrowUpDown, CheckSquare, Eye, Pencil
 } from 'lucide-react';
 
@@ -44,6 +46,8 @@ const PAGE_HEADER = {
   apercu:     { title: 'Tableau de Bord Expéditeur', subtitle: 'Gérez vos expéditions, suivez vos colis et consultez vos statistiques.' },
   expedition: { title: 'Mes Colis',                  subtitle: 'Gérez et visualisez l\'état de tous vos envois ColiFlow.' },
   suivi:      { title: 'Suivi en direct',            subtitle: 'Suivez en temps réel les colis actuellement pris en charge par un voyageur.' },
+  reclamations: { title: 'Mes Réclamations',         subtitle: 'Signalez un problème sur un envoi (colis non livré, contenu suspect, retard…) et suivez son traitement.' },
+  evaluations:  { title: 'Mes Évaluations',          subtitle: 'Notez les voyageurs après chaque livraison et consultez les avis reçus.' },
 };
 
 const CAT_LABEL = {
@@ -280,10 +284,10 @@ export default function SenderDashboard() {
   const recentPkgs = packages.slice(0, 3);
 
   const badges = [
-    ...(user?.statut_verification === 'verified' ? [{ icon: '✅', label: 'Identité Vérifiée' }] : []),
-    ...(totalSent >= 1 ? [{ icon: '🌟', label: 'Super Expéditeur' }] : []),
-    ...(totalSent >= 5 ? [{ icon: '📦', label: `${totalSent} Colis Envoyés` }] : []),
-    ...(totalSent >= 1 ? [{ icon: '🛡️', label: 'Fiable' }] : []),
+    ...(user?.statut_verification === 'verified' ? [{ Icon: BadgeCheck, label: 'Identité Vérifiée' }] : []),
+    ...(totalSent >= 1 ? [{ Icon: Star, label: 'Super Expéditeur' }] : []),
+    ...(totalSent >= 5 ? [{ Icon: Package, label: `${totalSent} Colis Envoyés` }] : []),
+    ...(totalSent >= 1 ? [{ Icon: Shield, label: 'Fiable' }] : []),
   ];
 
   const performDeletePackage = async (id) => {
@@ -421,22 +425,28 @@ export default function SenderDashboard() {
               )}
             </div>
 
+            {/* ── RÉCLAMATIONS TAB (self-contained, independent of packages fetch) ── */}
+            {activeTab === 'reclamations' && <ReclamationsPanel role="sender" />}
+
+            {/* ── ÉVALUATIONS TAB (self-contained) ── */}
+            {activeTab === 'evaluations' && <RatingsPanel role="sender" />}
+
             {/* Error State */}
-            {error && (
+            {activeTab !== 'reclamations' && activeTab !== 'evaluations' && error && (
               <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 mb-6 text-sm">
                 {error}
               </div>
             )}
 
             {/* Skeleton Loading State */}
-            {loading && (
+            {activeTab !== 'reclamations' && activeTab !== 'evaluations' && loading && (
               activeTab === 'apercu'
                 ? <DashboardSkeleton />
                 : <TableSkeleton />
             )}
 
             {/* Content view when fully loaded */}
-            {!loading && !error && (
+            {activeTab !== 'reclamations' && activeTab !== 'evaluations' && !loading && !error && (
               <div>
                 {/* ── APERCU TAB ──────────────────────────────────────────────── */}
                 {activeTab === 'apercu' && (
@@ -574,7 +584,7 @@ export default function SenderDashboard() {
 
                       {packages.length === 0 && (
                         <div className="flex flex-col bg-white dark:bg-gray-800 shadow-xs rounded-xl p-10 items-center gap-4 text-center">
-                          <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-3xl">📦</div>
+                          <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#0984E3]"><Package size={30} /></div>
                           <p className="text-gray-500 dark:text-gray-400 text-sm">
                             Vous n'avez pas encore envoyé de colis.
                           </p>
@@ -657,8 +667,8 @@ export default function SenderDashboard() {
                           <ul className="flex flex-col gap-3">
                             {badges.map((b) => (
                               <li key={b.label} className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-lg shrink-0">
-                                  {b.icon}
+                                <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#0984E3] shrink-0">
+                                  <b.Icon size={18} />
                                 </div>
                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{b.label}</span>
                               </li>

@@ -62,11 +62,17 @@ class ProfileController extends Controller
         $path = $request->file('document')->store('documents', 'public');
 
         $user->document_cin = asset('storage/'.$path);
-        $user->statut_verification = 'pending';
+
+        // When CIN verification is disabled in "Configuration Système", documents
+        // are auto-approved (no admin review needed); otherwise they await review.
+        $cinRequired = \App\Models\Setting::get('cin_verification_required');
+        $user->statut_verification = $cinRequired ? 'pending' : 'verified';
         $user->save();
 
         return response()->json([
-            'message' => 'Document envoyé, en attente de vérification',
+            'message' => $cinRequired
+                ? 'Document envoyé, en attente de vérification'
+                : 'Document enregistré et validé automatiquement.',
             'user' => $user,
         ]);
     }

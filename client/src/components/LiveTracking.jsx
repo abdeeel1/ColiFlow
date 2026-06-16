@@ -23,7 +23,7 @@ const travelerIcon = L.divIcon({
   html: `
     <div style="position:relative;width:40px;height:40px;">
       <span style="position:absolute;inset:0;border-radius:9999px;background:rgba(9,132,227,.35);animation:cf-ping 1.4s cubic-bezier(0,0,.2,1) infinite;"></span>
-      <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:9999px;background:#0984E3;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">🚚</span>
+      <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:9999px;background:#0984E3;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;color:#fff;"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></span>
     </div>
     <style>@keyframes cf-ping{75%,100%{transform:scale(2);opacity:0}}</style>`,
   iconSize: [40, 40],

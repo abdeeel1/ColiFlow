@@ -140,9 +140,9 @@ class TravelRequestController extends Controller
         $packageName = $travelRequest->package->package_name ?? 'votre colis';
 
         $notifMap = [
-            'accepted'  => ['type' => 'request_accepted',  'title' => 'Demande acceptée ✓',     'msg' => "Un voyageur a accepté de transporter \"{$packageName}\". Un code de remise vous a été envoyé par email."],
+            'accepted'  => ['type' => 'request_accepted',  'title' => 'Demande acceptée',        'msg' => "Un voyageur a accepté de transporter \"{$packageName}\". Un code de remise vous a été envoyé par email."],
             'rejected'  => ['type' => 'request_rejected',  'title' => 'Demande refusée',         'msg' => "Un voyageur a refusé de transporter \"{$packageName}\"."],
-            'delivered' => ['type' => 'request_delivered', 'title' => 'Colis livré ✓',           'msg' => "Votre colis \"{$packageName}\" a été livré avec succès."],
+            'delivered' => ['type' => 'request_delivered', 'title' => 'Colis livré',              'msg' => "Votre colis \"{$packageName}\" a été livré avec succès."],
         ];
 
         if (isset($notifMap[$request->status])) {
@@ -203,7 +203,7 @@ class TravelRequestController extends Controller
         UserNotification::create([
             'user_id' => $travelRequest->package->user_id,
             'type'    => 'request_in_transit',
-            'title'   => 'Livraison en cours 🚚',
+            'title'   => 'Livraison en cours',
             'message' => "Le voyageur a récupéré votre colis \"{$packageName}\". La livraison est en cours.",
             'data'    => [
                 'travel_request_id' => $travelRequest->id,
@@ -359,7 +359,12 @@ class TravelRequestController extends Controller
         $requests = TravelRequest::whereHas('travel', function ($q) {
                 $q->where('user_id', Auth::id());
             })
-            ->with(['travel.from_city', 'travel.to_city', 'package.images', 'package.to_city', 'sender'])
+            ->with([
+                'travel.from_city', 'travel.to_city', 'package.images', 'package.to_city',
+                'sender' => fn ($q) => $q
+                    ->withAvg('ratingsReceived as ratings_avg', 'stars')
+                    ->withCount('ratingsReceived as ratings_count'),
+            ])
             ->latest()
             ->get();
 

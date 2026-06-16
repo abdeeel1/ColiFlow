@@ -168,7 +168,7 @@ class ValidationController extends Controller
             $message = $category === 'identity'
                 ? 'Votre pièce d\'identité (CIN) a été vérifiée. Votre profil est confirmé.'
                 : 'Vos documents véhicule ont été approuvés. Vous pouvez désormais publier des trajets et transporter des colis.';
-            $title = $category === 'identity' ? 'Identité vérifiée ✅' : 'Véhicule validé 🚗';
+            $title = $category === 'identity' ? 'Identité vérifiée' : 'Véhicule validé';
             $type  = 'verification_approved';
         } else {
             $base = $category === 'identity'
@@ -178,7 +178,7 @@ class ValidationController extends Controller
             $message = $reasons
                 ? $base . ' Motif(s) : ' . implode(' ', $reasons)
                 : $base;
-            $title = $category === 'identity' ? 'Identité refusée ❌' : 'Véhicule refusé ❌';
+            $title = $category === 'identity' ? 'Identité refusée' : 'Véhicule refusé';
             $type  = 'verification_rejected';
         }
 

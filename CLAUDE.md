@@ -26,3 +26,43 @@ Quand tu crées ou modifies un composant :
 1. Ajoute des micro-interactions fluides sur les boutons et les cartes (`whileHover={{ scale: 1.02 }}`, `whileTap={{ scale: 0.98 }}`).
 2. Utilise `<AnimatePresence>` pour les apparitions/disparitions des modals (fade-in/slide-up).
 3. Reste subtil : les animations doivent servir l'expérience utilisateur (UX) de logistique, pas la ralentir.
+
+# GSAP Animation Guidelines
+
+## Stack
+- React + Vite
+- GSAP with @gsap/react
+
+## Animation Rules
+- Always use `useGSAP` from `@gsap/react` (never `useEffect` for GSAP)
+- Always pass `{ scope: containerRef }` to keep selectors scoped
+- Register plugins at the top of the file: `gsap.registerPlugin(ScrollTrigger)`
+- Animate only `transform` and `opacity` — never `width`, `height`, `top`, `left`
+- Use `gsap.context()` if not using `useGSAP`
+
+## Common Patterns
+
+### Entrance animation
+```jsx
+useGSAP(() => {
+  gsap.from(".element", { opacity: 0, y: 40, duration: 0.6, ease: "power2.out" });
+}, { scope: containerRef });
+```
+
+### Stagger list
+```jsx
+gsap.from(".item", { opacity: 0, y: 20, stagger: 0.1, ease: "power2.out" });
+```
+
+### ScrollTrigger
+```jsx
+gsap.from(".section", {
+  scrollTrigger: { trigger: ".section", start: "top 80%" },
+  opacity: 0, y: 60, duration: 0.8
+});
+```
+
+## When editing animations
+- Read the existing animation first before changing it
+- Preserve the original timing unless asked to change it
+- Never remove cleanup — useGSAP handles it automatically

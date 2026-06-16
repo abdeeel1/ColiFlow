@@ -31,6 +31,11 @@ class Package extends Model
     'accept_condition' => 'boolean',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
+
     public function images()
     {
         return $this->hasMany(PackageImage::class);

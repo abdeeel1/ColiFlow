@@ -86,16 +86,25 @@ const TravelDetail = () => {
                                 {travel.user?.name}
                             </p>
                             <span className="text-gray-400">|</span>
-                            <div className="flex gap-1 items-center">
-                                {[...Array(5)].map((_, i) => (
-                                    <Star
-                                        size={13}
-                                        key={i}
-                                        className="text-gray-300"
-                                    />
-                                ))}
-                                <span className="text-[0.8rem]">(Nouveau)</span>
-                            </div>
+                            {(() => {
+                                const avg = travel.user?.ratings_avg != null ? Number(travel.user.ratings_avg) : null
+                                const count = travel.user?.ratings_count ?? 0
+                                return (
+                                    <div className="flex gap-1 items-center">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                size={13}
+                                                key={i}
+                                                className={avg && i < Math.round(avg) ? "text-[#F39C12]" : "text-gray-300"}
+                                                fill={avg && i < Math.round(avg) ? "#F39C12" : "none"}
+                                            />
+                                        ))}
+                                        <span className="text-[0.8rem]">
+                                            {avg ? `${avg.toFixed(1)} (${count})` : '(Nouveau)'}
+                                        </span>
+                                    </div>
+                                )
+                            })()}
                         </div>
 
                         <div className="py-8 px-2 flex flex-col gap-6">

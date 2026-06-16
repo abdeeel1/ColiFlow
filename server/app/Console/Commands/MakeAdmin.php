@@ -30,7 +30,7 @@ class MakeAdmin extends Command
         $user->role = 'admin';
         $user->save();
 
-        $this->info("✅ {$user->email} est maintenant administrateur.");
+        $this->info("{$user->email} est maintenant administrateur.");
         return self::SUCCESS;
     }
 }

@@ -78,8 +78,8 @@ const DropZone = ({ inputRef, uploading, onSelect, accept, label, preview }) => 
             isImage(preview) ? (
                 <img src={preview} alt="aperçu" className="absolute inset-0 w-full h-full object-cover opacity-90" />
             ) : (
-                <div className="absolute top-2 right-2 text-[10px] font-semibold text-green-600 bg-green-50 border border-green-200 rounded-full px-2 py-0.5">
-                    ✓ Document reçu
+                <div className="absolute top-2 right-2 inline-flex items-center gap-1 text-[10px] font-semibold text-green-600 bg-green-50 border border-green-200 rounded-full px-2 py-0.5">
+                    <CheckCircle2 size={11} /> Document reçu
                 </div>
             )
         )}

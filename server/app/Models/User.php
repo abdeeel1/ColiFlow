@@ -94,4 +94,29 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    /**
+     * Réclamations filed by this user.
+     */
+    public function reclamations()
+    {
+        return $this->hasMany(\App\Models\Reclamation::class);
+    }
+
+    /**
+     * Ratings received by this user (as the rated party).
+     */
+    public function ratingsReceived()
+    {
+        return $this->hasMany(\App\Models\Rating::class, 'ratee_id');
+    }
+
+    /**
+     * Average star rating received, rounded to one decimal (null when never rated).
+     */
+    public function averageRating(): ?float
+    {
+        $avg = $this->ratingsReceived()->avg('stars');
+        return $avg !== null ? round((float) $avg, 1) : null;
+    }
 }

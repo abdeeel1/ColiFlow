@@ -1,6 +1,8 @@
 import { CalendarDays, MapPin } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { useSelector } from "react-redux"
+import axiosClient from "@/services/axios"
 
 const TravelerFormLast = () => {
     const {
@@ -11,6 +13,18 @@ const TravelerFormLast = () => {
 
     const { cities } = useSelector((state) => state.cities)
 
+    // Platform commission is configurable from the admin "Configuration Système".
+    const [commissionRate, setCommissionRate] = useState(10)
+    useEffect(() => {
+        axiosClient
+            .get("/api/app-config")
+            .then((r) => {
+                const c = Number(r.data?.platform_commission)
+                if (!Number.isNaN(c)) setCommissionRate(c)
+            })
+            .catch(() => {})
+    }, [])
+
     const travelCityOne = watch("travelCityOne")
     const travelCityTwo = watch("travelCityTwo")
     const travelDate = watch("travelDate")
@@ -19,7 +33,7 @@ const TravelerFormLast = () => {
     const travelPrice = watch("travelPrice") || 0
 
     const price = Number(travelPrice) || 0
-    const serviceFee = price * 0.15
+    const serviceFee = price * (commissionRate / 100)
     const earnings = price - serviceFee
 
     const selectedCityOne = cities.find(
@@ -154,7 +168,7 @@ const TravelerFormLast = () => {
                         </span>
                     </div>
                     <div className="flex justify-between text-sm text-green-700">
-                        <span>Frais de service (15%)</span>
+                        <span>Frais de service ({commissionRate}%)</span>
                         <span className="font-bold">
                             {serviceFee.toFixed(2)} MAD
                         </span>

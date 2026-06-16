@@ -30,6 +30,7 @@ import AdminDashboard from "./pages/AdminDashboard"
 import Messagerie from "./pages/Messagerie"
 import PackageDetail from "./pages/PackageDetail"
 import useVerificationSync from "./hooks/useVerificationSync"
+import MaintenanceBanner from "./components/MaintenanceBanner"
 
 function App() {
     const dispatch = useDispatch()
@@ -76,6 +77,8 @@ function App() {
         <div className="font-plusjakarta">
             <BrowserRouter>
                 <ScrollToTop />
+
+                <MaintenanceBanner />
 
                 <Toaster position="top-right" />
 

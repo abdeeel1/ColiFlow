@@ -12,11 +12,22 @@ use Illuminate\Support\Facades\DB;
 class TravelController extends Controller
 {
     /**
+     * Eager-load the traveler together with their received-rating average/count
+     * (exposed as user.ratings_avg / user.ratings_count in the JSON).
+     */
+    private static function withUserRating(): \Closure
+    {
+        return fn ($q) => $q
+            ->withAvg('ratingsReceived as ratings_avg', 'stars')
+            ->withCount('ratingsReceived as ratings_count');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = Travel::with(['user', 'from_city', 'to_city', 'images']);
+        $query = Travel::with(['user' => self::withUserRating(), 'from_city', 'to_city', 'images']);
 
         if ($request->filled('from_city')) {
             $query->whereHas('from_city', function ($q) use ($request) {
@@ -63,7 +74,7 @@ class TravelController extends Controller
     }
 
     public function featured() {
-        return Travel::with(['user', 'from_city', 'to_city', 'images'])->take(4)->get();
+        return Travel::with(['user' => self::withUserRating(), 'from_city', 'to_city', 'images'])->take(4)->get();
     }
 
     /**
@@ -142,7 +153,7 @@ class TravelController extends Controller
     public function show(Travel $travel)
     {
         return response()->json(
-            $travel->load(['user', 'from_city', 'to_city', 'images'])
+            $travel->load(['user' => self::withUserRating(), 'from_city', 'to_city', 'images'])
         );
     }
 

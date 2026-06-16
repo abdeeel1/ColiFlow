@@ -5,14 +5,14 @@ import { Check } from "lucide-react"
 export default function ActionTab({ expediteurData, voyageurData }) {
     return (
         <Tabs className="w-full">
-            <Tabs.ListContainer>
-                <Tabs.List className="bg-gray-400" aria-label="Options">
-                    <Tabs.Tab id="overview">
+            <Tabs.ListContainer className="w-full">
+                <Tabs.List className="w-full flex" aria-label="Options">
+                    <Tabs.Tab className="flex-1 justify-center text-center font-bold" id="overview">
                         Je suis Expéditeur
                         <Tabs.Indicator />
                     </Tabs.Tab>
 
-                    <Tabs.Tab className="bg-gray-400 font-bold" id="reports">
+                    <Tabs.Tab className="flex-1 justify-center text-center font-bold" id="reports">
                         Je suis Voyageur
                         <Tabs.Indicator />
                     </Tabs.Tab>

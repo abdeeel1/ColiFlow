@@ -17,7 +17,11 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = User::latest('created_at')->get()->map(fn ($u) => $this->payload($u))->values();
+        $members = User::withAvg('ratingsReceived as ratings_avg', 'stars')
+            ->latest('created_at')
+            ->get()
+            ->map(fn ($u) => $this->payload($u))
+            ->values();
 
         return response()->json([
             'members' => $members,
@@ -145,8 +149,11 @@ class MemberController extends Controller
             'role_label' => $this->roleLabel($u),
             'city'       => $u->city,
             'avatar'     => $u->profile_picture,
-            // No rating system yet — placeholder score, none for admins.
-            'score'      => $roleKey === 'admin' ? null : 5.0,
+            // Average star rating received (null for admins or never-rated members).
+            // Uses the eager-loaded avg from the list query when available, else queries.
+            'score'      => $roleKey === 'admin'
+                ? null
+                : ($u->ratings_avg !== null ? round((float) $u->ratings_avg, 1) : $u->averageRating()),
             'status'     => $u->status ?? 'active',
             'created_at' => $u->created_at,
         ];

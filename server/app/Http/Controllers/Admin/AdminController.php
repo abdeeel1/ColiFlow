@@ -57,8 +57,9 @@ class AdminController extends Controller
             ? round(($thisWeek - $lastWeek) / $lastWeek * 100)
             : ($thisWeek > 0 ? 100 : 0);
 
-        // Revenue to collect = 10% platform commission on delivered orders
-        $revenueToCollect = round($chiffreAffaires * 0.10);
+        // Revenue to collect = platform commission on delivered orders
+        $commissionRate   = (float) \App\Models\Setting::get('platform_commission') / 100;
+        $revenueToCollect = round($chiffreAffaires * $commissionRate);
 
         // ── Latest document verifications ───────────────────────────
         // A vehicle doc reflects the vehicle track; a bare CIN the identity track.

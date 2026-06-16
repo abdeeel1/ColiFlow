@@ -14,7 +14,7 @@ function DashboardCard10() {
       image: Image01,
       name: 'Alex Shatov',
       email: 'alexshatov@gmail.com',
-      location: '🇺🇸',
+      location: 'US',
       spent: '$2,890.66',
     },
     {
@@ -22,7 +22,7 @@ function DashboardCard10() {
       image: Image02,
       name: 'Philip Harbach',
       email: 'philip.h@gmail.com',
-      location: '🇩🇪',
+      location: 'DE',
       spent: '$2,767.04',
     },
     {
@@ -30,7 +30,7 @@ function DashboardCard10() {
       image: Image03,
       name: 'Mirko Fisuk',
       email: 'mirkofisuk@gmail.com',
-      location: '🇫🇷',
+      location: 'FR',
       spent: '$2,996.00',
     },
     {
@@ -38,7 +38,7 @@ function DashboardCard10() {
       image: Image04,
       name: 'Olga Semklo',
       email: 'olga.s@cool.design',
-      location: '🇮🇹',
+      location: 'IT',
       spent: '$1,220.66',
     },
     {
@@ -46,7 +46,7 @@ function DashboardCard10() {
       image: Image05,
       name: 'Burak Long',
       email: 'longburak@gmail.com',
-      location: '🇬🇧',
+      location: 'GB',
       spent: '$1,890.66',
     },
   ];

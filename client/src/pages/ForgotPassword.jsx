@@ -36,7 +36,7 @@ const ForgotPassword = () => {
                 email: data.email,
             })
 
-            toast.success("Lien envoyé à votre email 📩")
+            toast.success("Lien envoyé à votre email")
         } catch (err) {
             toast.error("Erreur lors de l'envoi")
             console.log(err)

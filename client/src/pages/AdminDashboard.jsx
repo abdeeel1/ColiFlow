@@ -7,6 +7,11 @@ import WeeklyBarChart from '@/charts/Weeklybarchart ';
 import ValidationList from './admin/ValidationList';
 import ValidationExam from './admin/ValidationExam';
 import MembersList from './admin/MembersList';
+import TrajetsList from './admin/TrajetsList';
+import ColisList from './admin/ColisList';
+import CommissionsList from './admin/CommissionsList';
+import SettingsList from './admin/SettingsList';
+import ReclamationsList from './admin/ReclamationsList';
 import {
   Users, Package, DollarSign, Star, TrendingUp,
   ShieldCheck, AlertTriangle, Car, ChevronRight, Construction,
@@ -18,11 +23,12 @@ const PAGE_HEADER = {
   documents:    { title: 'Vérification des Documents',     subtitle: 'Validez les pièces justificatives des nouveaux membres.' },
   vehicules:    { title: 'Approbation des Véhicules',       subtitle: 'Contrôlez et approuvez les véhicules des voyageurs.' },
   membres:      { title: 'Gestion des Membres',             subtitle: 'Gérez les comptes utilisateurs, modérez les profils et surveillez l\'activité de la communauté ColiFlow.' },
-  colis:        { title: 'Tous les Colis',                  subtitle: 'Vue globale de tous les colis en circulation.' },
-  litiges:      { title: 'Litiges',                         subtitle: 'Résolvez les litiges entre expéditeurs et voyageurs.' },
+  trajets:      { title: 'Trajets en Circulation',          subtitle: 'Supervisez tous les trajets actifs de la plateforme en temps réel.' },
+  colis:        { title: 'Suivi des Livraisons',            subtitle: 'Vue globale de tous les colis en circulation.' },
   transactions: { title: 'Transactions',                    subtitle: 'Suivez les paiements et mouvements financiers.' },
   commissions:  { title: 'Commissions',                     subtitle: 'Configurez et suivez les commissions ColiFlow.' },
   config:       { title: 'Configuration Système',           subtitle: 'Paramètres généraux de la plateforme.' },
+  reclamations: { title: 'Réclamations',                    subtitle: 'Traitez les litiges signalés par les expéditeurs et les voyageurs.' },
 };
 
 const STEP_CONFIG = {
@@ -165,8 +171,8 @@ export default function AdminDashboard() {
         <main className="grow">
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
-            {/* Title (the validation & membres tabs render their own header) */}
-            {activeTab !== 'validation' && activeTab !== 'membres' && (
+            {/* Title (validation, membres, logistique & finance tabs render their own header) */}
+            {activeTab !== 'validation' && activeTab !== 'membres' && activeTab !== 'trajets' && activeTab !== 'colis' && activeTab !== 'commissions' && activeTab !== 'config' && activeTab !== 'reclamations' && (
               <div className="sm:flex sm:justify-between sm:items-center mb-8">
                 <div>
                   <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold mb-1">
@@ -184,6 +190,19 @@ export default function AdminDashboard() {
 
             {/* ── GESTION DES MEMBRES ────────────────────────────────────── */}
             {activeTab === 'membres' && <MembersList />}
+
+            {/* ── LOGISTIQUE GLOBALE ─────────────────────────────────────── */}
+            {activeTab === 'trajets' && <TrajetsList />}
+            {activeTab === 'colis'   && <ColisList />}
+
+            {/* ── FINANCES & COMMISSIONS ─────────────────────────────────── */}
+            {activeTab === 'commissions' && <CommissionsList />}
+
+            {/* ── CONFIGURATION SYSTÈME ──────────────────────────────────── */}
+            {activeTab === 'config' && <SettingsList />}
+
+            {/* ── RÉCLAMATIONS ───────────────────────────────────────────── */}
+            {activeTab === 'reclamations' && <ReclamationsList />}
 
             {/* Error State */}
             {activeTab === 'apercu' && error && (
@@ -322,7 +341,7 @@ export default function AdminDashboard() {
                       Prochaines étapes
                     </h2>
                     {nextSteps.length === 0 ? (
-                      <p className="text-sm text-gray-400 dark:text-gray-500">Aucune action en attente. 🎉</p>
+                      <p className="text-sm text-gray-400 dark:text-gray-500">Aucune action en attente.</p>
                     ) : (
                       <ul className="flex flex-col divide-y divide-gray-100 dark:divide-gray-700/60">
                         {nextSteps.map((step, i) => {
@@ -369,7 +388,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
               )
-            ) : (activeTab === 'validation' || activeTab === 'membres') ? null : (
+            ) : (activeTab === 'validation' || activeTab === 'membres' || activeTab === 'trajets' || activeTab === 'colis' || activeTab === 'commissions' || activeTab === 'config' || activeTab === 'reclamations') ? null : (
               /* ── PLACEHOLDER for sections we'll build in the next steps ─── */
               <div className="flex flex-col bg-white dark:bg-gray-800 shadow-xs rounded-xl p-12 items-center gap-4 text-center">
                 <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">

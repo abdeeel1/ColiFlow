@@ -1,4 +1,8 @@
 {
+    "Trouver un trajet": "Trouver un trajet",
+    "Trouver un colis": "Trouver un colis",
+    "Publier un trajet": "Publier un trajet",
+    "Publier un colis": "Publier un colis",
     "features": {
         "step1": {
             "title": "Publiez votre annonce",

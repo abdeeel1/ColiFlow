@@ -5,7 +5,7 @@ import TravelerFormTwo from "@/components/traveler-form/TravelerFormTwo"
 import axiosClient from "@/services/axios"
 import SuspendedAccountDialog from "@/components/SuspendedAccountDialog"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CheckCircle, Circle } from "lucide-react"
+import { CheckCircle, Circle, Check } from "lucide-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
@@ -243,7 +243,7 @@ const AddTravel = () => {
                                     <div
                                         className={`flex items-center justify-center w-12 h-12 rounded-full border-2 font-bold transition-all duration-300 ${num === step ? "bg-[#0984E3] text-white border-[#0984E3] shadow-md ring-4 ring-blue-50" : num < step ? "bg-blue-50 text-[#0984E3] border-blue-200" : "bg-white text-slate-300 border-slate-200"}`}
                                     >
-                                        {num < step ? "✓" : num}
+                                        {num < step ? <Check size={20} /> : num}
                                     </div>
                                     <span
                                         className={`text-sm font-semibold transition-colors ${num === step ? "text-[#0984E3]" : "text-slate-400"}`}
