@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
+import { storageUrl } from '@/config';
 import { motion as Motion, AnimatePresence } from 'motion/react';
 import {
   Plane, Package, DollarSign, Star,
@@ -1565,7 +1566,7 @@ export default function TravelerDashboard() {
                                   <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl p-3 mb-3">
                                     {pkgImage ? (
                                       <img
-                                        src={`http://localhost:8000/storage/${pkgImage}`}
+                                        src={storageUrl(pkgImage)}
                                         alt={pkgName}
                                         className="w-12 h-12 rounded-xl object-cover shrink-0"
                                       />
@@ -2215,7 +2216,7 @@ function DemandeDetailModal({ request, commissionRate, actionLoading, onClose, o
               <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4">
                 {pkgImage ? (
                   <img
-                    src={`http://localhost:8000/storage/${pkgImage}`}
+                    src={storageUrl(pkgImage)}
                     alt={pkgName}
                     className="w-14 h-14 rounded-xl object-cover shrink-0"
                   />

@@ -7,6 +7,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckboxInput } from "@/components/ui/checkbox"
 import axiosClient from "@/services/axios"
+import { googleAuthUrl } from "@/config"
 import { useEffect, useRef, useState } from "react"
 import { useDispatch } from "react-redux"
 import { setUser } from "@/store/slices/authSlice"
@@ -66,7 +67,7 @@ const Login = () => {
     const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
     const handleGoogleSignUp = () => {
-        window.location.href = "http://localhost:8000/auth/google"
+        window.location.href = googleAuthUrl
     }
 
     useEffect(() => {

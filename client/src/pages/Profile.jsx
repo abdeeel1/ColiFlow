@@ -7,6 +7,7 @@ import {
     Clock3, CircleAlert, CheckCircle2, ChevronDown,
 } from 'lucide-react'
 import axiosClient from '@/services/axios'
+import { googleAuthUrl } from '@/config'
 import { setUser } from '@/store/slices/authSlice'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import Sidebar from '../partials/Sidebar'
@@ -261,7 +262,7 @@ const Profile = () => {
     const vehicleRejectionReasons = user?.vehicle_rejection_reasons ?? []
 
     const handleConnectGoogle = () => {
-        window.location.href = 'http://localhost:8000/auth/google'
+        window.location.href = googleAuthUrl
     }
 
     return (

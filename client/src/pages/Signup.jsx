@@ -2,6 +2,7 @@
 
 import { CheckboxInput } from "@/components/ui/checkbox"
 import axiosClient from "@/services/axios"
+import { googleAuthUrl } from "@/config"
 import GoogleButton from "@/ui/GoogleButton"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
@@ -19,7 +20,7 @@ const Signup = () => {
     const [success, setSuccess] = useState(null)
 
     const handleGoogleSignUp = () => {
-        window.location.href = "http://localhost:8000/auth/google"
+        window.location.href = googleAuthUrl
     }
 
     const FormSchema = z

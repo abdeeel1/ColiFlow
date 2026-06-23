@@ -1,7 +1,8 @@
 import axios from "axios"
+import { API_URL } from "@/config"
 
 const axiosClient = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: API_URL,
     withCredentials: true, // Crucial : autorise l'envoi/réception des cookies
     headers: {
         Accept: "application/json",

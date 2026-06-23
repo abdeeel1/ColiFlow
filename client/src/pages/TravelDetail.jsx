@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Check, MapPin, Star, Loader } from "lucide-react
 import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import axiosClient from "@/services/axios"
+import { storageUrl } from "@/config"
 
 const TravelDetail = () => {
     const { id } = useParams()
@@ -48,7 +49,7 @@ const TravelDetail = () => {
                     </Link>
                     {images.length > 0 ? (
                         <img
-                            src={`http://localhost:8000/storage/${images[selectedImage]?.path}`}
+                            src={storageUrl(images[selectedImage]?.path)}
                             alt=""
                             className="w-full h-full rounded-r-2xl object-cover"
                         />
@@ -157,7 +158,7 @@ const TravelDetail = () => {
                                     {images.map((img, index) => (
                                         <div key={index}>
                                             <img
-                                                src={`http://localhost:8000/storage/${img.path}`}
+                                                src={storageUrl(img.path)}
                                                 alt=""
                                                 className={`w-full h-15 rounded-2xl cursor-pointer ${
                                                     selectedImage === index

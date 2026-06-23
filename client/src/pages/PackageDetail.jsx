@@ -10,13 +10,14 @@ import Sidebar from '../partials/Sidebar';
 import TravelerSidebar from '../partials/TravelerSidebar';
 import Header from '../partials/Header';
 import axiosClient from '../services/axios';
+import { storageUrl } from '@/config';
 
 const CAT_LABEL = {
   electronique: 'Électronique', documents: 'Documents',
   mode: 'Mode', maison: 'Maison', autre: 'Autre',
 };
 
-const imgUrl = (path) => `http://localhost:8000/storage/${path}`;
+const imgUrl = (path) => storageUrl(path);
 
 const isInTransit = (pkg) => (pkg?.travel_requests?.length ?? 0) > 0;
 

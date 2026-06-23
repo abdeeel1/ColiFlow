@@ -1,0 +1,19 @@
+# Claude Code / AI assistant files — do not push
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.claude.json
+.claude.json.backup
+.mcp.json
+
+# Local docs (test report PDF, deployment guide) — do not push
+docs/
+
+# Root tooling (concurrently)
+/node_modules/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
