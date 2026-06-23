@@ -19,7 +19,7 @@ export default function MobileMenu({ isTraveler }) {
         setLoading(true)
 
         try {
-            await axiosClient.post("/logout")
+            await axiosClient.post("/api/logout")
             dispatch(logout())
             navigate("/login")
         } catch (error) {

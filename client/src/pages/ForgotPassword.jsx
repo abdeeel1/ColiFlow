@@ -32,7 +32,7 @@ const ForgotPassword = () => {
         try {
             await axiosClient.get("/sanctum/csrf-cookie")
 
-            await axiosClient.post("/forgot-password", {
+            await axiosClient.post("/api/forgot-password", {
                 email: data.email,
             })
 

@@ -91,7 +91,7 @@ const Login = () => {
 
         try {
             await axiosClient.get("/sanctum/csrf-cookie")
-            const response = await axiosClient.post("/login", credentials)
+            const response = await axiosClient.post("/api/login", credentials)
 
             if (response.status === 200 || response.status === 204) {
                 navigate("/")

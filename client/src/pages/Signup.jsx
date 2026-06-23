@@ -104,7 +104,7 @@ const Signup = () => {
 
         try {
             await axiosClient.get("/sanctum/csrf-cookie")
-            const response = await axiosClient.post("/register", credentials)
+            const response = await axiosClient.post("/api/register", credentials)
 
             if (response.status === 204) {
                 setSuccess("Email de vérification envoyé")

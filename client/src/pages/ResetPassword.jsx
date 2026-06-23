@@ -50,7 +50,7 @@ const ResetPassword = () => {
         try {
             await axiosClient.get("/sanctum/csrf-cookie")
 
-            await axiosClient.post("/reset-password", {
+            await axiosClient.post("/api/reset-password", {
                 token,
                 email,
                 password: data.password,

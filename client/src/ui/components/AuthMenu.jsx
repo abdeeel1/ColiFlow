@@ -14,7 +14,7 @@ export default function AuthMenu() {
 
     const handleLogout = async () => {
         try {
-            await axiosClient.post("/logout")
+            await axiosClient.post("/api/logout")
             dispatch(logout())
             navigate("/login")
         } catch (error) {
