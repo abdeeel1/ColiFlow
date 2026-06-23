@@ -1,9 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/api/:path*",     "destination": "https://REPLACE-WITH-BACKEND.alwaysdata.net/api/:path*" },
-    { "source": "/auth/:path*",    "destination": "https://REPLACE-WITH-BACKEND.alwaysdata.net/auth/:path*" },
-    { "source": "/sanctum/:path*", "destination": "https://REPLACE-WITH-BACKEND.alwaysdata.net/sanctum/:path*" },
-    { "source": "/storage/:path*", "destination": "https://REPLACE-WITH-BACKEND.alwaysdata.net/storage/:path*" }
+    { "source": "/api/:path*",     "destination": "https://coliflow.alwaysdata.net/api/:path*" },
+    { "source": "/auth/:path*",    "destination": "https://coliflow.alwaysdata.net/auth/:path*" },
+    { "source": "/sanctum/:path*", "destination": "https://coliflow.alwaysdata.net/sanctum/:path*" },
+    { "source": "/storage/:path*", "destination": "https://coliflow.alwaysdata.net/storage/:path*" }
   ]
 }
