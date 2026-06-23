@@ -86,10 +86,10 @@ const BestChoices = () => {
                 <div className="py-2 md:w-[75%] xl:w-[44%] bg-[#0984E3] mx-auto my-10 rounded-2xl text-sm w-full">
                     <div className="flex gap-2 md:gap-10 justify-center md:justify-evenly items-center px-4">
                         <p className="text-white font-semibold text-[0.5rem] md:text-[0.938rem] text-center">
-                            Une solution simple, rapide et 100% marocaine
+                            {t("Une solution simple, rapide et 100% marocaine")}
                         </p>
 
-                        <ActionLink text="Read More" link="#" />
+                        <ActionLink text={t("Read More")} link="#" />
                     </div>
                 </div>
             </div>

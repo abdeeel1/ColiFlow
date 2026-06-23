@@ -1,12 +1,15 @@
 import BadgeAlert from "@/ui/BadgeAlert"
 import { Circle, DollarSign, Folder, Laptop, Send } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 const CtaSection = () => {
+    const { t } = useTranslation()
+
     return (
         <section>
             <p className="text-center font-bold text-2xl xl:text-3xl font-clashdisplay capitalize">
-                Une interface intuitive pour tous
+                {t("Une interface intuitive pour tous")}
             </p>
 
             <div className="py-15">
@@ -17,41 +20,41 @@ const CtaSection = () => {
 
                     <div className="flex flex-col gap-4 justify-center items-center">
                         <p className="font-semibold text-center py-5 px-5 text-[1.188rem] lg:text-[1.375rem]">
-                            Suivez vos colis en temps réel Dashboard ColiFlow
+                            {t("Suivez vos colis en temps réel Dashboard ColiFlow")}
                         </p>
 
                         <p className="text-[#656565] text-[0.813rem] lg:text-[0.875rem] px-5 text-center lg:mx-30">
-                            Que vous soyez expéditeur ou voyageur, accédez à
-                            tous vos trajets, messages et paiements sur une
-                            plateforme unique et fluide
+                            {t(
+                                "Que vous soyez expéditeur ou voyageur, accédez à tous vos trajets, messages et paiements sur une plateforme unique et fluide",
+                            )}
                         </p>
 
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:py-5 ">
                             <div className="flex gap-2 items-center">
                                 <Folder fill="#656565" width={10} />
                                 <p className="text-[0.75rem] font-semibold text-[#656565]">
-                                    Statut des livraisons mis à jour
+                                    {t("Statut des livraisons mis à jour")}
                                 </p>
                             </div>
 
                             <div className="flex gap-2 items-center">
                                 <Send fill="#656565" width={10} />
                                 <p className="text-[0.75rem] font-semibold text-[#656565]">
-                                    Discutez directement avec le voyageur
+                                    {t("Discutez directement avec le voyageur")}
                                 </p>
                             </div>
 
                             <div className="flex gap-2 items-center">
                                 <DollarSign width={10} />
                                 <p className="text-[0.75rem] font-semibold text-[#656565]">
-                                    Transactions protégées
+                                    {t("Transactions protégées")}
                                 </p>
                             </div>
 
                             <div className="flex gap-2 items-center">
                                 <Laptop fill="#656565" width={10} />
                                 <p className="text-[0.75rem] font-semibold text-[#656565]">
-                                    Une expérience fluide sur tous les supports
+                                    {t("Une expérience fluide sur tous les supports")}
                                 </p>
                             </div>
                         </div>
@@ -60,11 +63,11 @@ const CtaSection = () => {
                     <div className="flex flex-col lg:flex-row  gap-4 py-5">
                         <Link to={"/login"}>
                             <button className="btn btn-ghost bg-blue-600 hover:border-blue-600 text-white btn-sm rounded-2xl">
-                                Commencer Maintenant
+                                {t("Commencer Maintenant")}
                             </button>
                         </Link>
                         <button className="btn btn-soft btn-sm rounded-2xl">
-                            Voir la Démo
+                            {t("Voir la Démo")}
                         </button>
                     </div>
                 </div>

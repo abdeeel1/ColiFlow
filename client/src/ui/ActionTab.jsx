@@ -1,19 +1,22 @@
 import { Tabs } from "@heroui/react"
 import BadgeUi from "./BadgeUi"
 import { Check } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export default function ActionTab({ expediteurData, voyageurData }) {
+    const { t } = useTranslation()
+
     return (
         <Tabs className="w-full">
             <Tabs.ListContainer className="w-full">
                 <Tabs.List className="w-full flex" aria-label="Options">
                     <Tabs.Tab className="flex-1 justify-center text-center font-bold" id="overview">
-                        Je suis Expéditeur
+                        {t("Je suis Expéditeur")}
                         <Tabs.Indicator />
                     </Tabs.Tab>
 
                     <Tabs.Tab className="flex-1 justify-center text-center font-bold" id="reports">
-                        Je suis Voyageur
+                        {t("Je suis Voyageur")}
                         <Tabs.Indicator />
                     </Tabs.Tab>
                 </Tabs.List>
