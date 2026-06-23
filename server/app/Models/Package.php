@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PackageImage;
 use Illuminate\Support\Facades\Storage;
 
 class Package extends Model
 {
-    //
+    /** @use HasFactory<\Database\Factories\PackageFactory> */
+    use HasFactory;
+
     protected $primaryKey = 'id';
     protected $table = 'packages';
     protected $fillable = [

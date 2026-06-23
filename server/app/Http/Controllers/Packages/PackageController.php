@@ -35,22 +35,16 @@ class PackageController extends Controller
             ->latest()
             ->get();
 
-        // Build per-week count for last 10 weeks
-        $weeklyData = Package::where('user_id', $user->id)
-            ->select(
-                DB::raw('YEARWEEK(created_at, 1) as week_key'),
-                DB::raw('COUNT(*) as count')
-            )
-            ->where('created_at', '>=', now()->subWeeks(10))
-            ->groupBy('week_key')
-            ->orderBy('week_key')
-            ->get()
-            ->keyBy('week_key');
-
+        // Build per-week count for the last 10 ISO weeks. Computed in PHP from the
+        // already-loaded collection so it stays portable across MySQL and SQLite
+        // (avoids the MySQL-only YEARWEEK function).
         $weeklyCounts = [];
         for ($i = 9; $i >= 0; $i--) {
-            $key = now()->subWeeks($i)->format('oW'); // ISO year + week
-            $weeklyCounts[] = (int) ($weeklyData[$key]->count ?? 0);
+            $weekStart = now()->subWeeks($i)->startOfWeek();
+            $weekEnd   = now()->subWeeks($i)->endOfWeek();
+            $weeklyCounts[] = $packages
+                ->filter(fn ($p) => $p->created_at >= $weekStart && $p->created_at <= $weekEnd)
+                ->count();
         }
 
         // Stats per category

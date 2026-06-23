@@ -1,0 +1,16 @@
+
+> client@0.0.0 test
+> vitest run
+
+
+ RUN  v3.2.6 C:/Users/pc/Desktop/ColiFlow/client
+
+ ✓ src/test/i18n.test.js (3 tests) 21ms
+ ✓ src/lib/utils.test.js (4 tests) 32ms
+ ✓ src/ui/BadgeUi.test.jsx (2 tests) 91ms
+
+ Test Files  3 passed (3)
+      Tests  9 passed (9)
+   Start at  14:30:31
+   Duration  15.50s (transform 203ms, setup 5.45s, collect 5.23s, tests 144ms, environment 22.55s, prepare 1.22s)
+

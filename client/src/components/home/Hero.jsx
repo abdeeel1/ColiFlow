@@ -8,7 +8,14 @@ import { ScrollTrigger } from "gsap/all"
 import { useSelector } from "react-redux"
 
 const Hero = () => {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
+
+    // Bricolage Grotesque display font is used for the hero title in French & English only
+    const lang = i18n.language || ""
+    const titleFont =
+        lang.startsWith("fr") || lang.startsWith("en")
+            ? "font-hero"
+            : "font-clashdisplay-bold"
 
     const { user } = useSelector((state) => state.auth)
     const isTraveler = user?.is_traveler
@@ -71,7 +78,7 @@ const Hero = () => {
             <div className="flex flex-col space-y-2 justify-center items-center py-8 2xl:py-10">
                 <p
                     id="header-title"
-                    className="font-bold font-clashdisplay-bold  text-center text-[32px] md:text-[48px] lg:text-[4.5rem]  leading-tight text-[#2D3436]"
+                    className={`font-bold ${titleFont}  text-center text-[32px] md:text-[48px] lg:text-[4.5rem]  leading-tight text-[#2D3436]`}
                 >
                     {t("Envoyez vos Colis au")} <br />
                     <span className="text-[#0984E3]">{t("Maroc")}</span>{" "}

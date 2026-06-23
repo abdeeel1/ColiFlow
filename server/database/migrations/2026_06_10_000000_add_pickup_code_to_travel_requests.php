@@ -10,7 +10,11 @@ return new class extends Migration
     public function up(): void
     {
         // Expand the status enum to cover the full delivery lifecycle.
-        DB::statement("ALTER TABLE travel_requests MODIFY COLUMN status ENUM('pending','accepted','rejected','in_transit','delivered') NOT NULL DEFAULT 'pending'");
+        // The raw MODIFY is MySQL/MariaDB-specific; SQLite (used in tests) stores
+        // enums as plain strings, so there is nothing to alter there.
+        if (in_array(DB::getDriverName(), ['mysql', 'mariadb'], true)) {
+            DB::statement("ALTER TABLE travel_requests MODIFY COLUMN status ENUM('pending','accepted','rejected','in_transit','delivered') NOT NULL DEFAULT 'pending'");
+        }
 
         Schema::table('travel_requests', function (Blueprint $table) {
             $table->string('pickup_code', 10)->nullable()->after('status');
@@ -25,6 +29,8 @@ return new class extends Migration
             $table->dropColumn(['pickup_code', 'picked_up_at', 'delivered_at']);
         });
 
-        DB::statement("ALTER TABLE travel_requests MODIFY COLUMN status ENUM('pending','accepted','rejected') NOT NULL DEFAULT 'pending'");
+        if (in_array(DB::getDriverName(), ['mysql', 'mariadb'], true)) {
+            DB::statement("ALTER TABLE travel_requests MODIFY COLUMN status ENUM('pending','accepted','rejected') NOT NULL DEFAULT 'pending'");
+        }
     }
 };

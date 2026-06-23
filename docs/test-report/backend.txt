@@ -1,0 +1,56 @@
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                                                            0.01s  
+
+   PASS  Tests\Unit\SettingTest
+  ✓ it falls back to default values                                                                              0.90s  
+  ✓ it persists and casts a boolean setting                                                                      0.04s  
+  ✓ it casts numeric settings to numbers                                                                         0.04s  
+  ✓ merged settings include every default key                                                                    0.04s  
+
+   PASS  Tests\Feature\Admin\AdminAccessTest
+  ✓ guest cannot access admin area                                                                               0.10s  
+  ✓ regular user is forbidden from admin area                                                                    0.10s  
+  ✓ admin can access admin area                                                                                  0.04s  
+
+   PASS  Tests\Feature\Auth\AuthenticationTest
+  ✓ users can authenticate using the login screen                                                                0.09s  
+  ✓ users can not authenticate with invalid password                                                             0.25s  
+  ✓ users can logout                                                                                             0.05s  
+  ✓ logout route requires authentication                                                                         0.04s  
+
+   PASS  Tests\Feature\Auth\EmailVerificationTest
+  ✓ email can be verified                                                                                        0.05s  
+  ✓ email is not verified with invalid hash                                                                      0.06s  
+
+   PASS  Tests\Feature\Auth\PasswordResetTest
+  ✓ reset password link can be requested                                                                         0.27s  
+  ✓ password can be reset with valid token                                                                       0.27s  
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  ✓ new users can register                                                                                       0.09s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ the application returns a successful response                                                                0.04s  
+
+   PASS  Tests\Feature\Packages\PackageTest
+  ✓ guest cannot create a package                                                                                0.05s  
+  ✓ authenticated user can create a package                                                                      0.10s  
+  ✓ package creation requires mandatory fields                                                                   0.06s  
+  ✓ departure and arrival cities must differ                                                                     0.05s  
+  ✓ user only sees their own packages                                                                            0.08s  
+  ✓ owner can delete their package                                                                               0.05s  
+  ✓ user cannot delete someone elses package                                                                     0.05s  
+
+   PASS  Tests\Feature\Travels\TravelTest
+  ✓ guest cannot publish a travel                                                                                0.05s  
+  ✓ verified traveler can publish a travel                                                                       0.05s  
+  ✓ non traveler cannot publish a travel                                                                         0.04s  
+  ✓ traveler without approved vehicle cannot publish                                                             0.05s  
+  ✓ travel creation requires mandatory fields                                                                    0.05s  
+  ✓ travels listing is public                                                                                    0.06s  
+  ✓ featured travels are limited to four                                                                         0.07s  
+
+  Tests:    32 passed (75 assertions)
+  Duration: 4.00s
+

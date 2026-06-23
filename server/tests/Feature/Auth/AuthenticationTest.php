@@ -39,9 +39,17 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post('/logout');
+        // Log in for real (session), then the authenticated user can log out.
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertNoContent();
 
-        $this->assertGuest();
-        $response->assertNoContent();
+        $this->post('/logout')->assertNoContent();
+    }
+
+    public function test_logout_route_requires_authentication(): void
+    {
+        $this->postJson('/logout')->assertUnauthorized();
     }
 }

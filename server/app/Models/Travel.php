@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
@@ -10,7 +11,9 @@ use App\Models\TravelImage;
 
 class Travel extends Model
 {
-    //
+    /** @use HasFactory<\Database\Factories\TravelFactory> */
+    use HasFactory;
+
     protected $table = "travels";
     protected $fillable = [
         'user_id',

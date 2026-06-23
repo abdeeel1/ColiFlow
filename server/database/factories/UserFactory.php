@@ -42,4 +42,26 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * A traveler whose vehicle documents are approved, so they may publish trips.
+     */
+    public function traveler(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_traveler'          => true,
+            'vehicle_verification' => 'verified',
+            'vehicle_photo'        => 'vehicles/car.jpg',
+        ]);
+    }
+
+    /**
+     * An administrator.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
+    }
 }
