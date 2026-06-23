@@ -51,7 +51,7 @@ const CompleteProfile = () => {
         try {
             await axiosClient.get("/sanctum/csrf-cookie")
 
-            await axiosClient.post("/complete-profile", {
+            await axiosClient.post("/api/complete-profile", {
                 phone: data.phone,
             })
 

@@ -84,6 +84,19 @@ Route::middleware(['auth:sanctum', 'maintenance'])->group(function () {
 
 Route::middleware(['auth:sanctum', 'maintenance'])->post('/switch-role', [UserController::class, 'switchRole']);
 
+// Complete profile (used by Google sign-ups to add their phone number).
+Route::middleware('auth:sanctum')->post('/complete-profile', function (Request $request) {
+    $request->validate([
+        'phone' => ['required', 'regex:/^(\+212|0)[5-7]\d{8}$/'],
+    ]);
+
+    $user = $request->user();
+    $user->phone = $request->phone;
+    $user->save();
+
+    return response()->json(['message' => 'Profil complété']);
+});
+
 // Réclamations (senders & travelers)
 Route::middleware(['auth:sanctum', 'maintenance'])->group(function () {
     Route::get('/reclamations', [ReclamationController::class, 'index']);
