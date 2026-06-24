@@ -134,7 +134,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen, variant = "default" }) {
               <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
             </svg>
           </button>
-          <NavLink end to="/" className="block">
+          <NavLink end to="/admin/dashboard" className="block" onClick={() => setSidebarOpen(false)}>
             <img src="/images/Logo.png" alt="ColiFlow Logo" className="w-33 xl:w-44" />
           </NavLink>
         </div>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import AdminSidebar from '../partials/AdminSidebar';
 import Header from '../partials/Header';
 import axiosClient from '../services/axios';
@@ -161,6 +163,67 @@ export default function AdminDashboard() {
   const nextSteps      = data?.next_steps ?? [];
   const systemHealth   = data?.system_health ?? [];
 
+  // Build & download a PDF report with every metric on this dashboard.
+  const downloadReport = () => {
+    const doc = new jsPDF();
+    const BLUE = [9, 132, 227];
+    const today = new Date().toLocaleDateString('fr-FR');
+
+    doc.setFontSize(18);
+    doc.setTextColor(...BLUE);
+    doc.text('ColiFlow - Rapport Administrateur', 14, 20);
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text(`Genere le ${today}`, 14, 27);
+
+    autoTable(doc, {
+      startY: 34,
+      head: [['Indicateur', 'Valeur']],
+      body: [
+        ['Croissance des inscriptions', `${data?.growth_percent >= 0 ? '+' : ''}${data?.growth_percent ?? 0}%`],
+        ['Utilisateurs totaux', fmtNumber(data?.total_users)],
+        ['Flux colis', fmtNumber(data?.flux_colis)],
+        ["Chiffre d'affaires", `${fmtNumber(data?.chiffre_affaires)} MAD`],
+        ['Taux de succes', `${data?.taux_succes ?? 0}%`],
+        ['Revenus a encaisser', `${fmtNumber(data?.revenue_to_collect)} MAD`],
+      ],
+      headStyles: { fillColor: BLUE },
+      theme: 'striped',
+    });
+
+    if (systemHealth.length) {
+      autoTable(doc, {
+        startY: doc.lastAutoTable.finalY + 8,
+        head: [['Sante Systeme', 'Etat']],
+        body: systemHealth.map((h) => [h.label, `${h.value} ${h.ok ? '(OK)' : '(Alerte)'}`]),
+        headStyles: { fillColor: BLUE },
+        theme: 'grid',
+      });
+    }
+
+    if (nextSteps.length) {
+      autoTable(doc, {
+        startY: doc.lastAutoTable.finalY + 8,
+        head: [['Prochaines etapes', 'Detail']],
+        body: nextSteps.map((s) => [s.title, s.sub]),
+        headStyles: { fillColor: BLUE },
+        theme: 'grid',
+      });
+    }
+
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 8,
+      head: [['Utilisateur', 'Document', 'Date', 'Statut']],
+      body: docVerifs.length
+        ? docVerifs.map((r) => [r.user, r.doc, fmtDate(r.date), (DOC_STATUS[r.status] ?? DOC_STATUS.attente).label])
+        : [['-', '-', '-', 'Aucune verification']],
+      headStyles: { fillColor: BLUE },
+      theme: 'striped',
+    });
+
+    doc.save(`coliflow-rapport-admin-${today.replace(/\//g, '-')}.pdf`);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden">
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -234,9 +297,12 @@ export default function AdminDashboard() {
                             {data?.growth_percent >= 0 ? '+' : ''}{data?.growth_percent ?? 0}%
                           </div>
                           <span className="text-sm text-gray-500 dark:text-gray-400">d'inscriptions</span>
-                          <a href="#0" className="text-sm text-[#0984E3] hover:underline font-medium mt-2">
-                            Voir le rapport détaillé →
-                          </a>
+                          <button
+                            onClick={downloadReport}
+                            className="text-sm text-[#0984E3] hover:underline font-medium mt-2 text-left w-fit cursor-pointer"
+                          >
+                            Télécharger le rapport (PDF) →
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -277,7 +343,7 @@ export default function AdminDashboard() {
                   <div className="flex flex-col bg-white dark:bg-gray-800 shadow-xs rounded-xl overflow-hidden">
                     <header className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
                       <h2 className="font-semibold text-gray-800 dark:text-gray-100">Dernières Vérifications de Documents</h2>
-                      <a href="#0" className="text-sm text-[#0984E3] hover:underline font-bold">Voir tout →</a>
+                      <Link to="/admin/dashboard?tab=validation" className="text-sm text-[#0984E3] hover:underline font-bold">Voir tout →</Link>
                     </header>
                     <div className="p-3">
                       <div className="overflow-x-auto">
