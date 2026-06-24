@@ -118,7 +118,7 @@ function DropdownNotifications({ align }) {
       </button>
 
       <Transition
-        className={`origin-top-right z-10 absolute top-full mt-1 right-0 w-80 max-w-[calc(100vw-1.5rem)] sm:max-w-none bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-lg overflow-hidden ${align === 'right' ? 'sm:right-0 sm:left-auto' : 'sm:right-auto sm:left-0'}`}
+        className={`origin-top-right z-50 fixed top-16 left-3 right-3 w-auto sm:absolute sm:top-full sm:mt-1 sm:w-80 ${align === 'right' ? 'sm:left-auto sm:right-0' : 'sm:right-auto sm:left-0'} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-lg overflow-hidden`}
         show={dropdownOpen}
         enter="transition ease-out duration-200 transform"
         enterStart="opacity-0 -translate-y-2"
