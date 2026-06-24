@@ -661,12 +661,14 @@ function Sidebar({ active, setActive, mobileOpen, setMobileOpen, t }) {
           lg:sticky lg:top-0 lg:translate-x-0 lg:z-auto  lg:shrink-0
         `}
             >
-                {/* Logo */}
-                <div className="flex justify-center items-center gap-2.5 px-5 py-4 border-b border-gray-100">
-                    <div>
-                        <img src="/images/Logo.png" alt="" className="w-40" />
-                    </div>
-                </div>
+                {/* Logo — click to go back home */}
+                <Link
+                    to="/"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex justify-center items-center gap-2.5 px-5 py-4 border-b border-gray-100 hover:opacity-80 transition-opacity"
+                >
+                    <img src="/images/Logo.png" alt="ColiFlow — Accueil" className="w-40" />
+                </Link>
 
                 {/* Nav sections */}
                 <nav className="flex-1 overflow-y-auto px-3 py-4">
