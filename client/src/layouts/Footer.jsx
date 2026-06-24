@@ -17,35 +17,35 @@ const Footer = () => {
                         <div>
                             <p className="text-[#A4A4A4]">Explorer</p>
                             <ul className="flex flex-col gap-3 py-3">
-                                <li className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/travels"} className="text-[#141414] text-[0.75rem]">
                                     Trouver un trajet
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link to={"/travels/create"} className="text-[#141414] text-[0.75rem]">
                                     Publier un trajet
-                                </li>
+                                </Link>
                                 <Link to={"/readmore/Cities Covered"} className="text-[#141414] text-[0.75rem]">
                                     Villes couvertes
                                 </Link>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/readmore/Terms & Conditions"} className="text-[#141414] text-[0.75rem]">
                                     Objets autorisés
-                                </li>
+                                </Link>
                             </ul>
                         </div>
                         <div>
                             <p className="text-[#A4A4A4]">Ressources</p>
                             <ul className="flex flex-col gap-3 py-3">
-                                <li className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/readmore/How it works"} className="text-[#141414] text-[0.75rem]">
                                     Comment ça marche ?
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link to={"/readmore/Customer Support"} className="text-[#141414] text-[0.75rem]">
                                     Centre d'assistance
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link to={"/readmore/Impact Écologique"} className="text-[#141414] text-[0.75rem]">
                                     Impact Écologique
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link to={"/readmore/FAQ"} className="text-[#141414] text-[0.75rem]">
                                     FAQ
-                                </li>
+                                </Link>
                             </ul>
                         </div>
                     </div>
@@ -54,16 +54,15 @@ const Footer = () => {
                         <div>
                             <p className="text-[#A4A4A4]">Légal & Sécurité</p>
                             <ul className="flex flex-col gap-3 py-3">
-                                <li className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/readmore/Terms & Conditions"} className="text-[#141414] text-[0.75rem]">
                                     Conditions Générales
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link to={"/readmore/Privacy Policy"} className="text-[#141414] text-[0.75rem]">
                                     Confidentialité
-                                </li>
-                                <li className="text-[#141414] text-[0.75rem]">
+                                </Link>
+                                <Link to={"/readmore/Privacy Policy"} className="text-[#141414] text-[0.75rem]">
                                     Sécurité des colis
-                                </li>
-                                
+                                </Link>
                             </ul>
                         </div>
                         <div>
@@ -72,10 +71,10 @@ const Footer = () => {
                                 <Link to={"/readmore/Customer Support"} className="text-[#141414] text-[0.75rem]">
                                     Support Client
                                 </Link>
-                                <Link className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/readmore/Follow us"} className="text-[#141414] text-[0.75rem]">
                                     Devenir Partenaire
                                 </Link>
-                                <Link to={"/readmore/Customer Support"} className="text-[#141414] text-[0.75rem]">
+                                <Link to={"/readmore/Follow us"} className="text-[#141414] text-[0.75rem]">
                                     Suivez-nous
                                 </Link>
                             </ul>
@@ -134,7 +133,7 @@ const Footer = () => {
                             <Link to={"/readmore/Impact Écologique"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Impact Écologique
                             </Link>
-                            <Link to={"readmore/FAQ"} className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            <Link to={"/readmore/FAQ"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 FAQ
                             </Link>
                         </ul>
@@ -143,7 +142,7 @@ const Footer = () => {
                     <div>
                         <p className="text-[#A4A4A4]">Légal & Sécurité</p>
                         <ul className="flex flex-col gap-3 py-3">
-                            <Link to={'Terms & Conditions'} className="text-[#141414] text-[0.75rem] cursor-pointer">
+                            <Link to={"/readmore/Terms & Conditions"} className="text-[#141414] text-[0.75rem] cursor-pointer">
                                 Conditions Générales
                             </Link>
                             <Link to={"/readmore/Privacy Policy"} className="text-[#141414] text-[0.75rem] cursor-pointer">
