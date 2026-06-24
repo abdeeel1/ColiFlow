@@ -66,7 +66,7 @@ function DropdownHelp({ align }) {
       </button>
 
       <Transition
-        className={`origin-top-right z-10 absolute top-full min-w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 py-2 rounded-lg shadow-lg overflow-hidden mt-1 ${align === 'right' ? 'right-0' : 'left-0'}`}
+        className={`origin-top-right z-50 fixed top-16 left-3 right-3 w-auto sm:absolute sm:top-full sm:mt-1 sm:w-64 ${align === 'right' ? 'sm:left-auto sm:right-0' : 'sm:right-auto sm:left-0'} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 py-2 rounded-lg shadow-lg overflow-hidden`}
         show={dropdownOpen}
         enter="transition ease-out duration-200 transform"
         enterStart="opacity-0 -translate-y-2"

@@ -1109,7 +1109,7 @@ export default function TravelerDashboard() {
                                   <td className="px-4 py-3 relative">
                                     <button
                                       onClick={e => { e.stopPropagation(); setOpenMenuId(openMenuId === travel.id ? null : travel.id); }}
-                                      className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition opacity-0 group-hover:opacity-100 cursor-pointer"
+                                      className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition opacity-100 sm:opacity-0 sm:group-hover:opacity-100 cursor-pointer"
                                     >
                                       <MoreHorizontal size={16} />
                                     </button>
@@ -1972,7 +1972,7 @@ export default function TravelerDashboard() {
                                     <button
                                       onClick={() => setDetailReq(req)}
                                       title="Voir les détails"
-                                      className="p-1.5 rounded-lg text-gray-400 hover:text-[#0984E3] hover:bg-blue-50 dark:hover:bg-blue-950/20 transition opacity-0 group-hover:opacity-100 cursor-pointer"
+                                      className="p-1.5 rounded-lg text-gray-400 hover:text-[#0984E3] hover:bg-blue-50 dark:hover:bg-blue-950/20 transition opacity-100 sm:opacity-0 sm:group-hover:opacity-100 cursor-pointer"
                                     >
                                       <Eye size={16} />
                                     </button>
