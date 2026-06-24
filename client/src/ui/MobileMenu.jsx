@@ -36,16 +36,19 @@ export default function MobileMenu({ isTraveler }) {
         }
     }, [isOpen])
 
+    // Dashboard route depends on the active mode (sender vs traveler).
+    const dashboardHref = isTraveler ? "/traveler/dashboard" : "/sender/dashboard"
+
     const senderLinks = [
         { label: "Nouveau colis", href: "/packages/create" },
         { label: "Liste des trajets", href: "/travels" },
-        { label: "Dashboard", href: "#" },
+        { label: "Dashboard", href: dashboardHref },
     ]
 
     const travelerLinks = [
         { label: "Nouveau travel", href: "/travels/create" },
-        { label: "Demandes de Réservation", href: "#" },
-        { label: "Dashboard", href: "#" },
+        { label: "Demandes de Réservation", href: "/traveler/dashboard?tab=demandes" },
+        { label: "Dashboard", href: dashboardHref },
     ]
 
     const subLinks = isTraveler ? travelerLinks : senderLinks
@@ -153,9 +156,13 @@ export default function MobileMenu({ isTraveler }) {
                                 )}
                             </button>
                         )}
-                        <button className="btn btn-neutral w-full  text-white font-bold rounded-2xl text-sm">
-                            Dashboard
-                        </button>
+                        {isAuth && (
+                            <Link to={dashboardHref} onClick={() => setIsOpen(false)} className="w-full">
+                                <button className="btn btn-neutral w-full text-white font-bold rounded-2xl text-sm">
+                                    Dashboard
+                                </button>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>
