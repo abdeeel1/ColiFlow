@@ -56,7 +56,12 @@ export default function DemoModal({ open, onClose }) {
   const [playing, setPlaying] = useState(false)
   const [cursor, setCursor] = useState({ x: 430, y: 300, on: false })
   const [phase, setPhase] = useState("idle") // idle | down | up
+  // The browser window is a fixed 1120px design; scale it to fit narrow screens.
+  const [scale, setScale] = useState(1)
+  const [frameH, setFrameH] = useState(0)
 
+  const colRef = useRef(null)
+  const frameRef = useRef(null)
   const viewportRef = useRef(null)
   const voiceRef = useRef(null)
   const timers = useRef([])
@@ -212,6 +217,28 @@ export default function DemoModal({ open, onClose }) {
     return () => document.removeEventListener("keydown", onKey)
   }, [open, onClose])
 
+  // Scale the fixed-width browser window down to the column width on small screens.
+  useEffect(() => {
+    if (!open) return
+    const recompute = () => {
+      const col = colRef.current
+      const frame = frameRef.current
+      if (!col || !frame) return
+      const s = Math.min(1, col.clientWidth / 1120)
+      setScale(s)
+      setFrameH(frame.offsetHeight * s) // offsetHeight is the unscaled layout height
+    }
+    recompute()
+    const ro = new ResizeObserver(recompute)
+    if (colRef.current) ro.observe(colRef.current)
+    if (frameRef.current) ro.observe(frameRef.current)
+    window.addEventListener("resize", recompute)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener("resize", recompute)
+    }
+  }, [open, step])
+
   const cur = NARRATION[step]
   const ripScale = phase === "up" ? 2 : 0.25
   const ripOpacity = phase === "down" ? 0.5 : 0
@@ -237,6 +264,7 @@ export default function DemoModal({ open, onClose }) {
           `}</style>
 
           <Motion.div
+            ref={colRef}
             className="relative flex w-full max-w-[1120px] flex-col items-center gap-4 my-auto"
             initial={{ opacity: 0, y: 24, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -253,10 +281,15 @@ export default function DemoModal({ open, onClose }) {
               <X size={18} />
             </button>
 
-            {/* ===== BROWSER WINDOW ===== */}
+            {/* ===== BROWSER WINDOW (fixed 1120px, scaled to fit) ===== */}
+            <div style={{ width: "100%", height: frameH || undefined, overflow: "hidden" }}>
             <div
-              className="w-full overflow-hidden rounded-2xl border bg-white"
+              ref={frameRef}
+              className="overflow-hidden rounded-2xl border bg-white"
               style={{
+                width: 1120,
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
                 borderColor: "#dfe6ee",
                 boxShadow:
                   "0 30px 70px -20px rgba(16,42,67,.45),0 8px 24px -12px rgba(16,42,67,.3)",
@@ -273,7 +306,7 @@ export default function DemoModal({ open, onClose }) {
                   <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#28c840" }} />
                 </div>
                 <div
-                  className="mx-auto hidden flex-1 items-center gap-2 sm:flex"
+                  className="mx-auto flex flex-1 items-center gap-2"
                   style={{
                     background: "#fff",
                     border: "1px solid #e2e8f0",
@@ -288,7 +321,7 @@ export default function DemoModal({ open, onClose }) {
                   <span style={{ color: "#94a3b8" }}>coliflow.vercel.app</span>
                   <span style={{ color: "#0f172a", fontWeight: 600 }}>{cur.url}</span>
                 </div>
-                <div style={{ width: 54 }} className="hidden sm:block" />
+                <div style={{ width: 54 }} />
               </div>
 
               {/* viewport */}
@@ -339,14 +372,15 @@ export default function DemoModal({ open, onClose }) {
                 </div>
               </div>
             </div>
+            </div>
 
             {/* ===== NARRATION DOCK ===== */}
             <div
-              className="flex w-full items-center gap-4 sm:gap-5"
-              style={{ background: "#0f1b2d", borderRadius: 18, padding: "16px 22px", boxShadow: "0 20px 50px -20px rgba(16,42,67,.55)" }}
+              className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-5"
+              style={{ background: "#0f1b2d", borderRadius: 18, padding: "16px 18px", boxShadow: "0 20px 50px -20px rgba(16,42,67,.55)" }}
             >
               {/* play controls */}
-              <div className="flex items-center gap-2">
+              <div className="order-2 flex items-center justify-center gap-2 sm:order-0">
                 <button onClick={() => go(step - 1)} title="Précédent" className="flex items-center justify-center" style={{ width: 38, height: 38, borderRadius: 11, border: "none", background: "#1e2d42", color: "#cbd5e1", cursor: "pointer" }}>
                   <SkipBack size={17} fill="currentColor" />
                 </button>
@@ -359,7 +393,7 @@ export default function DemoModal({ open, onClose }) {
               </div>
 
               {/* caption */}
-              <div className="min-w-0 flex-1">
+              <div className="order-1 w-full min-w-0 flex-1 sm:order-0">
                 <div className="mb-1.5 flex items-center gap-2.5">
                   <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".5px", color: "#0984E3", textTransform: "uppercase" }}>
                     Étape {step + 1}/8 · {cur.title}
@@ -379,7 +413,7 @@ export default function DemoModal({ open, onClose }) {
               </div>
 
               {/* replay + dots */}
-              <div className="flex flex-col items-end gap-2.5">
+              <div className="order-3 flex w-full items-center justify-between gap-2.5 sm:order-0 sm:w-auto sm:flex-col sm:items-end">
                 <button onClick={() => speak()} title="Réécouter" className="flex items-center gap-1.5" style={{ background: "#1e2d42", color: "#cbd5e1", border: "none", borderRadius: 11, padding: "8px 13px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
                   <RotateCcw size={14} />
                   <span className="hidden sm:inline">Réécouter</span>
