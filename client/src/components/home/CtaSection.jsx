@@ -1,10 +1,13 @@
 import BadgeAlert from "@/ui/BadgeAlert"
-import { Circle, DollarSign, Folder, Laptop, Send } from "lucide-react"
+import { Circle, DollarSign, Folder, Laptop, Send, Play } from "lucide-react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { useState } from "react"
+import DemoModal from "./DemoModal"
 
 const CtaSection = () => {
     const { t } = useTranslation()
+    const [demoOpen, setDemoOpen] = useState(false)
 
     return (
         <section>
@@ -66,12 +69,18 @@ const CtaSection = () => {
                                 {t("Commencer Maintenant")}
                             </button>
                         </Link>
-                        <button className="btn btn-soft btn-sm rounded-2xl">
+                        <button
+                            onClick={() => setDemoOpen(true)}
+                            className="btn btn-soft btn-sm rounded-2xl gap-2"
+                        >
+                            <Play size={14} />
                             {t("Voir la Démo")}
                         </button>
                     </div>
                 </div>
             </div>
+
+            <DemoModal key={demoOpen ? "open" : "closed"} open={demoOpen} onClose={() => setDemoOpen(false)} />
         </section>
     )
 }
