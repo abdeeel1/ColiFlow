@@ -54,6 +54,10 @@ export default function MobileMenu({ isTraveler }) {
     const subLinks = isTraveler ? travelerLinks : senderLinks
     const mainLabel = isTraveler ? "Publier un travel" : "Envoyer un colis"
     const secondaryLabel = isTraveler ? "Mes Travel" : "Mes Colis"
+    // "Mes Colis" -> sender dashboard packages tab; "Mes Travel" -> traveler trajets tab.
+    const secondaryHref = isTraveler
+        ? "/traveler/dashboard?tab=trajets"
+        : "/sender/dashboard?tab=expedition"
 
     return (
         <>
@@ -109,6 +113,7 @@ export default function MobileMenu({ isTraveler }) {
                                     <Link
                                         key={link.label}
                                         to={link.href}
+                                        onClick={() => setIsOpen(false)}
                                         className="px-3 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 hover:text-[#2D3436]"
                                     >
                                         {link.label}
@@ -117,12 +122,13 @@ export default function MobileMenu({ isTraveler }) {
                             </div>
                         )}
 
-                        <a
-                            href="#"
+                        <Link
+                            to={secondaryHref}
+                            onClick={() => setIsOpen(false)}
                             className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100"
                         >
                             {secondaryLabel}
-                        </a>
+                        </Link>
                         <a
                             href="#faq"
                             className="px-3 py-2.5 rounded-xl text-sm text-[#2D3436] hover:bg-gray-100"
