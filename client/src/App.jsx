@@ -20,6 +20,8 @@ import CompleteProfile from "./pages/CompleteProfile"
 import ResetPassword from "./pages/ResetPassword"
 import ProtectedRoute from "./utils/ProtectedRoute"
 import AdminRoute from "./utils/AdminRoute"
+import GuestRoute from "./utils/GuestRoute"
+import ModeRoute from "./utils/ModeRoute"
 import { useTranslation } from "react-i18next"
 import ReadMore from "./pages/ReadMore"
 import Favoris from "./pages/Favoris"
@@ -100,9 +102,15 @@ function App() {
                         <Route path="/messages" element={<Messagerie />} />
 
                         <Route path="/packages/:id" element={<PackageDetail />} />
+                    </Route>
 
+                    {/* Sender-only routes (active mode = sender) */}
+                    <Route element={<ModeRoute mode="sender" />}>
                         <Route path="/sender/dashboard" element={<SenderDashboard />} />
+                    </Route>
 
+                    {/* Traveler-only routes (active mode = traveler) */}
+                    <Route element={<ModeRoute mode="traveler" />}>
                         <Route path="/traveler/dashboard" element={<TravelerDashboard />} />
                     </Route>
 
@@ -111,24 +119,30 @@ function App() {
                         <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     </Route>
 
-                    <Route path="login" element={<Login />} />
+                    {/* Guest-only routes (redirect authenticated users away) */}
+                    <Route element={<GuestRoute />}>
+                        <Route path="login" element={<Login />} />
 
-                    <Route path="register" element={<Signup />} />
+                        <Route path="register" element={<Signup />} />
 
-                    <Route
-                        path="/complete-profile"
-                        element={<CompleteProfile />}
-                    />
+                        <Route
+                            path="/forgot-password"
+                            element={<ForgotPassword />}
+                        />
 
-                    <Route
-                        path="/forgot-password"
-                        element={<ForgotPassword />}
-                    />
+                        <Route
+                            path="/password-reset/:token"
+                            element={<ResetPassword />}
+                        />
+                    </Route>
 
-                    <Route
-                        path="/password-reset/:token"
-                        element={<ResetPassword />}
-                    />
+                    {/* Requires auth: finish profile after OAuth signup */}
+                    <Route element={<ProtectedRoute />}>
+                        <Route
+                            path="/complete-profile"
+                            element={<CompleteProfile />}
+                        />
+                    </Route>
 
                     {/* Routes Layout */}
 
