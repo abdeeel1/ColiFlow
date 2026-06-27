@@ -3,17 +3,14 @@ import { useSelector } from "react-redux"
 
 // Protects sender/traveler dashboards by the user's active mode.
 // - guests        -> login
-// - admins        -> admin dashboard (they don't use the sender/traveler areas)
 // - wrong mode    -> redirected to the dashboard matching their active mode
+// Admins are allowed through: they switch between "espace admin" and
+// "utilisateur" via the profile dropdown.
 const ModeRoute = ({ mode }) => {
     const { isAuth, user } = useSelector((state) => state.auth)
 
     if (!isAuth) {
         return <Navigate to="/login" replace />
-    }
-
-    if (user?.role === "admin") {
-        return <Navigate to="/admin/dashboard" replace />
     }
 
     const isTraveler = !!user?.is_traveler
